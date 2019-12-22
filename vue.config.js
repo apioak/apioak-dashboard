@@ -1,12 +1,9 @@
 module.exports = {
     devServer: {
         proxy: {
-            "/api": {
+            "/apioak": {
                 target: "http://49.232.143.79:10080",
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/api': ''
-                }
+                changeOrigin: true
             }
         }
     },

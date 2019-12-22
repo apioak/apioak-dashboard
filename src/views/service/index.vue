@@ -2,7 +2,11 @@
   <div class="service">
     <view-header name="服务"></view-header>
     <div class="service-list">
-      <el-button class="service-add fl" type="primary" @click="drawer = true , title = '添加服务'">新建服务</el-button>
+      <el-button
+        class="service-add fl"
+        type="primary"
+        @click="editId = 0,drawer = true , title = '添加服务'"
+      >新建服务</el-button>
       <el-table class="service-table" :data="serviceList">
         <el-table-column label="服务名称" prop="name"></el-table-column>
         <el-table-column label="服务前缀" prop="prefix"></el-table-column>
@@ -13,9 +17,17 @@
               type="primary"
               plain
               size="small"
-              @click="editService(scope.row),drawer = true , title = '编辑服务'"
+              style="margin-right:12px;"
+              @click="editService(scope),drawer = true , title = '编辑服务'"
             >编辑</el-button>
-            <el-button type="danger" plain size="small">删除</el-button>
+            <el-popover width="160" placement="bottom" v-model="delPop[scope.$index]">
+              <p>确认删除该服务吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="cancel(scope.$index)">取消</el-button>
+                <el-button type="primary" size="mini" @click="delService(scope.$index)">确定</el-button>
+              </div>
+              <el-button slot="reference" type="danger" plain size="small">删除</el-button>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -43,7 +55,10 @@
           <el-input type="textarea" v-model="form.desc"></el-input>
         </el-form-item>
         <el-row :gutter="24">
-          <el-col :span="4" style="padding-top:8px;font-size:16px;color:#606266;padding-right:0;">upstreams</el-col>
+          <el-col
+            :span="4"
+            style="padding-top:8px;font-size:16px;color:#606266;padding-right:0;"
+          >upstreams</el-col>
           <el-col :span="20" style="padding-left:0;">
             <el-tabs class="service-tab" v-model="activeEnv">
               <el-tab-pane label="dev" name="dev">
@@ -206,6 +221,10 @@ export default {
       title: "添加服务",
       activeEnv: "dev", // tab默认选中
       serviceList: [],
+      serviceListIds: [],
+      delPop:[],
+      editId: 0, // 当前编辑id
+      // delPop:false,// 删除
       form: {
         name: "",
         prefix: "",
@@ -266,35 +285,71 @@ export default {
       this.$http.get(api.serviceList).then(res => {
         if (res.status == 200) {
           let list = []; // 存放服务列表
+          let listIds = []; // 存放服务id
+          let pop = [];
           res.data.nodes.forEach(el => {
             if (el.value) {
               list.push(el.value);
+              listIds.push(el.key.split("/")[3]);
+              pop.push(false);
             }
           });
           this.serviceList = list;
+          this.serviceListIds = listIds;
+          this.delPop = pop;
         }
       });
     },
     /**
-     * @todo 保存服务
+     * @todo 保存&编辑服务
      */
     saveService() {
-      this.$http.post(api.creatService, this.form).then(res => {
-        if(res.status == 201 || res.status == 200){
-          this.$message({
-            type:'sucess',
-            message:'创建成功'
-          })
-          this.getServiceList();
-        }
-      });
+      if (this.editId) {
+        // 有id为更新（修改）
+        this.$http.put(api.editService(this.editId), this.form).then(res => {
+          if (res.status == 200) {
+            this.$message({
+              type: "sucess",
+              message: "编辑成功"
+            });
+            this.getServiceList();
+          }
+        });
+      } else {
+        // 无id为新建
+        this.$http.post(api.creatService, this.form).then(res => {
+          if (res.status == 201 || res.status == 200) {
+            this.$message({
+              type: "sucess",
+              message: "创建成功"
+            });
+            this.getServiceList();
+          }
+        });
+      }
     },
     /**
      * @todo 编辑服务
-     * @param row {Object} 当前编辑数据
+     * @param scope {Object} 当前编辑数据
      */
-    editService(row) {
-      this.form = row;
+    editService(scope) {
+      this.form = scope.row; // 给表单赋值
+      this.editId = this.serviceListIds[scope.$index]; // 获取当前编辑的id
+    },
+    /**
+     * @todo 删除服务
+     */
+    delService(index) {
+      this.editId = this.serviceListIds[index]; // 获取当前编辑的id
+      this.$http.delete(api.delService(this.editId)).then(res => {
+        if(res.status == 200){
+          this.$message({
+            type:'success',
+            message:'删除成功'
+          })
+        }
+        this.getServiceList();
+      });
     },
     /**
      * @todo 添加node
@@ -312,6 +367,12 @@ export default {
      */
     delNode(type, index) {
       this.$delete(this.upstreams[`${type}`]["nodes"], index);
+    },
+    /**
+     * @todo 取消确认弹层
+     */
+    cancel(index){
+      this.$set(this.delPop,index,false)
     }
   }
 };
