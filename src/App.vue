@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <el-container class="main">
-      <el-header class="main-header"></el-header>
+      <el-header class="main-header">
+        <img class="logo" src="./assets/logo.png" alt="logo">
+      </el-header>
       <el-container>
         <el-aside
           class="main-aside"
@@ -67,6 +69,12 @@ export default {
   height: 100%;
   position: absolute;
   color: #fff;
+  &-header{
+    .logo{
+      width: 40px;
+      height: 40px;
+    }
+  }
   &-aside {
     position: relative;
     height: 100%;
