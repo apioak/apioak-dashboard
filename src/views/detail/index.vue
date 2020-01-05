@@ -1,0 +1,47 @@
+<template>
+    <div class="detail">
+        <view-header style="border-bottom:0;" name="服务"></view-header>
+         <el-tabs class="detail-tab" v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="管理api" name="api">
+                <api-component></api-component>
+            </el-tab-pane>
+            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+        </el-tabs>
+    </div>
+</template>
+<script>
+import api from '@/api';
+const apiComponent =()=> import('./pages/api');
+export default {
+    name:'apiList',
+    data(){
+        return {
+           activeName:this.$route.query.tab
+        }
+    },
+    components:{
+        apiComponent,
+    },
+    created(){
+    },
+    methods:{
+        handleClick(tab, event) {
+            console.log(tab, event);
+        }
+    }
+}
+</script>
+<style lang="scss">
+    .el-tabs__nav-scroll{
+        padding-left: 20px;
+        background: #fff;
+    }
+</style>
+<style lang="scss" scoped>
+
+.detail{
+    
+}
+</style>

@@ -7,6 +7,8 @@ let api = {
     // 更新服务（编辑）
     editService: (service_id) => `/apioak/admin/service/${service_id}`,
     // 删除服务
-    delService: (service_id) => `/apioak/admin/service/${service_id}`
+    delService: (service_id) => `/apioak/admin/service/${service_id}`,
+    // 路由列表
+    routersList:'/apioak/admin/routers'
 }
 export default api

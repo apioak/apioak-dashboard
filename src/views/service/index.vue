@@ -8,7 +8,11 @@
         @click="editId = 0,drawer = true , title = '添加服务'"
       >新建服务</el-button>
       <el-table class="service-table" :data="serviceList">
-        <el-table-column label="服务名称" prop="name"></el-table-column>
+        <el-table-column label="服务名称">
+          <template slot-scope="scope">
+            <el-link @click="goDetail(scope)">{{scope.row.name}}</el-link>
+          </template>
+        </el-table-column>
         <el-table-column label="服务前缀" prop="prefix"></el-table-column>
         <el-table-column label="备注" prop="desc"></el-table-column>
         <el-table-column label="活动状态">
@@ -279,7 +283,7 @@ export default {
   },
   methods: {
     /**
-     * @todo 获取服务列表
+     *  获取服务列表
      */
     getServiceList() {
       this.$http.get(api.serviceList).then(res => {
@@ -301,7 +305,7 @@ export default {
       });
     },
     /**
-     * @todo 保存&编辑服务
+     *  保存&编辑服务
      */
     saveService() {
       if (this.editId) {
@@ -329,7 +333,7 @@ export default {
       }
     },
     /**
-     * @todo 编辑服务
+     *  编辑服务
      * @param scope {Object} 当前编辑数据
      */
     editService(scope) {
@@ -337,7 +341,7 @@ export default {
       this.editId = this.serviceListIds[scope.$index]; // 获取当前编辑的id
     },
     /**
-     * @todo 删除服务
+     *  删除服务
      */
     delService(index) {
       this.editId = this.serviceListIds[index]; // 获取当前编辑的id
@@ -352,7 +356,7 @@ export default {
       });
     },
     /**
-     * @todo 添加node
+     *  添加node
      * @param type {String} 环境
      */
     addNode(type) {
@@ -363,16 +367,28 @@ export default {
       });
     },
     /**
-     * @todo 删除node
+     *  删除node
      */
     delNode(type, index) {
       this.$delete(this.upstreams[`${type}`]["nodes"], index);
     },
     /**
-     * @todo 取消确认弹层
+     *  取消确认弹层
      */
     cancel(index){
       this.$set(this.delPop,index,false)
+    },
+    /**
+     * 跳转api详情
+     */
+    goDetail(scope){
+      this.$router.push({
+        name:'serviceDetail',
+        query:{
+          id:this.serviceListIds[scope.$index],
+          tab:'api'
+        }
+      })
     }
   }
 };
