@@ -73,6 +73,7 @@ export default {
     .logo{
       width: 40px;
       height: 40px;
+      margin-top: 10px;
     }
   }
   &-aside {
