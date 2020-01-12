@@ -574,6 +574,7 @@ export default {
         ],
         constant_params: []
       },
+      
       resultForm: {
         // 响应结果
         response_type: "",
