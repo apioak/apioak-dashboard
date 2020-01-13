@@ -17,7 +17,7 @@
             active-text-color="#fff"
             background-color="#333"
             :collapse="isCollapse"
-            default-active="dashboard"
+            :default-active="curActive"
             router
           >
             <el-menu-item index="dashboard">
@@ -45,8 +45,14 @@ export default {
   name: "app",
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      curActive:"",
     };
+  },
+  watch:{
+    "$route"(val){
+      this.curActive = val.name
+    }
   },
   methods: {
     collapseMenu() {

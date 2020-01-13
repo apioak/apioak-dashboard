@@ -22,7 +22,7 @@
         </el-table-column>
         <el-table-column label="名称">
           <template slot-scope="scope">
-            <el-link @click="showDetail(scope)">{{ scope.row.name }}</el-link>
+            <el-link type="primary" @click="showDetail(scope)">{{ scope.row.name }}</el-link>
           </template>
         </el-table-column>
         <el-table-column label="版本" prop="service_path"></el-table-column>
@@ -37,8 +37,14 @@
         <el-table-column label="环境">
           <template slot-scope="scope">
             <div v-for="(item,index) in scope.row.push_env" :key="index">
-              <p v-if="item" style="color:#67C23A;">{{ envMap[index] }}：已发布</p>
-              <p v-else>{{ envMap[index] }}：未发布</p>
+              <p v-if="item" style="color:#67C23A;">
+                <i class="dot dot-on"></i>
+                {{ envMap[index] }}
+              </p>
+              <p v-else>
+                <i class="dot dot-off"></i>
+                {{ envMap[index] }}
+              </p>
             </div>
           </template>
         </el-table-column>
@@ -52,13 +58,13 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
-                    <span @click="publish(scope,'dev','publish')">测试</span>
+                    <span @click="publish(scope,'dev','publish')">开发环境</span>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <span @click="publish(scope,'beta','publish')">预发布</span>
+                    <span @click="publish(scope,'beta','publish')">预发环境</span>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <span @click="publish(scope,'prod','publish')">发布</span>
+                    <span @click="publish(scope,'prod','publish')">生产环境</span>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -69,13 +75,13 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
-                    <span @click="publish(scope,'dev','unpublish')">测试</span>
+                    <span @click="publish(scope,'dev','unpublish')">开发环境</span>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <span @click="publish(scope,'beta','unpublish')">预发布</span>
+                    <span @click="publish(scope,'beta','unpublish')">预发环境</span>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <span @click="publish(scope,'prod','unpublish')">发布</span>
+                    <span @click="publish(scope,'prod','unpublish')">生产环境</span>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -446,25 +452,23 @@
           :rules="pluginRules"
           size="small"
         >
-          <el-form-item label="conn" prop="conn">
-            <el-input-number v-model="pluginForm.config.conn"></el-input-number>
-          </el-form-item>
-          <el-form-item label="burst" prop="burst">
-            <el-input-number v-model="pluginForm.config.burst"></el-input-number>
-          </el-form-item>
-          <el-form-item label="key" prop="key">
-            <el-select v-model="pluginForm.config.key">
-              <el-option label="remote_addr" value="remote_addr"></el-option>
-              <el-option label="server_addr" value="server_addr"></el-option>
-              <el-option label="http_x_real_ip" value="http_x_real_ip"></el-option>
-              <el-option label="http_x_forwarded_for" value="http_x_forwarded_for"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="default_conn_delay" prop="default_conn_delay">
-            <el-input-number v-model="pluginForm.config.default_conn_delay"></el-input-number>
-          </el-form-item>
-          <el-form-item label="描述">
-            <el-input type="textarea" v-model="pluginForm.config.desc"></el-input>
+          <el-form-item v-for="(item,key) in pluginParam" :key="key" :label="key">
+            <span v-if="item.type == 'number'">
+              <el-input-number v-model="pluginForm.config[key]" :min="item.minimum"></el-input-number>
+            </span>
+            <span v-if="item.type == 'string'">
+              <el-input type="text" v-model="pluginForm.config[key]"></el-input>
+            </span>
+            <span v-if="item.type == 'array'">
+              <el-select v-model="pluginForm.config[key]">
+                <el-option
+                  v-for="(op,index) in item.options"
+                  :key="`op${index}`"
+                  :label="op"
+                  :value="op"
+                ></el-option>
+              </el-select>
+            </span>
           </el-form-item>
         </el-form>
         <div style="margin-left:160px;">
@@ -477,24 +481,20 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" class="table-expand" size="small">
-                <el-form-item label="conn">
-                  <span>{{ props.row.conn }}</span>
-                </el-form-item>
-                <el-form-item label="burst">
-                  <span>{{ props.row.burst }}</span>
-                </el-form-item>
-                <el-form-item label="key">
-                  <span>{{ props.row.key }}</span>
-                </el-form-item>
-                <el-form-item label="default_conn_delay">
-                  <span>{{ props.row.default_conn_delay }}</span>
+                <el-form-item
+                  v-for="(plu,pluIndex) in props.row"
+                  :label="pluIndex"
+                  :key="`apiplugin${pluIndex}`"
+                  v-show="pluIndex !='name' && pluIndex != 'desc'"
+                >
+                  <span>{{ plu }}</span>
                 </el-form-item>
               </el-form>
             </template>
           </el-table-column>
-          <el-table-column label="配置名称" prop="name"></el-table-column>
+          <el-table-column label="配置名称" prop="name" width="120px"></el-table-column>
           <el-table-column label="描述" prop="desc"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="160px">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" plain @click="editPlugin(scope)">编辑</el-button>
               <el-button type="danger" size="mini" plain @click="delPlugin(scope)">删除</el-button>
@@ -514,11 +514,7 @@
           <el-card shadow="hover" class="plugin-card">
             <h3>{{ item.name }}</h3>
             <p>{{ item.desc }}</p>
-            <el-button
-              type="primary"
-              size="small"
-              @click="pluginForm.key = item.key,showAddPlugins = true,pluginText = `添加 ${item.key} 插件`,allPluginList = false"
-            >添加</el-button>
+            <el-button type="primary" size="small" @click="getPluginParam(item)">添加</el-button>
           </el-card>
         </el-col>
       </el-row>
@@ -544,9 +540,9 @@ export default {
       isEdit: false,
       curRouterid: "",
       envMap: {
-        beta: "预发布",
-        dev: "测试",
-        prod: "发布"
+        beta: "预发环境",
+        dev: "开发环境",
+        prod: "生产环境"
       },
       feForm: {
         // 前端配置
@@ -574,7 +570,7 @@ export default {
         ],
         constant_params: []
       },
-      
+
       resultForm: {
         // 响应结果
         response_type: "",
@@ -598,16 +594,8 @@ export default {
       pluginText: "",
       curPluginsList: [],
       showAddPlugins: false,
-      pluginForm: {
-        key: "",
-        config: {
-          conn: "",
-          burst: "",
-          key: "",
-          default_conn_delay: "",
-          desc: ""
-        }
-      },
+      pluginForm: {},
+      pluginParam:{},
       pluginRules: {
         conn: [{ required: true, message: "必填", trigger: "blur" }],
         burst: [{ required: true, message: "必填", trigger: "blur" }],
@@ -863,21 +851,47 @@ export default {
       }
     },
     /**
+     * 获取plugin 参数
+     */
+    async getPluginParam(scope) {
+      this.pluginForm.key = scope.key;
+      this.showAddPlugins = true;
+      this.pluginText = `添加 ${scope.key} 插件`;
+      this.allPluginList = false;
+      this.pluginParam = scope.parameter; // 插件参数
+      let obj = {};
+      for (let i in scope.parameter) {
+        obj[i] = scope.parameter[i]["default"];
+        obj["desc"] = scope.desc;
+      }
+      this.$set(this.pluginForm, "config", obj);
+      this.$set(this.pluginForm, "key", scope.key);
+    },
+    /**
      * 编辑plugin
      */
-    editPlugin(scope) {
-      this.showAddPlugins = true;
-      this.pluginText = `编辑 ${scope.row.name} 插件`;
-      this.pluginForm = {
-        key: scope.row.name,
-        config: {
-          conn: scope.row.conn,
-          burst: scope.row.burst,
-          key: scope.row.key,
-          default_conn_delay: scope.row.default_conn_delay,
-          desc: scope.row.desc || ""
+    async editPlugin(scope) {
+      // 获取list
+      let rowData = scope.row;
+      const { status, data } = await this.$http.get(api.pluginList);
+      if (status == 200) {
+        this.showAddPlugins = true;
+        this.pluginText = `编辑 ${scope.row.name} 插件`;
+        console.log(data);
+        data.forEach((el, index) => {
+          if (el.key == scope.row.name) {
+            this.pluginParam = el.parameter; // 插件参数
+          }
+        });
+        let obj = {};
+        for (let i in scope.row) {
+          if (i != "name") {
+            obj[i] = scope.row[i];
+          }
         }
-      };
+        this.$set(this.pluginForm, "key", scope.row.name);
+        this.$set(this.pluginForm, "config", obj);
+      }
     },
     /**
      * 取消保存
@@ -930,7 +944,8 @@ export default {
       })
         .then(async () => {
           const { status, data } = await this.$http.delete(
-            api.delRouterPlugin(this.curRouterid, scope.row.name),{ headers: { "APIOAK-SERVICE-ID": this.$route.query.id } }
+            api.delRouterPlugin(this.curRouterid, scope.row.name),
+            { headers: { "APIOAK-SERVICE-ID": this.$route.query.id } }
           );
           if (status == 200) {
             this.$message({
@@ -1002,20 +1017,32 @@ export default {
         padding-left: 20px;
       }
     }
-   
   }
-   .plugin-card {
-      text-align: center;
-      h3 {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 12px;
-      }
-      p {
-        text-align: left;
-        color: #666;
-        margin-bottom: 12px;
-      }
+  .plugin-card {
+    text-align: center;
+    h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 12px;
     }
+    p {
+      text-align: left;
+      color: #666;
+      margin-bottom: 12px;
+    }
+  }
+  .dot {
+    box-sizing: border-box;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #67c23a;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+    &.dot-off {
+      background: #e6a23c;
+    }
+  }
 }
 </style>

@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 let routes = [
   {
     path: "/",
-    redirect:'/dashboard'
+    redirect:'/service'
   }
 ];
 /**

@@ -22,7 +22,7 @@
         </el-table-column>
         <el-table-column label="服务名称">
           <template slot-scope="scope">
-            <el-link @click="goDetail(scope)">{{scope.row.name}}</el-link>
+            <el-link type="primary" @click="goDetail(scope)">{{scope.row.name}}</el-link>
           </template>
         </el-table-column>
         <el-table-column label="服务前缀" prop="prefix"></el-table-column>
@@ -255,25 +255,23 @@
           :rules="pluginRules"
           size="small"
         >
-          <el-form-item label="conn" prop="conn">
-            <el-input-number v-model="pluginForm.config.conn"></el-input-number>
-          </el-form-item>
-          <el-form-item label="burst" prop="burst">
-            <el-input-number v-model="pluginForm.config.burst"></el-input-number>
-          </el-form-item>
-          <el-form-item label="key" prop="key">
-            <el-select v-model="pluginForm.config.key">
-              <el-option label="remote_addr" value="remote_addr"></el-option>
-              <el-option label="server_addr" value="server_addr"></el-option>
-              <el-option label="http_x_real_ip" value="http_x_real_ip"></el-option>
-              <el-option label="http_x_forwarded_for" value="http_x_forwarded_for"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="default_conn_delay" prop="default_conn_delay">
-            <el-input-number v-model="pluginForm.config.default_conn_delay"></el-input-number>
-          </el-form-item>
-          <el-form-item label="描述">
-            <el-input type="textarea" v-model="pluginForm.config.desc"></el-input>
+          <el-form-item v-for="(item,key) in pluginParam" :key="key" :label="key">
+            <span v-if="item.type == 'number'">
+              <el-input-number v-model="pluginForm.config[key]" :min="item.minimum"></el-input-number>
+            </span>
+            <span v-if="item.type == 'string'">
+              <el-input type="text" v-model="pluginForm.config[key]"></el-input>
+            </span>
+            <span v-if="item.type == 'array'">
+              <el-select v-model="pluginForm.config[key]">
+                <el-option
+                  v-for="(op,index) in item.options"
+                  :key="`op${index}`"
+                  :label="op"
+                  :value="op"
+                ></el-option>
+              </el-select>
+            </span>
           </el-form-item>
         </el-form>
         <div style="margin-left:160px;">
@@ -286,24 +284,15 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" class="table-expand" size="small">
-                <el-form-item label="conn">
-                  <span>{{ props.row.conn }}</span>
-                </el-form-item>
-                <el-form-item label="burst">
-                  <span>{{ props.row.burst }}</span>
-                </el-form-item>
-                <el-form-item label="key">
-                  <span>{{ props.row.key }}</span>
-                </el-form-item>
-                <el-form-item label="default_conn_delay">
-                  <span>{{ props.row.default_conn_delay }}</span>
+                <el-form-item v-for="(plu,pluIndex) in props.row" :key="`serviceplugin${pluIndex}`" :label="pluIndex" v-show="pluIndex !='name' && pluIndex != 'desc'">
+                  <span>{{ plu }}</span>
                 </el-form-item>
               </el-form>
             </template>
           </el-table-column>
-          <el-table-column label="配置名称" prop="name"></el-table-column>
+          <el-table-column label="配置名称" prop="name" width="120px"></el-table-column>
           <el-table-column label="描述" prop="desc"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="160px">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" plain @click="editPlugin(scope)">编辑</el-button>
               <el-button type="danger" size="mini" plain @click="delPlugin(scope)">删除</el-button>
@@ -323,11 +312,7 @@
           <el-card shadow="hover" class="plugin-card">
             <h3>{{ item.name }}</h3>
             <p>{{ item.desc }}</p>
-            <el-button
-              type="primary"
-              size="small"
-              @click="pluginForm.key = item.key,showAddPlugins = true,pluginText = `添加 ${item.key} 插件`,allPluginList = false"
-            >添加</el-button>
+            <el-button type="primary" size="small" @click="getPluginParam(item)">添加</el-button>
           </el-card>
         </el-col>
       </el-row>
@@ -395,16 +380,8 @@ export default {
           }
         }
       },
-      pluginForm: {
-        key: "",
-        config: {
-          conn: "",
-          burst: "",
-          key: "",
-          default_conn_delay: "",
-          desc: ""
-        }
-      },
+      pluginForm: {},
+      pluginParam: {},
       rules: {
         name: [{ required: true, message: "请输入服务名称", trigger: "blur" }],
         prefix: [{ required: true, message: "请输入前缀", trigger: "blur" }],
@@ -554,28 +531,53 @@ export default {
       }
     },
     /**
+     * 获取plugin 参数
+     */
+    async getPluginParam(scope) {
+      this.pluginForm.key = scope.key;
+      this.showAddPlugins = true;
+      this.pluginText = `添加 ${scope.key} 插件`;
+      this.allPluginList = false;
+      this.pluginParam = scope.parameter; // 插件参数
+      let obj = {};
+      for (let i in scope.parameter) {
+        obj[i] = scope.parameter[i]["default"];
+        obj["desc"] = scope.desc;
+      }
+      this.$set(this.pluginForm, "config", obj);
+      this.$set(this.pluginForm, "key", scope.key);
+    },
+    /**
      * 编辑plugin
      */
-    editPlugin(scope){
+    async editPlugin(scope) {
+      // 获取list
+      let rowData = scope.row;
+      const { status, data } = await this.$http.get(api.pluginList);
+      if (status == 200) {
         this.showAddPlugins = true;
-        this.pluginText = `编辑 ${scope.row.name} 插件`
-        this.pluginForm = {
-          key: scope.row.name,
-          config: {
-            conn: scope.row.conn,
-            burst: scope.row.burst,
-            key: scope.row.key,
-            default_conn_delay: scope.row.default_conn_delay,
-            desc: scope.row.desc || ''
+        this.pluginText = `编辑 ${scope.row.name} 插件`;
+        console.log(data);
+        data.forEach((el, index) => {
+          if (el.key == scope.row.name) {
+            this.pluginParam = el.parameter; // 插件参数
+          }
+        });
+        let obj = {};
+        for (let i in scope.row) {
+          if (i != "name") {
+            obj[i] = scope.row[i];
           }
         }
+        this.$set(this.pluginForm, "key", scope.row.name);
+        this.$set(this.pluginForm, "config", obj);
+      }
     },
     /**
      * 取消保存
      */
     cancelPlugin(scope) {
       this.showAddPlugins = false;
-      // this.$refs[scope].resetFields();
     },
     /**
      * 保存服务插件
@@ -592,22 +594,8 @@ export default {
           this.curPluginsList.push(data.value.plugins[i]);
         }
         this.showAddPlugins = false;
-        this.pluginForm = {
-          key: "",
-          config: {
-            conn: "",
-            burst: "",
-            key: "",
-            default_conn_delay: "",
-            desc: ""
-          }
-        };
+        this.pluginForm = {};
       }
-      // this.$refs[scope].validate(async valid => {
-      //   if (valid) {
-
-      //   }
-      // });
     },
     /**
      * 删除服务插件
@@ -651,7 +639,10 @@ export default {
 .table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
-  width: 50%;
+  width: 100%;
+}
+.table-expand .el-form-item__content {
+  padding-left: 160px;
 }
 </style>
 <style lang="scss" scoped>
