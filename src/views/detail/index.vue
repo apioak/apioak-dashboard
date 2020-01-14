@@ -13,7 +13,7 @@
 import api from '@/api';
 const apiComponent =()=> import('./pages/api');
 export default {
-    name:'apiList',
+    name:'serviceDetail',
     data(){
         return {
            activeName:this.$route.query.tab

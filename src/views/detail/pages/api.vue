@@ -93,28 +93,160 @@
       </el-table>
     </div>
     <el-drawer
+      v-if="Object.keys(detailData).length"
       class="api-drawer detail"
       :visible.sync="showDetailDrawer"
       :direction="direction"
       :title="title"
       :with-header="false"
-      size="70%"
+      size="50%"
     >
       <p class="api-drawer_tit">
         <span v-html="title"></span>
         <i class="el-icon-close fr" @click="showDetailDrawer = false"></i>
       </p>
-      <div class="part-info">
+      <div class="part-info api-detail-info">
         <h3>基本信息</h3>
-        <p class="part-info_tit">
-          <span>所属服务</span>
-        </p>
-        <p>
-          <span>API名称</span>
-        </p>
-        <p>
-          <span>备注</span>
-        </p>
+        <div class="baseinfo">
+          <p>
+            <span class="tit">所属服务</span>
+            <span class="cont">后端服务</span>
+          </p>
+          <p>
+            <span class="tit">API名称</span>
+            <span class="cont">{{ detailData.name }}</span>
+          </p>
+          <p>
+            <span class="tit">备注</span>
+            <span class="cont">{{ detailData.desc }}</span>
+          </p>
+        </div>
+        <h3>前端信息</h3>
+        <div class="feinfo">
+          <p>
+            <span class="tit">请求方法</span>
+            <span class="cont">{{ detailData.method }}</span>
+            <span class="tit">版本</span>
+            <span class="cont">{{ detailData.service_path.split('/')[2] }}</span>
+          </p>
+          <p>
+            <span class="tit">请求路径</span>
+            <span class="cont">{{ detailData.path }}</span>
+            <span class="tit">跨域</span>
+            <span class="cont">{{ detailData.enable_cors ? '是':'否' }}</span>
+          </p>
+          <p>
+            <span class="tit">参数配置</span>
+            <el-table
+              size="mini"
+              :data="detailData.request_params"
+              style="margin-left:40px;"
+              :header-cell-style="rowClass"
+            >
+              <el-table-column label="参数" prop="name"></el-table-column>
+              <el-table-column label="位置" prop="position"></el-table-column>
+              <el-table-column label="必填">
+                <template slot-scope="scope">{{ scope.row.require ? '是' : '否' }}</template>
+              </el-table-column>
+              <el-table-column label="类型" prop="type"></el-table-column>
+              <el-table-column label="默认值" prop="default_val"></el-table-column>
+              <el-table-column label="描述" prop="desc"></el-table-column>
+            </el-table>
+          </p>
+        </div>
+        <h3>后端信息</h3>
+        <div class="serviceinfo">
+          <p>
+            <span class="tit">请求路径</span>
+            <span class="cont">{{ detailData.service_path }}</span>
+          </p>
+          <p>
+            <span class="tit">请求方法</span>
+            <span class="cont">{{ detailData.service_method }}</span>
+            <span class="tit">超时时间</span>
+            <span class="cont">{{ detailData.timeout }}</span>
+          </p>
+          <p>
+            <span class="tit">参数配置</span>
+            <el-table
+              size="mini"
+              :data="detailData.service_params"
+              style="margin-left:40px;"
+              :header-cell-style="rowClass"
+            >
+              <el-table-column label="后端参数名" prop="service_name"></el-table-column>
+              <el-table-column label="后端参数位置" prop="service_position"></el-table-column>
+              <el-table-column label="前端参数名">
+                <template slot-scope="scope">
+                  <div>{{ detailData.request_params[scope.$index].name }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="前端参数位置">
+                <template slot-scope="scope">
+                  <div>{{ detailData.request_params[scope.$index].position }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="前端参数类型">
+                <template slot-scope="scope">
+                  <div>{{ detailData.request_params[scope.$index].type }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="描述" prop="desc"></el-table-column>
+            </el-table>
+          </p>
+          <p>
+            <span class="tit">常量参数</span>
+            <el-table
+              size="mini"
+              :data="detailData.constant_params"
+              style="margin-left:40px;"
+              :header-cell-style="rowClass"
+            >
+              <el-table-column label="参数" prop="name"></el-table-column>
+              <el-table-column label="位置" prop="position"></el-table-column>
+              <el-table-column label="参数值" prop="value"></el-table-column>
+              <el-table-column label="描述" prop="desc"></el-table-column>
+            </el-table>
+          </p>
+        </div>
+        <h3>响应信息</h3>
+        <div class="responseinfo">
+          <p>
+            <span class="tit">返回类型</span>
+            <span class="cont">{{ detailData.response_type }}</span>
+          </p>
+          <p>
+            <span class="tit" style="margin-left:28px;margin-bottom:12px;">成功响应实例</span>
+            <el-input
+              type="textarea"
+              v-model="detailData.response_success"
+              readonly
+              style="margin-left:32px;width:80%;"
+            ></el-input>
+          </p>
+          <p>
+            <span class="tit" style="margin-left:28px;margin-bottom:12px;">失败响应实例</span>
+            <el-input
+              type="textarea"
+              v-model="detailData.response_fail"
+              readonly
+              style="margin-left:32px;width:80%;"
+            ></el-input>
+          </p>
+          <p>
+            <span class="tit" style="margin-bottom:12px">错误码配置</span>
+            <el-table
+              size="mini"
+              :data="detailData.response_error_codes"
+              style="margin-left:40px;"
+              :header-cell-style="rowClass"
+            >
+              <el-table-column label="错误码" prop="code"></el-table-column>
+              <el-table-column label="错误信息" prop="msg"></el-table-column>
+              <el-table-column label="描述" prop="desc"></el-table-column>
+            </el-table>
+          </p>
+        </div>
       </div>
     </el-drawer>
     <el-drawer
@@ -559,14 +691,14 @@ export default {
         service_method: "GET",
         timeout: 5,
         service_params: [
-          {
-            service_name: "",
-            name: "zzz",
-            service_position: "Query",
-            position: "Query",
-            desc: "",
-            type: "string"
-          }
+          // {
+          //   service_name: "",
+          //   name: "", // 前端参数
+          //   service_position: "Query",
+          //   position: "", // 前端参数位置
+          //   desc: "",     // 前端参数描述
+          //   type: ""     // 前端参数类型
+          // }
         ],
         constant_params: []
       },
@@ -595,7 +727,7 @@ export default {
       curPluginsList: [],
       showAddPlugins: false,
       pluginForm: {},
-      pluginParam:{},
+      pluginParam: {},
       pluginRules: {
         conn: [{ required: true, message: "必填", trigger: "blur" }],
         burst: [{ required: true, message: "必填", trigger: "blur" }],
@@ -674,6 +806,28 @@ export default {
      */
     next(formName) {
       this.activeStep = this.activeStep + 1;
+
+      if (formName == "feConfig") {
+        // name position type
+
+        if (
+          this.feForm.request_params.length !=
+          this.serviceForm.service_params.length
+        ) {
+          let arr = [];
+          this.feForm.request_params.forEach((el, index) => {
+            arr.push({
+              name: el.name,
+              position: el.position,
+              type: el.type,
+              desc: el.desc,
+              service_name: "",
+              service_position: ""
+            });
+          });
+          this.serviceForm.service_params = arr;
+        }
+      }
     },
     /** 保存api*/
     async saveApi() {
@@ -959,6 +1113,9 @@ export default {
     },
     handleClick() {
       console.log(11);
+    },
+    rowClass({ row, rowIndex }) {
+      return "background:#fafafa";
     }
   }
 };
@@ -1015,6 +1172,28 @@ export default {
       padding-left: 20px;
       &_tit {
         padding-left: 20px;
+      }
+    }
+    .api-detail-info {
+      h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      span {
+        display: inline-block;
+      }
+      .tit {
+        font-weight: bold;
+        width: 100px;
+        text-align: right;
+      }
+      .cont {
+        margin-left: 12px;
+      }
+      p {
+        padding-left: 60px;
+        margin-bottom: 14px;
       }
     }
   }
