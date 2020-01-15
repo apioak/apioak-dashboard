@@ -110,7 +110,7 @@
         <div class="baseinfo">
           <p>
             <span class="tit">所属服务</span>
-            <span class="cont">后端服务</span>
+            <span class="cont">{{ this.$route.query.name }}</span>
           </p>
           <p>
             <span class="tit">API名称</span>
