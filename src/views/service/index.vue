@@ -506,6 +506,7 @@ export default {
         name: "serviceDetail",
         query: {
           id: this.serviceListIds[scope.$index],
+          name:scope.row.name,
           tab: "api"
         }
       });
