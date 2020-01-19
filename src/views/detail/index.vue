@@ -2,7 +2,7 @@
     <div class="detail">
         <view-header style="border-bottom:0;" name="服务"></view-header>
          <el-tabs class="detail-tab" v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="管理api" name="api">
+            <el-tab-pane label="管理API" name="api">
                 <api-component></api-component>
             </el-tab-pane>
             <!-- <el-tab-pane label="插件列表" name="second">插件列表</el-tab-pane> -->
