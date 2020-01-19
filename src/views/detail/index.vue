@@ -5,7 +5,6 @@
             <el-tab-pane label="管理API" name="api">
                 <api-component></api-component>
             </el-tab-pane>
-            <!-- <el-tab-pane label="插件列表" name="second">插件列表</el-tab-pane> -->
         </el-tabs>
     </div>
 </template>
