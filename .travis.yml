@@ -11,6 +11,8 @@ script:
 
 after_script:
   - cd ./dist
+  - wget ${GH_REDW}/.travis/LICENSE
+  - wget ${GH_REDW}/.travis/README.md
   - git init
   - git config --global user.name  "${GIT_NAME}"
   - git config --global user.email "${GIT_EMAIL}"
