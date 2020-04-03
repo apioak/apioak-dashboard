@@ -1,4 +1,5 @@
 module.exports = {
+    publicPath:"/apioak/dashboard",
     devServer: {
         proxy: {
             "/apioak": {
@@ -8,4 +9,4 @@ module.exports = {
         }
     },
     lintOnSave: false
-}
+};
