@@ -8,7 +8,7 @@
                 <el-form :inline="true" :model="projectQueryData" class="project-form-inline">
                     <el-form-item>
                         <el-input v-model="projectQueryData.name" placeholder="输入项目名称"
-                                  prefix-icon="el-icon-search"></el-input>
+                                  prefix-icon="el-icon-search" @keyup.enter.native="queryProjectByName"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="queryProjectByName" icon="el-icon-search">搜索</el-button>
@@ -274,10 +274,10 @@
             },
 
             queryProjectByName() {
-                let name = this.projectQueryData.name;
+                let name = this.projectQueryData.name.trim();
                 if (name) {
                     this.projectLists = this.projectLists.filter(ele => {
-                        return ele.name === name.trim();
+                        return ele.name.includes(name);
                     });
                     this.initTable();
                 } else {
@@ -287,6 +287,40 @@
         }
     };
 </script>
+<style lang="css">
+    .el-drawer__body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .table-expand {
+        font-size: 0;
+    }
+
+    .table-expand label {
+        width: 160px;
+        color: #99a9bf;
+        text-align: right !important;
+    }
+
+    .table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    .table-expand .el-form-item__content {
+        padding-left: 160px;
+    }
+
+    .fe-inline-table .resizeInputClass /deep/ .el-form-item__content {
+        margin-left: 0 !important;
+    }
+
+    .fe-inline-table .resizeInputClass.el-form-item {
+        margin-bottom: 0 !important;
+    }
+</style>
 <style lang="scss" scoped>
     .project-container {
         width: 100%;

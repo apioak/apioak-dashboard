@@ -7,7 +7,8 @@
                 </el-button>
                 <el-form :inline="true" :model="userQueryData" class="user-form-inline">
                     <el-form-item label="">
-                        <el-input v-model="userQueryData.email" placeholder="输入邮箱"></el-input>
+                        <el-input v-model="userQueryData.email" placeholder="输入邮箱"
+                                  @keyup.enter.native="executeQueryUserByEmail"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="executeQueryUserByEmail">查询</el-button>
@@ -24,7 +25,7 @@
                         <template slot-scope="user">
                             <el-switch active-color="#13ce66" v-model="user.row.is_enable"
                                        @change='executeUpdatedUserStatus(user.row)' :active-value="1"
-                                       :inactive-value="0"></el-switch>
+                                       :inactive-value="0" :disabled="loginUID === user.row.id"></el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
@@ -41,7 +42,8 @@
                                     iconColor="red"
                                     @onConfirm="executeRemoveUser(user.row)"
                                     title="确定删除该项目吗？" style="margin-right:10px;">
-                                <el-button slot="reference" type="danger" size="small">删除
+                                <el-button slot="reference" type="danger" size="small"
+                                           :disabled="loginUID === user.row.id">删除
                                 </el-button>
                             </el-popconfirm>
 
@@ -94,6 +96,8 @@
                 optionPasswordUserOpen: false,
                 optionPasswordUserId: 0,
 
+                loginUID: 0,
+
                 userLists: [],
                 userCount: 0,
                 userTableLists: [],
@@ -110,6 +114,7 @@
             };
         },
         created() {
+            this.getLoginUID();
             this.getUsers();
         },
         methods: {
@@ -216,11 +221,18 @@
                 });
             },
 
+            getLoginUID() {
+                let loginAdminID = this.$cookies.get(this.$oakConst.cookies.APIOAK_ADMIN_ID);
+                if (loginAdminID) {
+                    this.loginUID = parseInt(loginAdminID);
+                }
+            },
+
             executeQueryUserByEmail() {
-                let email = this.userQueryData.email;
+                let email = this.userQueryData.email.trim();
                 if (email) {
                     this.userLists = this.userLists.filter(ele => {
-                        return ele.email === email.trim();
+                        return ele.email.includes(email);
                     });
                     this.initTable();
                 } else {

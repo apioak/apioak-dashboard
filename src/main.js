@@ -1,24 +1,24 @@
 import Vue from "vue";
 import App from "./App.vue";
-import ApioakCookie from 'vue-cookies';
-import ApioakElement from 'element-ui';
-import ApioakBackend from '@/apioak/backend';
-import ApioakRequest from '@/apioak/request';
-import ApioakConst from "@/apioak/const";
-import ApioakRouter from '@/apioak/router';
-import ApioakStore from '@/store'
+import APIOAKCookie from 'vue-cookies';
+import APIOAKElement from 'element-ui';
+import APIOAKBackend from '@/apioak/backend';
+import APIOAKRequest from '@/apioak/request';
+import APIOAKConst from "@/apioak/const";
+import APIOAKRouter from '@/router';
+import APIOAKStore from '@/store/index';
 
-Vue.use(ApioakRouter);
-Vue.use(ApioakCookie);
-Vue.use(ApioakElement);
-Vue.use(ApioakBackend);
-Vue.use(ApioakRequest);
-Vue.use(ApioakConst);
+Vue.use(APIOAKRouter);
+Vue.use(APIOAKCookie);
+Vue.use(APIOAKElement);
+Vue.use(APIOAKBackend);
+Vue.use(APIOAKRequest);
+Vue.use(APIOAKConst);
 
 Vue.config.productionTip = false;
 
 new Vue({
-  router: ApioakRouter,
-  store: ApioakStore,
+  router: APIOAKRouter,
+  store: APIOAKStore,
   render: h => h(App),
 }).$mount("#app");

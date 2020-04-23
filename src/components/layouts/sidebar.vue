@@ -65,6 +65,11 @@
         mounted() {
             this.defaultActiveMenu = this.$route.name;
         },
+        watch: {
+            '$route.name': function (newName, oldName) {
+                this.defaultActiveMenu = newName;
+            }
+        }
     };
 </script>
 

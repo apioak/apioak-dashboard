@@ -15,7 +15,7 @@
 
                 <el-form-item>
                     <el-input v-model="routerQueryData.name" placeholder="输入路由名称"
-                              prefix-icon="el-icon-search"></el-input>
+                              prefix-icon="el-icon-search" @keyup.enter.native="queryRouterByName"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="queryRouterByName" icon="el-icon-search">查询</el-button>
@@ -251,10 +251,10 @@
         },
         methods: {
             queryRouterByName() {
-                let name = this.routerQueryData.name;
+                let name = this.routerQueryData.name.trim();
                 if (name) {
                     this.routerLists = this.routerLists.filter(ele => {
-                        return ele.name === name.trim();
+                        return ele.name.includes(name);
                     });
                     this.initTable();
                 } else {
