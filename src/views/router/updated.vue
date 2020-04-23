@@ -420,6 +420,7 @@
                         this.$emit('changeUpdatedRouter', value);
                     }
                     this.routerForms = {};
+                    this.routerOperateSection = 1;
                     this.$refs['routerRequestForms'].resetFields();
                     this.$refs['routerBackendForms'].resetFields();
                     this.$refs['routerResponseForms'].resetFields();
@@ -1143,14 +1144,6 @@
 
     .api-drawer_input {
         width: 300px;
-    }
-
-    .fe-inline-table .resizeInputClass /deep/ .el-form-item__content {
-        margin-left: 0 !important;
-    }
-
-    .fe-inline-table .resizeInputClass.el-form-item {
-        margin-bottom: 0 !important;
     }
 
 </style>

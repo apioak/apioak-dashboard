@@ -32,9 +32,9 @@
 
                                 <el-input type="hidden" v-model="projectForm.upstreams[upstreamIndex].id"></el-input>
 
-                                <el-form-item label="主机地址" :prop="`upstreams[${upstreamIndex}].host`"
+                                <el-form-item label="主机名称" :prop="`upstreams[${upstreamIndex}].host`"
                                               :rules="projectRules.hostname">
-                                    <el-input v-model="projectForm.upstreams[upstreamIndex].host" placeholder="主机地址">
+                                    <el-input v-model="projectForm.upstreams[upstreamIndex].host" placeholder="主机名称">
                                     </el-input>
                                 </el-form-item>
 
@@ -193,7 +193,7 @@
                 if (reg.test(value)) {
                     callback();
                 } else {
-                    return callback(new Error('主机地址不合法'));
+                    return callback(new Error('主机名称不合法，主机名称应为WEB服务器的 Server Name，禁止使用 http:// 或 https:// 开始。'));
                 }
             };
             return {
