@@ -1,0 +1,17 @@
+.list_manage {
+  i {
+    font-size: 20px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  i.icon-shanchu {
+    color: #ff5722;
+  }
+  i.icon-xiugai {
+    color: #2196f3;
+  }
+}
+.md-list.md-dense .md-list-item-text {
+  line-height: 40px;
+  text-indent: 10px;
+}

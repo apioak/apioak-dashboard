@@ -1,29 +1,10 @@
-# apioak-dashboard
+修复下拉选择框报错问题:
 
-## Project setup
-```
-npm install
-```
+    1、查看本地 node_modules\vue-material\dist\vue-material.js
+    2、搜索 isInvalidValue
+    3、修改一下代码:
+        old：
+            return this.$el.validity.badInput;
+        new
+            return this.$el.validity ? this.$el.validity.badInput : false;
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
