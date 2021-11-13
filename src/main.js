@@ -1,24 +1,67 @@
+// =========================================================
+// * Vue Material Dashboard - v1.5.0
+// =========================================================
+//
+// * Product Page: https://www.creative-tim.com/product/vue-material-dashboard
+// * Copyright 2019 Creative Tim (https://www.creative-tim.com)
+// * Licensed under MIT (https://github.com/creativetimofficial/vue-material-dashboard/blob/master/LICENSE.md)
+//
+// * Coded by Creative Tim
+//
+// =========================================================
+//
+// * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from "vue";
-import App from "./App.vue";
-import APIOAKCookie from 'vue-cookies';
-import APIOAKElement from 'element-ui';
-import APIOAKBackend from '@/apioak/backend';
-import APIOAKRequest from '@/apioak/request';
-import APIOAKConst from "@/apioak/const";
-import APIOAKRouter from '@/router';
-import APIOAKStore from '@/store/index';
+import VueRouter from "vue-router";
+import App from "./App";
+import store from "./store";
+import filters from "./filters";
+Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]));
 
-Vue.use(APIOAKRouter);
-Vue.use(APIOAKCookie);
-Vue.use(APIOAKElement);
-Vue.use(APIOAKBackend);
-Vue.use(APIOAKRequest);
-Vue.use(APIOAKConst);
+//font
+import "./assets/font/iconfont.css";
+import "./assets/scss/common.scss";
 
-Vue.config.productionTip = false;
+// router setup
+import routes from "./routes/routes";
 
+// Plugins
+import GlobalComponents from "./globalComponents";
+import GlobalDirectives from "./globalDirectives";
+import Notifications from "./components/NotificationPlugin";
+import DialogBox from "./components/Dialog";
+import Vuelidate from "vuelidate";
+
+// MaterialDashboard plugin
+import MaterialDashboard from "./material-dashboard";
+import Chartist from "chartist";
+
+// configure router
+const router = new VueRouter({
+  routes, // short for routes: routes
+  linkExactActiveClass: "nav-item active",
+});
+
+Vue.prototype.$Chartist = Chartist;
+
+Vue.use(VueRouter);
+Vue.use(MaterialDashboard);
+Vue.use(GlobalComponents);
+Vue.use(GlobalDirectives);
+Vue.use(Notifications);
+Vue.use(DialogBox);
+Vue.use(Vuelidate);
+
+/* eslint-disable no-new */
 new Vue({
-  router: APIOAKRouter,
-  store: APIOAKStore,
-  render: h => h(App),
-}).$mount("#app");
+  el: "#app",
+  render: (h) => h(App),
+  router,
+  store,
+  data: {
+    Chartist: Chartist,
+  },
+});
