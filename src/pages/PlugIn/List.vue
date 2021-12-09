@@ -23,7 +23,12 @@
           <div class="md-layout-item">
             <md-field>
               <label>选择插件</label>
-              <md-select name="plugin_id" id="plugin_id" md-dense>
+              <md-select
+                name="plugin_id"
+                id="plugin_id"
+                @md-selected="pluginChange"
+                md-dense
+              >
                 <md-option
                   v-for="(item, index) in plugInSettingList"
                   :key="index"
@@ -34,44 +39,66 @@
             </md-field>
           </div>
         </div>
-        <div class="md-layout md-gutter">
+        <div class="md-layout md-gutter" v-if="plugInInfo">
           <div class="md-layout-item">
             <md-field>
               <label>插件标识</label>
-              <md-input></md-input>
+              <md-input :value="plugInInfo.tag" disabled></md-input>
             </md-field>
           </div>
         </div>
-        <div class="md-layout md-gutter" v-if="plugInTypeList.length > 0">
+        <div
+          class="md-layout md-gutter"
+          v-if="plugInInfo && Object.keys(plugInTypeList).length > 0"
+        >
           <div class="md-layout-item">
             <md-field>
               <label>插件类型</label>
-              <md-select name="plugin_type" id="plugin_type" md-dense>
+              <md-select
+                name="plugin_type"
+                id="plugin_type"
+                v-model="plugInInfo.type"
+                disabled
+                md-dense
+              >
                 <md-option
                   v-for="(item, index) in plugInTypeList"
                   :key="index"
-                  :value="item.id"
-                >{{ item.name }}</md-option>
+                  :value="index"
+                  >{{ item }}</md-option
+                >
               </md-select>
             </md-field>
           </div>
         </div>
-        <div class="md-layout md-gutter">
+        <div class="md-layout md-gutter" v-if="plugInInfo">
           <div class="md-layout-item">
             <md-field>
               <label>插件描述</label>
-              <md-input></md-input>
+              <md-input :value="plugInInfo.description" disabled></md-input>
             </md-field>
+          </div>
+        </div>
+        <div class="md-layout md-gutter">
+          <div class="md-layout-item">
+            <label class="form-label">启用：</label>
+            <md-switch v-model="form.is_enable" class="md-primary" />
           </div>
         </div>
       </div>
       <div v-show="plugAddSetting">
-        <div class="md-layout md-gutter">
-          <div class="md-layout-item">
-            <md-field>
-              <label>secret</label>
-              <md-input required></md-input>
-            </md-field>
+        <div v-if="plugInInfo">
+          <div
+            class="md-layout md-gutter"
+            v-for="(item, index) in form.config"
+            :key="index"
+          >
+            <div class="md-layout-item">
+              <md-field>
+                <label>{{ index }}</label>
+                <md-input v-model="form.config[index]"></md-input>
+              </md-field>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +106,9 @@
         <md-button class="md-raised md-mini" @click="addPlugIn = false"
           >取消</md-button
         >
-        <md-button class="md-raised md-mini md-success">保存</md-button>
+        <md-button class="md-raised md-mini md-success" @click="submitForm"
+          >保存</md-button
+        >
       </div>
     </md-card>
     <div class="plug-table md-clear">
@@ -89,6 +118,7 @@
         <div class="plug-th" style="width: 100px">标识</div>
         <div class="plug-th" style="width: 80px">类型</div>
         <div class="plug-th" style="width: 150px">描述</div>
+        <div class="plug-th" style="width: 60px">发布</div>
         <div class="plug-th" style="width: 60px">启用</div>
         <div class="plug-th" style="width: 100px">操作</div>
       </div>
@@ -106,32 +136,41 @@
         <div class="plug-td" style="width: 150px">{{ item.description }}</div>
         <div class="plug-td" style="width: 60px">
           <md-switch
+            v-if="!item.is_release"
+            v-model="item.is_release"
+            class="md-primary"
+            @change="putSwitchRelease(item)"
+          ></md-switch>
+          <md-button class="md-icon-button md-primary" v-else>已发布</md-button>
+        </div>
+        <div class="plug-td" style="width: 60px">
+          <md-switch
             v-model="item.is_enable"
             class="md-primary"
             @change="putSwitchEnable(item)"
           ></md-switch>
         </div>
         <div class="plug-td list_manage" style="width: 100px">
-          <i class="iconfont icon-xiugai" @click="editShow(item, true)" />
+          <i class="iconfont icon-xiugai" @click="editShow(item, true)">
+            <md-tooltip md-direction="top">修改</md-tooltip>
+          </i>
           <i
             class="iconfont icon-shanchu"
             @click="deleteRoutePlugin(item.id, item.plugin_id)"
-          />
+          ><md-tooltip md-direction="top">删除</md-tooltip></i>
         </div>
         <div class="plug-tr-form" v-if="item.is_edit" :key="item.id">
-          <md-field>
-            <label>rate</label>
-            <md-input></md-input>
-          </md-field>
-          <md-field>
-            <label>burst</label>
-            <md-input></md-input>
+          <md-field v-for="(value, label) in item.config" :key="label">
+            <label>{{ label }}</label>
+            <md-input v-model="item.config[label]" />
           </md-field>
           <div class="service-button">
             <md-button class="md-raised" @click="editShow(item, false)"
               >取消</md-button
             >
-            <md-button class="md-raised md-success">保存</md-button>
+            <md-button class="md-raised md-success" @click="configSubmit(item)"
+              >保存</md-button
+            >
           </div>
         </div>
       </div>
@@ -163,11 +202,11 @@ export default {
       plugInList: [],
       plugInSettingList: [],
       plugInTypeList: {},
+      plugInInfo: null,
       form: {
-        plugin_id: "",
         config: {},
-        is_enable: true,
-        order: 0,
+        is_enable: 2,
+        order: 10,
       },
     };
   },
@@ -188,9 +227,11 @@ export default {
           this.plugInList = res.data || [];
           if (this.plugInList.length > 0) {
             this.plugInList.forEach((item, index) => {
+              item.is_release = item.is_release === 1;
               item.is_enable = item.is_enable === 1;
               item.is_edit = false;
               item.type_cn = this.plugInTypeList[item.type] || "";
+              item.config = JSON.parse(item.config || "[]");
             });
           }
         }
@@ -210,9 +251,39 @@ export default {
         }
       });
     },
-    getPlugInfo: function() {
-
+    pluginChange: function (value) {
+      this.plugInInfo = null;
+      ApiPlugIn.info(value).then((res) => {
+        if (res.code === 0) {
+          this.plugInInfo = res.data;
+          this.plugInInfo.is_enable = this.plugInInfo.is_enable === 1;
+          this.form.config = res.data.config;
+        } else {
+          this.$notify({ message: res.msg });
+        }
+      });
     },
+
+    /**
+     * 路由插件发布
+     */
+    putSwitchRelease: function (item) {
+      let status = item.is_release === true ? 1 : 2;
+      ApiRoute.putSwitchRoutePluginRelease(
+        this.routeId,
+        item.plugin_id,
+        item.id,
+        status
+      ).then((res) => {
+        if (res.code !== 0) {
+          item.is_release = !item.is_release;
+          this.$notify({ message: res.msg });
+        } else {
+          this.$notify({ message: res.msg, type: "success" });
+        }
+      });
+    },
+
     /**
      * 路由插件开关
      */
@@ -225,9 +296,10 @@ export default {
         status
       ).then((res) => {
         if (res.code === 0) {
+          item.is_release = false;
           this.$notify({ message: "修改成功", type: "success" });
         } else {
-          item.is_enable = false;
+          item.is_enable = !item.is_enable;
           this.$notify({ message: res.msg });
         }
       });
@@ -235,6 +307,26 @@ export default {
     editShow: function (item, isEdit) {
       item.is_edit = isEdit;
       this.$forceUpdate();
+    },
+    configSubmit: function (item) {
+      let configParams = {
+        is_enable: item.is_enable === true ? 1 : 2,
+        order: 10,
+        config: item.config,
+      };
+      ApiRoute.updateRoutePlugin(
+        this.routeId,
+        item.plugin_id,
+        item.id,
+        configParams
+      ).then((res) => {
+        if (res.code === 0) {
+          this.$notify({ message: "修改成功", type: "success" });
+          this.getList();
+        } else {
+          this.$notify({ message: res.msg });
+        }
+      });
     },
     deleteRoutePlugin: function (id, pluginId) {
       this.$dialog
@@ -253,15 +345,33 @@ export default {
           });
         });
     },
-    getPlugInType: function() {
+    getPlugInType: function () {
       return ApiPlugIn.typeList().then((res) => {
         let typeEnum = {};
         if (res.code === 0) {
-          res.data.forEach(function(item, index) {
+          res.data.forEach(function (item, index) {
             typeEnum[item.id] = item.name;
           });
         }
         this.plugInTypeList = typeEnum;
+      });
+    },
+    submitForm: function () {
+      let formData = JSON.parse(JSON.stringify(this.form));
+      formData.is_enable = formData.is_enable === true ? 1 : 2;
+      ApiRoute.addRoutePlugin(
+        this.serviceId,
+        this.routeId,
+        this.plugInInfo.id,
+        formData
+      ).then((res) => {
+        if (res.code === 0) {
+          this.addPlugIn = false;
+          this.getList();
+          this.$notify({ message: res.msg, type: "success" });
+        } else {
+          this.$notify({ message: res.msg });
+        }
       });
     },
     plugTab: function (tabName) {

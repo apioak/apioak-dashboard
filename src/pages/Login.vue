@@ -5,7 +5,7 @@
       <div
         class="
           md-layout-item
-          md-size-20
+          md-size-30
           md-medium-size-33
           md-small-size-70
           md-xsmall-size-100
@@ -21,14 +21,24 @@
               <md-icon>email</md-icon>
               <label>邮箱...</label>
               <md-input v-model.trim="email" required></md-input>
-              <span class="md-error" v-if="!$v.email.required">邮箱不能为空</span>
-              <span class="md-error" v-if="!$v.email.email">邮箱格式不正确</span>
+              <span class="md-error" v-if="!$v.email.required"
+                >邮箱不能为空</span
+              >
+              <span class="md-error" v-if="!$v.email.email"
+                >邮箱格式不正确</span
+              >
             </md-field>
             <md-field :class="getValidationClass('password')">
               <md-icon>lock_outline</md-icon>
               <label>密码...</label>
-              <md-input v-model.trim="password" type="password" required></md-input>
-              <span class="md-error" v-if="!$v.password.required">密码不能为空</span>
+              <md-input
+                v-model.trim="password"
+                type="password"
+                required
+              ></md-input>
+              <span class="md-error" v-if="!$v.password.required"
+                >密码不能为空</span
+              >
             </md-field>
             <div class="login-button">
               <md-button class="md-raised md-success" @click="login"
@@ -63,7 +73,7 @@ export default {
   },
   mounted() {},
   methods: {
-    getValidationClass: function(fieldName) {
+    getValidationClass: function (fieldName) {
       const field = this.$v[fieldName];
       if (field) {
         return {

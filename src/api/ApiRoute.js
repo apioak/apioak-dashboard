@@ -46,6 +46,20 @@ export default {
   },
 
   /**
+   * 路由修改
+   * @param id
+   * @param params
+   * @returns {Promise<unknown>}
+   */
+  copy: (id, params) => {
+    return request(
+      "admin/route/copy/" + params.service_id + "/" + id,
+      params,
+      "post"
+    );
+  },
+
+  /**
    * 路由名称更新
    * @param serviceId
    * @param id
@@ -56,6 +70,21 @@ export default {
     return request(
       "admin/route/update/name/" + serviceId + "/" + id,
       { name: name },
+      "put"
+    );
+  },
+
+  /**
+   * 路由发布
+   * @param serviceId
+   * @param id
+   * @param isRelease
+   * @returns {Promise<unknown>}
+   */
+  putSwitchRelease: (serviceId, id, isRelease) => {
+    return request(
+      "admin/route/switch/release/" + serviceId + "/" + id,
+      { is_release: isRelease },
       "put"
     );
   },
@@ -132,7 +161,40 @@ export default {
    * @returns {Promise<unknown>}
    */
   routePluginInfo: (routeId, plugInId, routePlugInId) => {
-    return request("admin/route/plugin/info/" + routeId + "/" + plugInId + "/" + routePlugInId);
+    return request(
+      "admin/route/plugin/info/" +
+        routeId +
+        "/" +
+        plugInId +
+        "/" +
+        routePlugInId
+    );
+  },
+
+  /**
+   * 【路由-插件】路由插件发布更新
+   * @param routeId
+   * @param plugInId
+   * @param routePlugInId
+   * @param isRelease
+   * @returns {Promise<unknown>}
+   */
+  putSwitchRoutePluginRelease: (
+    routeId,
+    plugInId,
+    routePlugInId,
+    isRelease
+  ) => {
+    return request(
+      "admin/route/plugin/switch/release/" +
+        routeId +
+        "/" +
+        plugInId +
+        "/" +
+        routePlugInId,
+      { is_release: isRelease },
+      "put"
+    );
   },
 
   /**

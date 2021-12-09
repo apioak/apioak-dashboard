@@ -5,7 +5,7 @@
       <div
         class="
           md-layout-item
-          md-size-20
+          md-size-30
           md-medium-size-33
           md-small-size-70
           md-xsmall-size-100
@@ -21,14 +21,20 @@
               <md-icon>face</md-icon>
               <label>用户...</label>
               <md-input v-model="form.name" id="name" required></md-input>
-              <span class="md-error" v-if="!$v.form.name.required">用户不能为空</span>
+              <span class="md-error" v-if="!$v.form.name.required"
+                >用户不能为空</span
+              >
             </md-field>
             <md-field :class="getValidationClass('email')">
               <md-icon>email</md-icon>
               <label>邮箱...</label>
               <md-input v-model="form.email" id="email" required></md-input>
-              <span class="md-error" v-if="!$v.form.email.required">邮箱不能为空</span>
-              <span class="md-error" v-if="!$v.form.email.email">邮箱格式不正确</span>
+              <span class="md-error" v-if="!$v.form.email.required"
+                >邮箱不能为空</span
+              >
+              <span class="md-error" v-if="!$v.form.email.email"
+                >邮箱格式不正确</span
+              >
             </md-field>
             <md-field :class="getValidationClass('password')">
               <md-icon>lock_outline</md-icon>
@@ -39,7 +45,9 @@
                 id="password"
                 required
               ></md-input>
-              <span class="md-error" v-if="!$v.form.password.required">密码不能为空</span>
+              <span class="md-error" v-if="!$v.form.password.required"
+                >密码不能为空</span
+              >
             </md-field>
             <md-field :class="getValidationClass('re_password')">
               <md-icon>lock_outline</md-icon>
@@ -50,8 +58,12 @@
                 id="re_password"
                 required
               ></md-input>
-              <span class="md-error" v-if="!$v.form.re_password.required">确认密码不能为空</span>
-              <span class="md-error" v-if="!$v.form.re_password.sameAsPassword">密码不一致</span>
+              <span class="md-error" v-if="!$v.form.re_password.required"
+                >确认密码不能为空</span
+              >
+              <span class="md-error" v-if="!$v.form.re_password.sameAsPassword"
+                >密码不一致</span
+              >
             </md-field>
             <div class="login-button">
               <md-button class="md-raised md-success" @click="register"
@@ -93,13 +105,13 @@ export default {
       password: { required },
       re_password: {
         required,
-        sameAsPassword: sameAs("password")
+        sameAsPassword: sameAs("password"),
       },
     },
   },
   mounted() {},
   methods: {
-    getValidationClass: function(fieldName) {
+    getValidationClass: function (fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
         return {

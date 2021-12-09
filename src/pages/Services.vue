@@ -50,25 +50,45 @@
                   ></md-input>
                 </md-field>
               </div>
-              <div class="md-layout-item">
+              <div class="md-layout-item text-right">
                 <md-button
                   class="md-raised md-success addNode"
                   @click="drawerService('')"
-                  ><i class="iconfont icon-addNode" /> 新增服务</md-button
+                ><i class="iconfont icon-addNode" /> 新增服务</md-button
                 >
               </div>
             </div>
             <md-table v-model="serviceList">
               <md-table-row slot="md-table-row" slot-scope="{ item }">
-                <md-table-cell md-label="ID/名称"
-                  >{{ item.id }}<br />{{ item.name }}</md-table-cell
-                >
+                <md-table-cell md-label="ID/名称">
+                  <router-link :to="{ name: 'ServiceDetail', params: { service_id: item.id } }">
+                    {{ item.id }}
+                  </router-link><br />
+                  <span v-if="!item.edit_name">
+                    {{ item.name }}
+                    <i
+                      class="iconfont icon-xiugai"
+                      @click="editServiceName(item)"
+                    />
+                  </span>
+                  <md-field class="field-edit-name" v-else>
+                    <md-input
+                      v-model="item.name"
+                      @blur="saveServiceName(item)"
+                    />
+                  </md-field>
+                </md-table-cell>
                 <md-table-cell md-label="域名">
-                  <div
-                    v-for="(domain, domainIndex) in item.service_domains"
-                    :key="domainIndex"
-                  >
-                    {{ domain }}
+                  <div style="cursor: pointer">
+                    {{item.service_domains[0]}}<span v-if="Object.keys(item.service_domains).length > 1">...</span>
+                    <md-tooltip md-direction="top">
+                      <div
+                          v-for="(domain, domainIndex) in item.service_domains"
+                          :key="domainIndex"
+                      >
+                        {{ domain }}
+                      </div>
+                    </md-tooltip>
                   </div>
                 </md-table-cell>
                 <md-table-cell md-label="协议">{{
@@ -91,6 +111,17 @@
                     class="md-primary"
                   ></md-switch>
                 </md-table-cell>
+                <md-table-cell md-label="发布">
+                  <md-switch
+                    v-if="!item.is_release"
+                    v-model="item.is_release"
+                    @change="putSwitchRelease(item)"
+                    class="md-primary"
+                  ></md-switch>
+                  <md-button class="md-icon-button md-primary" v-else
+                    >已发布</md-button
+                  >
+                </md-table-cell>
                 <md-table-cell md-label="启用">
                   <md-switch
                     v-model="item.is_enable"
@@ -101,19 +132,21 @@
                 <md-table-cell md-label="操作" class="list_manage">
                   <router-link
                     :to="{
-                      name: 'ServiceDetail',
+                      name: 'ServiceRoute',
                       params: { service_id: item.id },
                     }"
-                    ><i class="iconfont icon-lianjie"
-                  /></router-link>
+                  ><i class="iconfont icon-lianjie">
+                    <md-tooltip md-direction="top">路由</md-tooltip>
+                  </i>
+                  </router-link>
                   <i
                     class="iconfont icon-xiugai"
                     @click="drawerService(item.id)"
-                  />
+                  ><md-tooltip md-direction="top">修改</md-tooltip></i>
                   <i
                     class="iconfont icon-shanchu"
                     @click="deleteService(item.id)"
-                  />
+                  ><md-tooltip md-direction="top">删除</md-tooltip></i>
                 </md-table-cell>
               </md-table-row>
             </md-table>
@@ -135,7 +168,6 @@
       v-if="isShow"
       :display.sync="drawerDisplay"
       :inner="true"
-      :mask="false"
     >
       <ServiceModify
         v-if="isShow"
@@ -152,6 +184,7 @@ import Pager from "../components/Common/Pager";
 import Drawer from "../components/Common/Drawer";
 import ServiceModify from "./Service/Modify";
 import ApiService from "../api/ApiService";
+import ApiRoute from "../api/ApiRoute";
 
 export default {
   components: {
@@ -204,7 +237,9 @@ export default {
           this.serviceList.forEach(function (item) {
             item.health_check = item.health_check === 1;
             item.web_socket = item.web_socket === 1;
+            item.is_release = item.is_release === 1;
             item.is_enable = item.is_enable === 1;
+            item.edit_name = false;
           });
         }
       });
@@ -219,6 +254,24 @@ export default {
       });
       this.currentServiceId = id;
       this.drawerDisplay = true;
+    },
+    /**
+     * 修改名称
+     */
+    editServiceName: function (item) {
+      item.edit_name = true;
+      this.$forceUpdate();
+    },
+    saveServiceName: function (item) {
+      ApiService.putName(item.id, item.name).then((res) => {
+        if (res.code !== 0) {
+          this.$notify({ message: res.msg });
+        } else {
+          item.edit_name = false;
+          this.$forceUpdate();
+          this.$notify({ message: res.msg, type: "success" });
+        }
+      });
     },
     /**
      * 删除
@@ -246,8 +299,11 @@ export default {
       let status = item.health_check === true ? 1 : 2;
       ApiService.putSwitchHealthCheck(item.id, status).then((res) => {
         if (res.code !== 0) {
-          item.health_check = false;
+          item.health_check = !item.health_check;
           this.$notify({ message: res.msg });
+        } else {
+          item.is_release = false;
+          this.$notify({ message: res.msg, type: "success" });
         }
       });
     },
@@ -258,20 +314,40 @@ export default {
       let status = item.web_socket === true ? 1 : 2;
       ApiService.putSwitchWebsocket(item.id, status).then((res) => {
         if (res.code !== 0) {
-          item.web_socket = false;
+          item.web_socket = !item.web_socket;
           this.$notify({ message: res.msg });
+        } else {
+          item.is_release = false;
+          this.$notify({ message: res.msg, type: "success" });
+        }
+      });
+    },
+    /**
+     * 服务发布
+     */
+    putSwitchRelease: function (item) {
+      let status = item.is_release === true ? 1 : 2;
+      ApiService.putSwitchRelease(item.id, status).then((res) => {
+        if (res.code !== 0) {
+          item.is_release = !item.is_release;
+          this.$notify({ message: res.msg });
+        } else {
+          this.$notify({ message: res.msg, type: "success" });
         }
       });
     },
     /**
      * 服务开关
      */
-    putSwitchEnable: function (item) {
+    putSwitchEnable: function (item, index) {
       let status = item.is_enable === true ? 1 : 2;
       ApiService.putSwitchEnable(item.id, status).then((res) => {
         if (res.code !== 0) {
-          item.is_enable = false;
+          item.is_enable = !item.is_enable;
           this.$notify({ message: res.msg });
+        } else {
+          item.is_release = false;
+          this.$notify({ message: res.msg, type: "success" });
         }
       });
     },
@@ -296,5 +372,8 @@ export default {
     line-height: 17px;
     margin-right: 5px;
   }
+}
+.icon-xiugai {
+  cursor: pointer;
 }
 </style>

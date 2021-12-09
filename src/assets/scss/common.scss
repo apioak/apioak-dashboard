@@ -12,6 +12,13 @@
   }
 }
 .md-list.md-dense .md-list-item-text {
-  line-height: 40px;
-  text-indent: 10px;
+  /*line-height: 40px !important;
+  text-indent: 10px !important;*/
+  position: static !important;
+}
+.md-select-menu .md-checkbox {
+  margin-right: 6px !important;
+}
+.field-edit-name {
+  margin: 0 !important;
 }

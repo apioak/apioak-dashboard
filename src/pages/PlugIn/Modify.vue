@@ -29,7 +29,7 @@
               v-for="(item, index) in plugInTypeList"
               :key="index"
               :value="index"
-            >{{ item }}</md-option
+              >{{ item }}</md-option
             >
           </md-select>
         </md-field>
@@ -105,11 +105,11 @@ export default {
         }
       });
     },
-    getPlugInType: function() {
+    getPlugInType: function () {
       return ApiPlugIn.typeList().then((res) => {
         let typeEnum = {};
         if (res.code === 0) {
-          res.data.forEach(function(item, index) {
+          res.data.forEach(function (item, index) {
             typeEnum[item.id] = item.name;
           });
         }

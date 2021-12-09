@@ -5,7 +5,9 @@
         <md-field :class="getValidationClass('certificate')">
           <label>证书内容</label>
           <md-input v-model="form.certificate" required></md-input>
-          <span class="md-error" v-if="!$v.form.certificate.required">证书不能为空</span>
+          <span class="md-error" v-if="!$v.form.certificate.required"
+            >证书不能为空</span
+          >
         </md-field>
       </div>
     </div>
@@ -14,7 +16,9 @@
         <md-field :class="getValidationClass('private_key')">
           <label>私钥内容</label>
           <md-input v-model="form.private_key" required></md-input>
-          <span class="md-error" v-if="!$v.form.private_key.required">私钥内容不能为空</span>
+          <span class="md-error" v-if="!$v.form.private_key.required"
+            >私钥内容不能为空</span
+          >
         </md-field>
       </div>
     </div>
@@ -66,7 +70,7 @@ export default {
     this.getInfo();
   },
   methods: {
-    getValidationClass: function(fieldName) {
+    getValidationClass: function (fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
         return {

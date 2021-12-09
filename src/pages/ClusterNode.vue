@@ -66,7 +66,7 @@
                   <i
                     class="iconfont icon-shanchu"
                     @click="deleteClusterNode(item.id)"
-                  />
+                  ><md-tooltip md-direction="top">删除</md-tooltip></i>
                 </md-table-cell>
               </md-table-row>
             </md-table>

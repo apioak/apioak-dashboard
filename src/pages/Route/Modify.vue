@@ -13,18 +13,21 @@
         <md-field :class="getValidationClass('route_path')">
           <label>路由路径</label>
           <md-input v-model="form.route_path" required />
-          <span class="md-error" v-if="!$v.form.route_path.required">路由路径不能为空</span>
+          <span class="md-error" v-if="!$v.form.route_path.required"
+            >路由路径不能为空</span
+          >
         </md-field>
       </div>
     </div>
     <div class="md-layout md-gutter">
-      <div class="md-layout-item">
+      <div class="md-layout-item request_methods">
         <md-field :class="getValidationClass('request_methods')">
           <label>请求方法</label>
           <md-select
             v-model="form.request_methods"
             name="request_methods"
             id="request_methods"
+            md-dense
             multiple
             required
           >
@@ -34,7 +37,9 @@
             <md-option value="PUT">PUT</md-option>
             <md-option value="DELETE">DELETE</md-option>
           </md-select>
-          <span class="md-error" v-if="!$v.form.request_methods.required">请求方法不能为空</span>
+          <span class="md-error" v-if="!$v.form.request_methods.required"
+            >请求方法不能为空</span
+          >
         </md-field>
       </div>
     </div>
@@ -96,7 +101,7 @@ export default {
     },
   },
   methods: {
-    getValidationClass: function(fieldName) {
+    getValidationClass: function (fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
         return {
@@ -130,9 +135,11 @@ export default {
       formData.is_enable = formData.is_enable === true ? 1 : 2;
       formData.service_id = this.serviceId;
       formData.request_methods = formData.request_methods.join(",");
-      if (this.routeId && !this.isCopy) {
+      if (this.isCopy) { //复制
+        routeHttp = ApiRoute.copy(this.routeId, formData);
+      } else if (this.routeId) { //修改
         routeHttp = ApiRoute.put(this.routeId, formData);
-      } else {
+      } else { //添加
         routeHttp = ApiRoute.post(this.serviceId, formData);
       }
       routeHttp.then((res) => {
@@ -168,9 +175,5 @@ export default {
   button {
     margin-right: 15px;
   }
-}
-.md-list-item-text {
-  line-height: 50px !important;
-  text-indent: 50px !important;
 }
 </style>
