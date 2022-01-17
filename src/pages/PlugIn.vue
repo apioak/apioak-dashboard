@@ -10,21 +10,6 @@
           </md-card-header>
           <md-card-content>
             <div class="md-layout md-gutter">
-              <!--<div class="md-layout-item">
-                <md-field>
-                  <label>启用状态</label>
-                  <md-select
-                    name="is_enable"
-                    id="is_enable"
-                    v-model="plugInParams.is_enable"
-                    md-dense
-                  >
-                    <md-option value="0">ALL</md-option>
-                    <md-option value="1">ON</md-option>
-                    <md-option value="2">OFF</md-option>
-                  </md-select>
-                </md-field>
-              </div>-->
               <div class="md-layout-item">
                 <md-field>
                   <label>搜索内容</label>
@@ -33,8 +18,8 @@
               </div>
               <div class="md-layout-item">
                 <md-button
-                  class="md-raised md-success addNode"
-                  @click="drawerDisplay = true"
+                  class="md-raised md-primary addNode"
+                  @click="drawerPlugIn('')"
                   ><i class="iconfont icon-addNode" /> 新增插件</md-button
                 >
               </div>
@@ -42,20 +27,16 @@
             <md-table v-model="plugInList">
               <md-table-row slot="md-table-row" slot-scope="{ item }">
                 <md-table-cell md-label="ID/名称"
-                >{{ item.id }}<br />{{ item.name }}</md-table-cell
+                  >{{ item.id }}<br />{{ item.name }}</md-table-cell
                 >
-                <md-table-cell md-label="ICON">{{
-                    item.icon
-                  }}</md-table-cell>
-                <md-table-cell md-label="TAG">{{
-                    item.tag
-                  }}</md-table-cell>
+                <md-table-cell md-label="ICON">{{ item.icon }}</md-table-cell>
+                <md-table-cell md-label="TAG">{{ item.tag }}</md-table-cell>
                 <md-table-cell md-label="类型">{{
-                    item.type_cn
-                  }}</md-table-cell>
+                  item.type_cn
+                }}</md-table-cell>
                 <md-table-cell md-label="描述">{{
-                    item.description
-                  }}</md-table-cell>
+                  item.description
+                }}</md-table-cell>
                 <md-table-cell md-label="操作" class="list_manage">
                   <i
                     class="iconfont icon-xiugai"
@@ -83,7 +64,6 @@
       title="新增插件"
       :display.sync="drawerDisplay"
       :inner="true"
-      :mask="false"
       width="500px"
     >
       <PlugInModify
@@ -156,11 +136,11 @@ export default {
         }
       });
     },
-    getPlugInType: function() {
+    getPlugInType: function () {
       return ApiPlugIn.typeList().then((res) => {
         let typeEnum = {};
         if (res.code === 0) {
-          res.data.forEach(function(item, index) {
+          res.data.forEach(function (item, index) {
             typeEnum[item.id] = item.name;
           });
         }

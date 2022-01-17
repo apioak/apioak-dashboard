@@ -1,33 +1,31 @@
 <template>
   <ul class="nav nav-mobile-menu">
     <li>
-      <md-field>
-        <label>Search</label>
-        <md-input v-model="search" type="text"></md-input>
-      </md-field>
-    </li>
-    <li>
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="material-icons">dashboard</i>
-        <p>Dashboard</p></a
-      >
-    </li>
-    <li>
       <a href="#" data-toggle="dropdown" class="dropdown-toggle"
         ><i class="material-icons">person</i>
-        <p>Profile</p></a
+        <p @click="logout">退出</p></a
       >
     </li>
   </ul>
 </template>
 <script>
+import ApiUser from "../../api/ApiUser";
+
 export default {
-  data() {
-    return {
-      search: null,
-      selectedEmployee: null,
-      employees: [],
-    };
+  methods: {
+    toggleSidebar() {
+      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+    },
+    logout: function () {
+      ApiUser.logout().then((res) => {
+        if (res.code === 0) {
+          this.$store.commit("setToken", "");
+          this.$router.push({ name: "Login" });
+        } else {
+          this.$notify({ message: res.msg });
+        }
+      });
+    },
   },
 };
 </script>

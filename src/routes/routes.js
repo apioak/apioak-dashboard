@@ -56,7 +56,7 @@ const routes = [
         component: ClusterNode,
       },
       {
-        path: "plug-in",
+        path: "plugin",
         name: "PlugIn",
         component: PlugIn,
       },

@@ -6,7 +6,7 @@
 <script>
 export default {};
 </script>
-<style>
+<style lang="scss" scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.1s;

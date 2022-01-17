@@ -2,7 +2,7 @@
     display: inline-block;
     position: relative;
     width: 100%;
-    margin: 25px 0;
+    margin: 10px 0 0 0;
     overflow: unset;
 
     box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
@@ -357,6 +357,26 @@
     &.md-card-plain{
         .card-avatar{
             margin-top: 0;
+        }
+    }
+}
+
+.list-header {
+    .list-header-icon {
+        &[data-color="blue"]{
+            @include set-background-color-icon($brand-primary);
+        }
+        &[data-color="green"]{
+            @include set-background-color-icon($brand-success);
+        }
+        &[data-color="orange"]{
+            @include set-background-color-icon($brand-warning);
+        }
+        &[data-color="red"]{
+            @include set-background-color-icon($brand-danger);
+        }
+        &[data-color="defatle"]{
+            @include set-background-color-icon($brand-primary);
         }
     }
 }

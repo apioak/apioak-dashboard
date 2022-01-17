@@ -50,7 +50,7 @@ export default {
     // 宽度
     width: {
       type: String,
-      default: "400px",
+      default: "700px",
     },
 
     // 是否在父级元素中打开

@@ -278,6 +278,11 @@
     }
 }
 
+@mixin set-background-color-icon($color) {
+  background-color: $color !important;
+  @include shadow-big-color($color);
+}
+
 // for social buttons
 @mixin social-buttons-color ($color){
     background-color: $color !important;

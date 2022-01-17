@@ -5,7 +5,7 @@
   ));
 
 @include md-register-theme("default", (
-  primary: md-get-palette-color(green, 500), // The primary color of your application
+  primary: md-get-palette-color(blue, 600), // The primary color of your application
 ));
 
 
@@ -111,7 +111,7 @@ $blue-A100: #82b1ff !default;
 $blue-A200: #448aff !default;
 $blue-A400: #2979ff !default;
 $blue-A700: #2962ff !default;
-$blue: $blue-500 !default;
+$blue: $blue-600 !default;
 
 
 $light-blue-50: #e1f5fe !default;

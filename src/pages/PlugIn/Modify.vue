@@ -29,7 +29,7 @@
               v-for="(item, index) in plugInTypeList"
               :key="index"
               :value="index"
-            >{{ item }}</md-option
+              >{{ item }}</md-option
             >
           </md-select>
         </md-field>
@@ -55,7 +55,7 @@
       <md-button class="md-raised" @click="$emit('closeDrawer')"
         >取消</md-button
       >
-      <md-button class="md-raised md-success" @click="submitForm"
+      <md-button class="md-raised md-primary" @click="submitForm"
         >保存</md-button
       >
     </div>
@@ -105,11 +105,11 @@ export default {
         }
       });
     },
-    getPlugInType: function() {
+    getPlugInType: function () {
       return ApiPlugIn.typeList().then((res) => {
         let typeEnum = {};
         if (res.code === 0) {
-          res.data.forEach(function(item, index) {
+          res.data.forEach(function (item, index) {
             typeEnum[item.id] = item.name;
           });
         }
@@ -127,7 +127,7 @@ export default {
       }
       plugInHttp.then((res) => {
         if (res.code === 0) {
-          this.$notify({ message: res.msg, type: "success" });
+          this.$notify({ message: res.msg, type: "blue" });
           return this.$emit("saveHandle");
         } else {
           this.$notify({ message: res.msg });

@@ -35,8 +35,12 @@
                 v-model.trim="form.service_nodes[index].node_ip"
                 required
               />
-              <span class="md-error" v-if="!item.node_ip.required">上游节点不能为空</span>
-              <span class="md-error" v-if="!item.node_ip.ipAddress">上游节点格式有误</span>
+              <span class="md-error" v-if="!item.node_ip.required"
+                >上游节点不能为空</span
+              >
+              <span class="md-error" v-if="!item.node_ip.ipAddress"
+                >上游节点格式有误</span
+              >
             </md-field>
           </div>
           <div class="md-layout-item md-size-20">
@@ -46,15 +50,23 @@
                 v-model.number="form.service_nodes[index].node_port"
                 required
               />
-              <span class="md-error" v-if="!item.node_port.required">端口不能为空</span>
-              <span class="md-error" v-if="!item.node_port.between">端口范围应在1~65535之间</span>
+              <span class="md-error" v-if="!item.node_port.required"
+                >端口不能为空</span
+              >
+              <span class="md-error" v-if="!item.node_port.between"
+                >端口范围应在1~65535之间</span
+              >
             </md-field>
           </div>
           <div class="md-layout-item md-size-20">
             <md-field :class="getValidationClass('service_nodes')">
               <label>权重</label>
-              <md-input v-model.number="form.service_nodes[index].node_weight"/>
-              <span class="md-error" v-if="!item.node_weight.between">端口范围应在1~100之间</span>
+              <md-input
+                v-model.number="form.service_nodes[index].node_weight"
+              />
+              <span class="md-error" v-if="!item.node_weight.between"
+                >端口范围应在1~100之间</span
+              >
             </md-field>
           </div>
           <div class="md-layout-item md-size-20 service-node">
@@ -81,9 +93,9 @@
         <div v-show="isAdvanced">
           <div class="form-item">
             <label class="form-label">请求协议：</label>
-            <md-radio v-model.number="form.protocol" value="1">HTTP</md-radio>
-            <md-radio v-model.number="form.protocol" value="2">HTTPS</md-radio>
-            <md-radio v-model.number="form.protocol" value="3">HTTP&HTTPS</md-radio>
+            <md-radio v-model="form.protocol" value="1">HTTP</md-radio>
+            <md-radio v-model="form.protocol" value="2">HTTPS</md-radio>
+            <md-radio v-model="form.protocol" value="3">HTTP&HTTPS</md-radio>
           </div>
           <div class="form-item">
             <label class="form-label">健康检查：</label>
@@ -111,14 +123,24 @@
             </md-field>
           </div>
           <div class="form-item">
-            <md-field :class="getValidationClass('connection_timeout', 'timeouts')">
+            <md-field
+              :class="getValidationClass('connection_timeout', 'timeouts')"
+            >
               <label>链接超时（毫秒）</label>
               <md-input
                 v-model.number="form.timeouts.connection_timeout"
                 required
               ></md-input>
-              <span class="md-error" v-if="!$v.form.timeouts.connection_timeout.required">链接超时不能为空</span>
-              <span class="md-error" v-if="!$v.form.timeouts.connection_timeout.integer">链接超时内容必须为数字</span>
+              <span
+                class="md-error"
+                v-if="!$v.form.timeouts.connection_timeout.required"
+                >链接超时不能为空</span
+              >
+              <span
+                class="md-error"
+                v-if="!$v.form.timeouts.connection_timeout.integer"
+                >链接超时内容必须为数字</span
+              >
             </md-field>
           </div>
           <div class="form-item">
@@ -128,8 +150,16 @@
                 v-model.number="form.timeouts.send_timeout"
                 required
               ></md-input>
-              <span class="md-error" v-if="!$v.form.timeouts.send_timeout.required">发送超时不能为空</span>
-              <span class="md-error" v-if="!$v.form.timeouts.send_timeout.integer">发送超时内容必须为数字</span>
+              <span
+                class="md-error"
+                v-if="!$v.form.timeouts.send_timeout.required"
+                >发送超时不能为空</span
+              >
+              <span
+                class="md-error"
+                v-if="!$v.form.timeouts.send_timeout.integer"
+                >发送超时内容必须为数字</span
+              >
             </md-field>
           </div>
           <div class="form-item">
@@ -139,8 +169,16 @@
                 v-model.number="form.timeouts.read_timeout"
                 required
               ></md-input>
-              <span class="md-error" v-if="!$v.form.timeouts.read_timeout.required">读取超时不能为空</span>
-              <span class="md-error" v-if="!$v.form.timeouts.read_timeout.integer">读取超时内容必须为数字</span>
+              <span
+                class="md-error"
+                v-if="!$v.form.timeouts.read_timeout.required"
+                >读取超时不能为空</span
+              >
+              <span
+                class="md-error"
+                v-if="!$v.form.timeouts.read_timeout.integer"
+                >读取超时内容必须为数字</span
+              >
             </md-field>
           </div>
         </div>
@@ -149,7 +187,7 @@
         <md-button class="md-raised" @click="$emit('closeDrawer')"
           >取消</md-button
         >
-        <md-button class="md-raised md-success" @click="submitForm"
+        <md-button class="md-raised md-primary" @click="submitForm"
           >保存</md-button
         >
       </div>
@@ -159,7 +197,12 @@
 
 <script>
 import ApiService from "../../api/ApiService";
-import { required, between, ipAddress, integer } from "vuelidate/lib/validators";
+import {
+  required,
+  between,
+  ipAddress,
+  integer,
+} from "vuelidate/lib/validators";
 export default {
   name: "ServiceModify",
   props: {
@@ -228,8 +271,10 @@ export default {
     this.getInfo();
   },
   methods: {
-    getValidationClass: function(fieldName, parent = '') {
-      const field = parent ? this.$v.form[parent][fieldName] : this.$v.form[fieldName];
+    getValidationClass: function (fieldName, parent = "") {
+      const field = parent
+        ? this.$v.form[parent][fieldName]
+        : this.$v.form[fieldName];
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty,
@@ -272,7 +317,6 @@ export default {
       });
     },
     submitForm: function () {
-      console.log("this.form", this.form);
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
@@ -292,7 +336,7 @@ export default {
       }
       serviceHttp.then((res) => {
         if (res.code === 0) {
-          this.$notify({ message: res.msg, type: "success" });
+          this.$notify({ message: res.msg, type: "primary" });
           return this.$emit("saveHandle");
         } else {
           this.$notify({ message: res.msg });
@@ -306,7 +350,11 @@ export default {
       this.$delete(this.form.service_domains, index);
     },
     addNode: function () {
-      this.form.service_nodes.push({ node_ip: "", node_port: "", node_weight: "" });
+      this.form.service_nodes.push({
+        node_ip: "",
+        node_port: "",
+        node_weight: "",
+      });
     },
     removeNode: function (index) {
       this.$delete(this.form.service_nodes, index);
@@ -354,7 +402,7 @@ export default {
 }
 .icon-tianjia {
   z-index: 99;
-  color: #66bb6a;
+  color: #1e88e5;
   cursor: pointer !important;
 }
 .icon-jian {

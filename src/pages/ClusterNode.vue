@@ -5,9 +5,7 @@
         class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100"
       >
         <md-card>
-          <md-card-header data-background-color="green">
-            <h4 class="title">节点管理</h4>
-          </md-card-header>
+          <list-header :sidebar-item-color="sidebarBackground" icon="icon-jiedian" title="节点管理" title_href="ClusterNode"/>
           <md-card-content>
             <div class="md-layout md-gutter">
               <div class="md-layout-item">
@@ -47,29 +45,44 @@
                 </md-field>
               </div>
             </div>
-            <md-table v-model="clusterNodeList">
-              <md-table-row slot="md-table-row" slot-scope="{ item }">
-                <md-table-cell md-label="节点IP">{{
+          </md-card-content>
+        </md-card>
+
+        <md-card>
+          <md-card-content>
+
+            <md-table>
+
+              <md-table-row class="md-head">
+                <md-table-head>节点IP</md-table-head>
+                <md-table-head>状态</md-table-head>
+                <md-table-head>启用</md-table-head>
+                <md-table-head>操作</md-table-head>
+              </md-table-row>
+
+              <md-table-row v-for="(item, index) in clusterNodeList" :key="index">
+                <md-table-cell>{{
                   item.node_ip
                 }}</md-table-cell>
-                <md-table-cell md-label="状态">{{
+                <md-table-cell>{{
                   item.node_status
                 }}</md-table-cell>
-                <md-table-cell md-label="启用">
+                <md-table-cell>
                   <md-switch
                     v-model="item.is_enable"
                     @change="putSwitchEnable(item)"
                     class="md-primary"
                   ></md-switch>
                 </md-table-cell>
-                <md-table-cell md-label="操作" class="list_manage">
+                <md-table-cell class="list_manage">
                   <i
                     class="iconfont icon-shanchu"
                     @click="deleteClusterNode(item.id)"
-                  />
+                  ><md-tooltip md-direction="top">删除</md-tooltip></i>
                 </md-table-cell>
               </md-table-row>
             </md-table>
+
             <Pager
               v-if="total > 0"
               :pageSize="searchParams.page_size"
@@ -86,10 +99,12 @@
 
 <script>
 import Pager from "../components/Common/Pager";
+import ListHeader from "../components/Common/ListHeader";
 import ApiClusterNode from "../api/ApiClusterNode";
 
 export default {
   components: {
+    ListHeader,
     Pager,
   },
   data() {
@@ -187,5 +202,9 @@ export default {
     line-height: 17px;
     margin-right: 5px;
   }
+}
+.md-gutter {
+  margin-top: -5px;
+  margin-bottom: -20px;
 }
 </style>

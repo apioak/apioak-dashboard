@@ -39,6 +39,20 @@ export default {
   },
 
   /**
+   * 证书发布
+   * @param id
+   * @param isRelease
+   * @returns {Promise<unknown>}
+   */
+  putSwitchRelease: (id, isRelease) => {
+    return request(
+      "admin/certificate/switch/release/" + id,
+      { is_release: isRelease },
+      "put"
+    );
+  },
+
+  /**
    * 证书开关
    * @param id
    * @param isEnable
