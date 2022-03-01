@@ -2,51 +2,43 @@
   <div class="wrapper">
     <notifications></notifications>
     <div class="md-layout login-page">
-      <div
-        class="
-          md-layout-item
-          md-size-30
-          md-medium-size-33
-          md-small-size-70
-          md-xsmall-size-100
-        "
-      >
+      <div class="login-card">
         <md-card>
-          <md-card-header data-background-color="green">
-            <img src="../assets/img/logo.png" class="login-logo" />
-            <h4 class="title">登录</h4>
-          </md-card-header>
+          <div class="logo">
+            <div><img src="../assets/img/logo.png" class="login-logo" /></div>
+            <h1>欢迎登录APIOAK</h1>
+          </div>
           <md-card-content>
             <md-field :class="getValidationClass('email')">
               <md-icon>email</md-icon>
               <label>邮箱...</label>
               <md-input v-model.trim="email" required></md-input>
               <span class="md-error" v-if="!$v.email.required"
-                >邮箱不能为空</span
+              >邮箱不能为空</span
               >
               <span class="md-error" v-if="!$v.email.email"
-                >邮箱格式不正确</span
+              >邮箱格式不正确</span
               >
             </md-field>
             <md-field :class="getValidationClass('password')">
               <md-icon>lock_outline</md-icon>
               <label>密码...</label>
               <md-input
-                v-model.trim="password"
-                type="password"
-                required
+                  v-model.trim="password"
+                  type="password"
+                  required
               ></md-input>
               <span class="md-error" v-if="!$v.password.required"
-                >密码不能为空</span
+              >密码不能为空</span
               >
             </md-field>
             <div class="login-button">
-              <md-button class="md-raised md-success" @click="login"
-                >登录</md-button
+              <md-button class="md-raised md-primary" @click="login"
+              >登录</md-button
               >
             </div>
             <div class="to-login">
-              <router-link :to="{ name: 'Register' }">去注册...</router-link>
+              <router-link :to="{ name: 'Register' }">暂无账号，去注册 ></router-link>
             </div>
           </md-card-content>
         </md-card>
@@ -106,8 +98,7 @@ export default {
 
 .login-page {
   height: 100%;
-  background: url("../assets/img/login.jpg") no-repeat;
-  background-size: 100% 100%;
+  background-color: #E8EFFF;
   width: 100%;
   position: absolute;
   top: 0;
@@ -115,12 +106,17 @@ export default {
   left: 0;
 }
 
-.login-logo {
-  width: 80px;
-  height: 80px;
-}
-.md-card {
-  margin-top: 50px;
+.logo {
+  text-align: center;
+  margin-top: 20px;
+  .login-logo {
+    width: 60px;
+    height: 60px;
+  }
+  h1 {
+    font-size: 20px;
+    margin: 10px 0 0;
+  }
 }
 .md-card-header {
   overflow: hidden;
@@ -141,5 +137,21 @@ export default {
   width: 100%;
   text-align: right;
   margin-right: 15px;
+}
+.login-card {
+  margin-top: -100px;
+  width: 1000px;
+  background: url("../assets/img/login.jpg") no-repeat;
+  background-size: 400px 450px;
+  background-position: left center;
+  display: flex;
+  align-items: center;
+  .md-card{
+    margin-top: 100px;
+    width: 350px !important;
+    height: 400px;
+    margin-left: 520px;
+    box-shadow: 2px 3px 10px rgba(0,0,0,0.2);
+  }
 }
 </style>

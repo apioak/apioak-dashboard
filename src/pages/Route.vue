@@ -51,9 +51,19 @@
 
         <md-card>
           <md-card-content>
-            <md-table v-model="routeList">
-              <md-table-row slot="md-table-row" slot-scope="{ item }">
-                <md-table-cell md-label="ID/名称">
+            <md-table>
+              <md-table-row class="md-head">
+                <md-table-head>ID/名称</md-table-head>
+                <md-table-head>方法</md-table-head>
+                <md-table-head>路径</md-table-head>
+                <md-table-head>插件</md-table-head>
+                <md-table-head>发布</md-table-head>
+                <md-table-head>启用</md-table-head>
+                <md-table-head>操作</md-table-head>
+              </md-table-row>
+
+              <md-table-row v-for="(item, index) in routeList" :key="index">
+                <md-table-cell>
                   {{ item.id }}<br />
                   <span v-if="!item.edit_name">
                     {{ item.route_name }}
@@ -69,38 +79,40 @@
                     />
                   </md-field>
                 </md-table-cell>
-                <md-table-cell md-label="方法">
-                  <md-button
-                      class="md-icon-button md-primary"
-                      v-for="(method, index) in item.request_methods"
-                      :key="index"
-                  >
-                    {{ method }}
-                  </md-button>
+                <md-table-cell>
+                  <span v-for="(method, index) in item.request_methods" :key="index">
+                    <el-tag v-if="method == `ALL`" class="color-black font-bold" >{{ method }}  </el-tag>
+                    <el-tag v-if="method == `GET`" class="color-green font-bold" >{{ method }}  </el-tag>
+                    <el-tag v-if="method == `POST`" class="color-orange font-bold" >{{ method }}  </el-tag>
+                    <el-tag v-if="method == `PUT`" class="color-blue font-bold" >{{ method }}  </el-tag>
+                    <el-tag v-if="method == `DELETE`" class="color-red font-bold" >{{ method }}  </el-tag>
+                    <el-tag v-if="method == `OPTIONS`" class="color-purple font-bold" >{{ method }}  </el-tag>
+                  </span>
                 </md-table-cell>
-                <md-table-cell md-label="路径">{{
+                <md-table-cell>{{
                     item.route_path
                   }}</md-table-cell>
-                <md-table-cell md-label="插件"></md-table-cell>
-                <md-table-cell md-label="发布">
-                  <md-switch
-                      v-if="!item.is_release"
-                      v-model="item.is_release"
-                      @change="putSwitchRelease(item)"
-                      class="md-primary"
-                  ></md-switch>
-                  <md-button class="md-icon-button md-primary" v-else
-                  >已发布</md-button
-                  >
+                <md-table-cell></md-table-cell>
+                <md-table-cell>
+                  <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
+                  <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
+                  <span v-if="item.release_status === 3" class="color-green font-bold">已发布</span>
                 </md-table-cell>
-                <md-table-cell md-label="启用">
+                <md-table-cell>
                   <md-switch
                       v-model="item.is_enable"
                       @change="putSwitchEnable(item)"
                       class="md-primary"
                   ></md-switch>
                 </md-table-cell>
-                <md-table-cell md-label="操作" class="list_manage">
+                <md-table-cell class="list_manage">
+                  <i
+                      v-if="item.release_status !== 3"
+                      @click="putSwitchRelease(item)"
+                      class="iconfont icon-yuntongbu"
+                  >
+                    <md-tooltip md-direction="top">发布</md-tooltip>
+                  </i>
                   <a
                       @click="drawerRoutePlugIn(item.id)"
                       href="javascript:void(0);"
@@ -108,7 +120,6 @@
                     <i class="iconfont icon-chajiangongneng">
                       <md-tooltip md-direction="top">插件</md-tooltip>
                     </i>
-
                   </a>
                   <a
                       href="javascript:void(0);"
@@ -129,6 +140,7 @@
                 </md-table-cell>
               </md-table-row>
             </md-table>
+
             <Pager
                 v-if="total > 0"
                 :pageSize="searchParams.page_size"
@@ -160,7 +172,7 @@
         title="插件列表"
         :display.sync="drawerPlugInDisplay"
         :inner="true"
-        width="700px"
+        width="800px"
     >
       <PlugInList
           v-if="isDrawerPlugInShow"
@@ -232,7 +244,6 @@ export default {
           this.total = res.data["total"];
           this.routeList = res.data["data"];
           this.routeList.forEach(function (item) {
-            item.is_release = item.is_release === 1;
             item.is_enable = item.is_enable === 1;
             item.edit_name = false;
           });
@@ -250,7 +261,7 @@ export default {
         } else {
           item.edit_name = false;
           this.$forceUpdate();
-          this.$notify({ message: res.msg, type: "success" });
+          this.$notify({ message: res.msg, type: "primary" });
         }
       });
     },
@@ -258,13 +269,12 @@ export default {
      * 路由发布
      */
     putSwitchRelease: function (item) {
-      let status = item.is_release === true ? 1 : 2;
-      ApiRoute.putSwitchRelease(this.serviceId, item.id, status).then((res) => {
+      ApiRoute.putSwitchRelease(this.serviceId, item.id).then((res) => {
         if (res.code !== 0) {
-          item.is_release = !item.is_release;
           this.$notify({ message: res.msg });
         } else {
-          this.$notify({ message: res.msg, type: "success" });
+          this.$notify({ message: res.msg, type: "primary" });
+          this.getList();
         }
       });
     },
@@ -278,8 +288,8 @@ export default {
           item.is_enable = !item.is_enable;
           this.$notify({ message: res.msg });
         } else {
-          item.is_release = false;
-          this.$notify({ message: res.msg, type: "success" });
+          this.$notify({ message: res.msg, type: "primary" });
+          this.getList();
         }
       });
     },
@@ -312,6 +322,7 @@ export default {
           .then(() => {
             ApiRoute.delete(this.serviceId, id).then((res) => {
               if (res.code === 0) {
+                this.$notify({ message: res.msg, type: "primary" });
                 this.getList();
               } else {
                 this.$notify({ message: res.msg });

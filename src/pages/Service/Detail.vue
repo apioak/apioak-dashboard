@@ -21,7 +21,7 @@
         </md-card>
         <md-card>
           <md-card-content>
-            <ServiceModify :serviceId="serviceId" />
+            <ServiceModify :serviceId="serviceId" :advanced="true"/>
           </md-card-content>
         </md-card>
       </div>

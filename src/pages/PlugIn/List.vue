@@ -135,13 +135,9 @@
         <div class="plug-td" style="width: 80px">{{ item.type_cn }}</div>
         <div class="plug-td" style="width: 150px">{{ item.description }}</div>
         <div class="plug-td" style="width: 60px">
-          <md-switch
-            v-if="!item.is_release"
-            v-model="item.is_release"
-            class="md-primary"
-            @change="putSwitchRelease(item)"
-          ></md-switch>
-          <md-button class="md-icon-button md-primary" v-else>已发布</md-button>
+          <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
+          <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
+          <span v-if="item.release_status === 3" class="color-green font-bold">已发布</span>
         </div>
         <div class="plug-td" style="width: 60px">
           <md-switch
@@ -151,6 +147,13 @@
           ></md-switch>
         </div>
         <div class="plug-td list_manage" style="width: 100px">
+          <i
+              v-if="item.release_status !== 3"
+              @click="putSwitchRelease(item)"
+              class="iconfont icon-yuntongbu"
+          >
+            <md-tooltip md-direction="top">发布</md-tooltip>
+          </i>
           <i class="iconfont icon-xiugai" @click="editShow(item, true)">
             <md-tooltip md-direction="top">修改</md-tooltip>
           </i>
@@ -227,7 +230,6 @@ export default {
           this.plugInList = res.data || [];
           if (this.plugInList.length > 0) {
             this.plugInList.forEach((item, index) => {
-              item.is_release = item.is_release === 1;
               item.is_enable = item.is_enable === 1;
               item.is_edit = false;
               item.type_cn = this.plugInTypeList[item.type] || "";
@@ -268,18 +270,16 @@ export default {
      * 路由插件发布
      */
     putSwitchRelease: function (item) {
-      let status = item.is_release === true ? 1 : 2;
       ApiRoute.putSwitchRoutePluginRelease(
         this.routeId,
         item.plugin_id,
-        item.id,
-        status
+        item.id
       ).then((res) => {
         if (res.code !== 0) {
-          item.is_release = !item.is_release;
           this.$notify({ message: res.msg });
         } else {
-          this.$notify({ message: "发布成功", type: "primary" });
+          this.$notify({ message: res.msg, type: "primary" });
+          this.getList();
         }
       });
     },
@@ -296,8 +296,8 @@ export default {
         status
       ).then((res) => {
         if (res.code === 0) {
-          item.is_release = false;
-          this.$notify({ message: "修改成功", type: "primary" });
+          this.$notify({ message: res.msg, type: "primary" });
+          this.getList();
         } else {
           item.is_enable = !item.is_enable;
           this.$notify({ message: res.msg });
@@ -321,7 +321,7 @@ export default {
         configParams
       ).then((res) => {
         if (res.code === 0) {
-          this.$notify({ message: "修改成功", type: "primary" });
+          this.$notify({ message: res.msg, type: "primary" });
           this.getList();
         } else {
           this.$notify({ message: res.msg });
@@ -337,7 +337,7 @@ export default {
         .then(() => {
           ApiRoute.deleteRoutePlugin(this.routeId, pluginId, id).then((res) => {
             if (res.code === 0) {
-              this.$notify({ message: "删除成功", type: "primary" });
+              this.$notify({ message: res.msg, type: "primary" });
               this.getList();
             } else {
               this.$notify({ message: res.msg });

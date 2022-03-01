@@ -61,15 +61,10 @@ export default {
   /**
    * 服务发布
    * @param id
-   * @param isRelease
    * @returns {Promise<unknown>}
    */
-  putSwitchRelease: (id, isRelease) => {
-    return request(
-      "admin/service/switch/release/" + id,
-      { is_release: isRelease },
-      "put"
-    );
+  putSwitchRelease: (id) => {
+    return request("admin/service/switch/release/" + id, null, "put");
   },
 
   /**

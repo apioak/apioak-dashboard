@@ -152,7 +152,7 @@ export default {
       let status = item.is_enable === true ? 1 : 2;
       ApiClusterNode.putSwitchEnable(item.id, status).then((res) => {
         if (res.code === 0) {
-          this.$notify({ message: "修改成功", type: "success" });
+          this.$notify({ message: res.msg, type: "primary" });
         } else {
           this.$notify({ message: res.msg });
         }
@@ -167,6 +167,7 @@ export default {
         .then(() => {
           ApiClusterNode.delete(id).then((res) => {
             if (res.code === 0) {
+              this.$notify({ message: res.msg, type: "primary" });
               this.getList();
             } else {
               this.$notify({ message: res.msg });

@@ -4,9 +4,9 @@
       <div class="md-layout-item">
         <md-field :class="getValidationClass('certificate')">
           <label>证书内容</label>
-          <md-input v-model="form.certificate" required></md-input>
+          <md-textarea v-model="form.certificate" required></md-textarea >
           <span class="md-error" v-if="!$v.form.certificate.required"
-            >证书不能为空</span
+          >证书不能为空</span
           >
         </md-field>
       </div>
@@ -15,9 +15,9 @@
       <div class="md-layout-item">
         <md-field :class="getValidationClass('private_key')">
           <label>私钥内容</label>
-          <md-input v-model="form.private_key" required></md-input>
+          <md-textarea v-model="form.private_key" required></md-textarea>
           <span class="md-error" v-if="!$v.form.private_key.required"
-            >私钥内容不能为空</span
+          >私钥内容不能为空</span
           >
         </md-field>
       </div>
@@ -30,10 +30,10 @@
     </div>
     <div class="service-button">
       <md-button class="md-raised" @click="$emit('closeDrawer')"
-        >取消</md-button
+      >取消</md-button
       >
       <md-button class="md-raised md-primary" @click="submitForm"
-        >保存</md-button
+      >保存</md-button
       >
     </div>
   </div>
@@ -109,11 +109,11 @@ export default {
         certificateHttp = ApiCertificate.post(formData);
       }
       certificateHttp.then((res) => {
-        if (res.code === 0) {
-          this.$notify({ message: res.msg, type: "blue" });
-          return this.$emit("saveHandle");
-        } else {
+        if (res.code !== 0) {
           this.$notify({ message: res.msg });
+        } else {
+          this.$notify({ message: res.msg, type: "primary" });
+          return this.$emit("saveHandle");
         }
       });
     },

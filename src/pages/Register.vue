@@ -2,27 +2,19 @@
   <div class="wrapper">
     <notifications></notifications>
     <div class="md-layout login-page">
-      <div
-        class="
-          md-layout-item
-          md-size-30
-          md-medium-size-33
-          md-small-size-70
-          md-xsmall-size-100
-        "
-      >
+      <div class="login-card">
         <md-card>
-          <md-card-header data-background-color="green">
-            <img src="../assets/img/logo.png" class="login-logo" />
-            <h4 class="title">注册</h4>
-          </md-card-header>
+          <div class="logo">
+            <div><img src="../assets/img/logo.png" class="login-logo" /></div>
+            <h1>欢迎注册APIOAK</h1>
+          </div>
           <md-card-content>
             <md-field :class="getValidationClass('name')">
               <md-icon>face</md-icon>
               <label>用户...</label>
               <md-input v-model="form.name" id="name" required></md-input>
               <span class="md-error" v-if="!$v.form.name.required"
-                >用户不能为空</span
+              >用户不能为空</span
               >
             </md-field>
             <md-field :class="getValidationClass('email')">
@@ -30,49 +22,49 @@
               <label>邮箱...</label>
               <md-input v-model="form.email" id="email" required></md-input>
               <span class="md-error" v-if="!$v.form.email.required"
-                >邮箱不能为空</span
+              >邮箱不能为空</span
               >
               <span class="md-error" v-if="!$v.form.email.email"
-                >邮箱格式不正确</span
+              >邮箱格式不正确</span
               >
             </md-field>
             <md-field :class="getValidationClass('password')">
               <md-icon>lock_outline</md-icon>
               <label>密码...</label>
               <md-input
-                v-model="form.password"
-                type="password"
-                id="password"
-                required
+                  v-model="form.password"
+                  type="password"
+                  id="password"
+                  required
               ></md-input>
               <span class="md-error" v-if="!$v.form.password.required"
-                >密码不能为空</span
+              >密码不能为空</span
               >
             </md-field>
             <md-field :class="getValidationClass('re_password')">
               <md-icon>lock_outline</md-icon>
               <label>确认密码...</label>
               <md-input
-                v-model="form.re_password"
-                type="password"
-                id="re_password"
-                required
+                  v-model="form.re_password"
+                  type="password"
+                  id="re_password"
+                  required
               ></md-input>
               <span class="md-error" v-if="!$v.form.re_password.required"
-                >确认密码不能为空</span
+              >确认密码不能为空</span
               >
               <span class="md-error" v-if="!$v.form.re_password.sameAsPassword"
-                >密码不一致</span
+              >密码不一致</span
               >
             </md-field>
             <div class="login-button">
-              <md-button class="md-raised md-success" @click="register"
-                >注册</md-button
+              <md-button class="md-raised md-primary" @click="register"
+              >注册</md-button
               >
             </div>
             <div class="to-login">
               <router-link :to="{ name: 'Login' }"
-                >已有账号，去登录</router-link
+              >已有账号，去登录 ></router-link
               >
             </div>
           </md-card-content>
@@ -144,8 +136,7 @@ export default {
 
 .login-page {
   height: 100%;
-  background: url("../assets/img/login.jpg") no-repeat;
-  background-size: 100% 100%;
+  background: #E8EFFF;
   width: 100%;
   position: absolute;
   top: 0;
@@ -153,10 +144,19 @@ export default {
   left: 0;
 }
 
-.login-logo {
-  width: 80px;
-  height: 80px;
+.logo {
+  text-align: center;
+  margin-top: 20px;
+  .login-logo {
+    width: 60px;
+    height: 60px;
+  }
+  h1 {
+    font-size: 20px;
+    margin: 10px 0 0;
+  }
 }
+
 .md-card {
   margin-top: 50px;
 }
@@ -180,4 +180,24 @@ export default {
   text-align: right;
   margin-right: 15px;
 }
+.login-card {
+  margin-top: -100px;
+  width: 1000px;
+  background: url("../assets/img/login.jpg") no-repeat;
+  background-size: 400px 450px;
+  background-position: left center;
+  display: flex;
+  align-items: center;
+  .md-card{
+    margin-top: 50px;
+    width: 350px !important;
+    height: 470px;
+    margin-left: 520px;
+    box-shadow: 2px 3px 10px rgba(0,0,0,0.2);
+    .md-field {
+      margin: 4px 0 !important;
+    }
+  }
+}
 </style>
+54

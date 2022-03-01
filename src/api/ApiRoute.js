@@ -81,12 +81,8 @@ export default {
    * @param isRelease
    * @returns {Promise<unknown>}
    */
-  putSwitchRelease: (serviceId, id, isRelease) => {
-    return request(
-      "admin/route/switch/release/" + serviceId + "/" + id,
-      { is_release: isRelease },
-      "put"
-    );
+  putSwitchRelease: (serviceId, id) => {
+    return request("admin/route/switch/release/" + serviceId + "/" + id, null, "put");
   },
 
   /**
@@ -182,8 +178,7 @@ export default {
   putSwitchRoutePluginRelease: (
     routeId,
     plugInId,
-    routePlugInId,
-    isRelease
+    routePlugInId
   ) => {
     return request(
       "admin/route/plugin/switch/release/" +
@@ -192,7 +187,7 @@ export default {
         plugInId +
         "/" +
         routePlugInId,
-      { is_release: isRelease },
+      null,
       "put"
     );
   },

@@ -64,7 +64,7 @@
       title="新增插件"
       :display.sync="drawerDisplay"
       :inner="true"
-      width="500px"
+      width="700px"
     >
       <PlugInModify
         v-if="isShow"

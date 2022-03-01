@@ -268,6 +268,9 @@ export default {
     },
   },
   mounted() {
+    if (this.serviceId) {
+      this.isAdvanced = true;
+    }
     this.getInfo();
   },
   methods: {

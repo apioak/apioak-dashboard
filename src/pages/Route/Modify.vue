@@ -144,7 +144,7 @@ export default {
       }
       routeHttp.then((res) => {
         if (res.code === 0) {
-          this.$notify({ message: res.msg, type: "success" });
+          this.$notify({ message: res.msg, type: "primary" });
           return this.$emit("saveHandle");
         } else {
           this.$notify({ message: res.msg });

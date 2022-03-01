@@ -17,9 +17,25 @@
                     v-model="certParams.is_enable"
                     md-dense
                   >
-                    <md-option value="0">ALL</md-option>
-                    <md-option value="1">ON</md-option>
-                    <md-option value="2">OFF</md-option>
+                    <md-option value="0">全部</md-option>
+                    <md-option value="1">启用</md-option>
+                    <md-option value="2">关闭</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+              <div class="md-layout-item">
+                <md-field>
+                  <label>发布状态</label>
+                  <md-select
+                      name="release_status"
+                      id="release_status"
+                      v-model="certParams.release_status"
+                      md-dense
+                  >
+                    <md-option value="0">全部</md-option>
+                    <md-option value="1">未发布</md-option>
+                    <md-option value="2">待发布</md-option>
+                    <md-option value="3">已发布</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -42,33 +58,54 @@
 
         <md-card>
           <md-card-content>
-            <md-table v-model="certificateList">
-              <md-table-row slot="md-table-row" slot-scope="{ item }">
-                <md-table-cell md-label="服务名称">{{
-                  item.sni
-                }}</md-table-cell>
-                <md-table-cell md-label="过期时间">{{
-                  item.expired_at | formatTime
-                }}</md-table-cell>
-                <md-table-cell md-label="发布">
-                  <md-switch
-                    v-if="!item.is_release"
-                    v-model="item.is_release"
-                    @change="putSwitchRelease(item)"
-                    class="md-primary"
-                  ></md-switch>
-                  <md-button class="md-icon-button md-primary" v-else
-                    >已发布</md-button
-                  >
+            <md-table>
+              <md-table-row class="md-head">
+                <md-table-head>证书ID</md-table-head>
+                <md-table-head>SNI</md-table-head>
+                <md-table-head>过期时间</md-table-head>
+                <md-table-head>
+                  发布
+                  <md-tooltip md-direction="top">
+                    1：这是个测试<br/>2：这还是个测试
+                  </md-tooltip>
+                </md-table-head>
+                <md-table-head>启用</md-table-head>
+                <md-table-head>操作</md-table-head>
+              </md-table-row>
+
+              <md-table-row v-for="(item, index) in certificateList" :key="index">
+                <md-table-cell>
+                  {{ item.id }}
                 </md-table-cell>
-                <md-table-cell md-label="启用">
+                <md-table-cell>
+                  {{ item.sni }}
+                </md-table-cell>
+                <md-table-cell v-if="newTimeStamp > item.expired_at" class="color-red">
+                  {{ item.expired_at | formatTime }}
+                </md-table-cell>
+                <md-table-cell v-else>
+                  {{ item.expired_at | formatTime }}
+                </md-table-cell>
+                <md-table-cell>
+                  <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
+                  <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
+                  <span v-if="item.release_status === 3" class="color-green font-bold">已发布</span>
+                </md-table-cell>
+                <md-table-cell>
                   <md-switch
                     v-model="item.is_enable"
                     @change="putSwitchEnable(item)"
                     class="md-primary"
                   ></md-switch>
                 </md-table-cell>
-                <md-table-cell md-label="操作" class="list_manage">
+                <md-table-cell class="list_manage">
+
+                  <i
+                      v-if="item.release_status !== 3"
+                      @click="putSwitchRelease(item)"
+                      class="iconfont icon-yuntongbu"
+                  ><md-tooltip md-direction="top">发布</md-tooltip></i>
+
                   <i
                     class="iconfont icon-xiugai"
                     @click="drawerCertificate(item.id)"
@@ -79,7 +116,9 @@
                   ><md-tooltip md-direction="top">删除</md-tooltip></i>
                 </md-table-cell>
               </md-table-row>
+
             </md-table>
+
             <Pager
               v-if="total > 0"
               :pageSize="certParams.page_size"
@@ -126,6 +165,7 @@ export default {
     return {
       certParams: {
         is_enable: "",
+        release_status: "",
         search: "",
         page: 1,
         page_size: 10,
@@ -135,6 +175,7 @@ export default {
       isShow: true,
       drawerDisplay: false,
       currentCertificateId: "",
+      newTimeStamp: 0,
     };
   },
   mounted() {
@@ -161,9 +202,9 @@ export default {
           this.total = res.data["total"];
           this.certificateList = res.data["data"];
           this.certificateList.forEach(function (item) {
-            item.is_release = item.is_release === 1;
             item.is_enable = item.is_enable === 1;
           });
+          this.newTimeStamp = Math.floor(new Date().getTime() / 1000);
         }
       });
     },
@@ -171,13 +212,12 @@ export default {
      * 证书发布
      */
     putSwitchRelease: function (item) {
-      let status = item.is_release === true ? 1 : 2;
-      ApiCertificate.putSwitchRelease(item.id, status).then((res) => {
+      ApiCertificate.putSwitchRelease(item.id).then((res) => {
         if (res.code !== 0) {
-          item.is_release = !item.is_release;
           this.$notify({ message: res.msg });
         } else {
           this.$notify({ message: res.msg, type: "primary" });
+          this.getList();
         }
       });
     },
@@ -193,6 +233,7 @@ export default {
         } else {
           item.is_release = false;
           this.$notify({ message: res.msg, type: "primary" });
+          this.getList();
         }
       });
     },
@@ -213,6 +254,7 @@ export default {
         .then(() => {
           ApiCertificate.delete(id).then((res) => {
             if (res.code === 0) {
+              this.$notify({ message: res.msg, type: "primary" });
               this.getList();
             } else {
               this.$notify({ message: res.msg });
