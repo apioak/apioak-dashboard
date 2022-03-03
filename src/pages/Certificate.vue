@@ -19,7 +19,7 @@
                   >
                     <md-option value="0">全部</md-option>
                     <md-option value="1">启用</md-option>
-                    <md-option value="2">关闭</md-option>
+                    <md-option value="2">停用</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -65,9 +65,13 @@
                 <md-table-head>过期时间</md-table-head>
                 <md-table-head>
                   发布
-                  <md-tooltip md-direction="top">
-                    1：这是个测试<br/>2：这还是个测试
-                  </md-tooltip>
+                  <i class="iconfont icon-help color-orange">
+                    <md-tooltip md-direction="top">
+                      未发布：新增但未发布到数据面<br/>
+                      待发布：当前配置与数据面不符<br/>
+                      已发布：当前配置已发布数据面
+                    </md-tooltip>
+                  </i>
                 </md-table-head>
                 <md-table-head>启用</md-table-head>
                 <md-table-head>操作</md-table-head>
@@ -176,6 +180,7 @@ export default {
       drawerDisplay: false,
       currentCertificateId: "",
       newTimeStamp: 0,
+      sidebarBackground: "blue",
     };
   },
   mounted() {
@@ -188,6 +193,7 @@ export default {
      */
     handleCurrentChange: function (page) {
       this.certParams.page = page.currentPage;
+      this.$store.commit("currentPage", page.currentPage);
     },
     saveHandle: function () {
       this.drawerDisplay = false;

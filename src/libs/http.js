@@ -4,7 +4,7 @@ import store from "../store/index";
 export function request(url, params, method = "get") {
   /*let baseUrl =
     process.env.NODE_ENV === "production" ? process.env.VUE_APP_ROOT : "/api/";*/
-  let baseUrl = "/api/";
+  let baseUrl = "/";
   url = baseUrl + url;
   //添加header头
   let header = {

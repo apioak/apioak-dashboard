@@ -1,16 +1,32 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2693038 */
-  src: url('iconfont.woff2?t=1645777970919') format('woff2'),
-       url('iconfont.woff?t=1645777970919') format('woff'),
-       url('iconfont.ttf?t=1645777970919') format('truetype');
+  src: url('iconfont.woff2?t=1646294801144') format('woff2'),
+       url('iconfont.woff?t=1646294801144') format('woff'),
+       url('iconfont.ttf?t=1646294801144') format('truetype');
 }
 
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 16px;
+  font-size: 22px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-loudou:before {
+  content: "\e61f";
+}
+
+.icon-apex_plugin1:before {
+  content: "\e6d7";
+}
+
+.icon-auth:before {
+  content: "\e635";
+}
+
+.icon-help:before {
+  content: "\e752";
 }
 
 .icon-yuntongbu:before {

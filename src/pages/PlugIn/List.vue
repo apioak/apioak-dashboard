@@ -113,33 +113,45 @@
     </md-card>
     <div class="plug-table md-clear">
       <div class="plug-thtr">
-        <div class="plug-th" style="width: 50px">展示</div>
-        <div class="plug-th" style="width: 130px">ID/名称</div>
-        <div class="plug-th" style="width: 100px">标识</div>
-        <div class="plug-th" style="width: 80px">类型</div>
-        <div class="plug-th" style="width: 150px">描述</div>
-        <div class="plug-th" style="width: 60px">发布</div>
-        <div class="plug-th" style="width: 60px">启用</div>
+        <div class="plug-th" style="width: 45px">展开</div>
+        <div class="plug-th" style="width: 30px"></div>
+        <div class="plug-th" style="width: 90px">名称</div>
+        <div class="plug-th" style="width: 110px">标识</div>
+        <div class="plug-th" style="width: 60px">类型</div>
+        <div class="plug-th" style="width: 180px">描述</div>
+        <div class="plug-th" style="width: 80px">发布
+          <i class="iconfont icon-help color-orange">
+            <md-tooltip md-direction="top">
+              未发布：新增但未发布到数据面<br/>
+              待发布：当前配置与数据面不符<br/>
+              已发布：当前配置已发布数据面
+            </md-tooltip>
+          </i>
+        </div>
+        <div class="plug-th" style="width: 70px">启用</div>
         <div class="plug-th" style="width: 100px">操作</div>
       </div>
       <div class="plug-tr" v-for="(item, index) in plugInList" :key="index">
-        <div class="plug-td" style="width: 50px; cursor: pointer">
+        <div class="plug-td" style="width: 45px; cursor: pointer">
           <i
             class="iconfont"
             :class="arrowClass(item.is_edit)"
             @click="editShow(item, !item.is_edit)"
           ></i>
         </div>
-        <div class="plug-td" style="width: 130px">{{ item.name }}</div>
-        <div class="plug-td" style="width: 100px">{{ item.tag }}</div>
-        <div class="plug-td" style="width: 80px">{{ item.type_cn }}</div>
-        <div class="plug-td" style="width: 150px">{{ item.description }}</div>
-        <div class="plug-td" style="width: 60px">
+        <div class="plug-td" style="width: 30px">
+          <i class="iconfont" :class="[item.icon, item.color]"></i>
+        </div>
+        <div class="plug-td" style="width: 90px">{{ item.name }}</div>
+        <div class="plug-td" style="width: 110px">{{ item.tag }}</div>
+        <div class="plug-td" style="width: 60px">{{ item.type_cn }}</div>
+        <div class="plug-td" style="width: 180px">{{ item.description }}</div>
+        <div class="plug-td" style="width: 80px">
           <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
           <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
           <span v-if="item.release_status === 3" class="color-green font-bold">已发布</span>
         </div>
-        <div class="plug-td" style="width: 60px">
+        <div class="plug-td" style="width: 70px">
           <md-switch
             v-model="item.is_enable"
             class="md-primary"
@@ -233,6 +245,7 @@ export default {
               item.is_enable = item.is_enable === 1;
               item.is_edit = false;
               item.type_cn = this.plugInTypeList[item.type] || "";
+              item.color = "color-plugin-" + item.type;
               item.config = JSON.parse(item.config || "[]");
             });
           }

@@ -127,7 +127,7 @@ export default {
       }
       plugInHttp.then((res) => {
         if (res.code === 0) {
-          this.$notify({ message: res.msg, type: "blue" });
+          this.$notify({ message: res.msg, type: "primary" });
           return this.$emit("saveHandle");
         } else {
           this.$notify({ message: res.msg });

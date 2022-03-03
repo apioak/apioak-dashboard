@@ -33,7 +33,7 @@
                   >
                     <md-option value="0">全部</md-option>
                     <md-option value="1">启用</md-option>
-                    <md-option value="2">关闭</md-option>
+                    <md-option value="2">停用</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -81,7 +81,16 @@
                 <md-table-head>域名</md-table-head>
                 <md-table-head>协议</md-table-head>
                 <md-table-head>负载均衡</md-table-head>
-                <md-table-head>发布</md-table-head>
+                <md-table-head>
+                  发布
+                  <i class="iconfont icon-help color-orange">
+                    <md-tooltip md-direction="top">
+                      未发布：新增但未发布到数据面<br/>
+                      待发布：当前配置与数据面不符<br/>
+                      已发布：当前配置已发布数据面
+                    </md-tooltip>
+                  </i>
+                </md-table-head>
                 <md-table-head>WebSocket</md-table-head>
                 <md-table-head>健康检查</md-table-head>
                 <md-table-head>启用</md-table-head>
@@ -190,7 +199,7 @@
             <Pager
               v-if="total > 0"
               :pageSize="serviceParams.page_size"
-              :current-page="serviceParams.page"
+              :current-pages=currentPage
               :totals="total"
               @current-change="handleCurrentChange"
             />
@@ -250,7 +259,13 @@ export default {
       active: false,
     };
   },
+  computed: {
+    currentPage () {
+      return parseInt(this.$store.state.currentPage);
+    }
+  },
   mounted() {
+    this.serviceParams.page = this.$store.state.currentPage;
     //获取服务列表
     this.getList();
   },
@@ -261,6 +276,7 @@ export default {
      */
     handleCurrentChange: function (page) {
       this.serviceParams.page = page.currentPage;
+      this.$store.commit("setCurrentPage", page.currentPage);
     },
     saveHandle: function () {
       this.drawerDisplay = false;

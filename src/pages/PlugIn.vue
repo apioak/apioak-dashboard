@@ -116,6 +116,7 @@ export default {
      */
     handleCurrentChange: function (page) {
       this.plugInParams.page = page.currentPage;
+      this.$store.commit("currentPage", page.currentPage);
     },
     saveHandle: function () {
       this.drawerDisplay = false;

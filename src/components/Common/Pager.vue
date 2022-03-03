@@ -67,6 +67,11 @@ export default {
       default: 10,
       type: Number,
     },
+    currentPages: {
+      // 每页显示数量
+      default: 1,
+      type: Number,
+    },
     totals: {
       // 总数
       default: 0,
@@ -91,7 +96,7 @@ export default {
       nextDisabled: null,
       preDisabled: "disabled",
       totalPages: 1, // 默认页数
-      currentPage: 1,
+      currentPage: this.currentPages,
       size: this.pageSize, // 获取每页数量
     };
   },

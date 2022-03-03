@@ -26,6 +26,29 @@
   margin: 0 !important;
 }
 
+.color-plugin-0 {
+  color: darkgrey;
+}
+
+.color-plugin-1 {
+  color: limegreen;
+}
+.color-plugin-2 {
+  color: orangered;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.color-grey {
+  color: grey;
+}
+
+.color-black {
+  color: black;
+}
+
 .color-red {
   color: red;
 }
@@ -46,14 +69,37 @@
   color: blue;
 }
 
-.color-black {
-  color: black;
+.background-color-grey {
+  background-color: grey;
 }
 
-.color-grey {
-  color: grey;
+.background-color-black {
+  background-color: black;
 }
 
-.font-bold {
-  font-weight: bold;
+.background-color-red {
+  background-color: red;
+}
+
+.background-color-orange {
+  background-color: orange;
+}
+
+.background-color-green {
+  background-color: green;
+}
+
+.background-color-purple {
+  background-color: purple;
+}
+
+.background-color-blue {
+  background-color: blue;
+}
+
+.font-block {
+  color: white;
+  padding: 2px 3px;
+  border-radius: 3px;
+  margin: 2px;
 }

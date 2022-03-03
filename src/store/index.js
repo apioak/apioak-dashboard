@@ -11,6 +11,7 @@ export default new Vuex.Store({
     routerParams: localStorage.getItem("routerParams")
       ? JSON.parse(localStorage.getItem("routerParams"))
       : {},
+    currentPage: localStorage.getItem("currentPage") ? localStorage.getItem("currentPage") : 1,
   },
   mutations: {
     /**
@@ -21,6 +22,7 @@ export default new Vuex.Store({
       state.token = token;
     },
     /**
+     * 路由参数
      * @param state
      * @param routerParams
      */
@@ -31,6 +33,10 @@ export default new Vuex.Store({
         JSON.stringify(state.routerParams)
       );
     },
+    setCurrentPage(state, page) {
+      window.localStorage.setItem("currentPage", page)
+      state.currentPage = page
+    }
   },
   actions: {},
   modules: {},

@@ -10,31 +10,31 @@
             <div class="md-layout md-gutter">
               <div class="md-layout-item">
                 <md-field>
-                  <label>状态</label>
+                  <label>IP类型</label>
+                  <md-select
+                      name="ip_type"
+                      id="ip_type"
+                      v-model="searchParams.ip_type"
+                      md-dense
+                  >
+                    <md-option value="0">全部</md-option>
+                    <md-option value="1">IPV4</md-option>
+                    <md-option value="2">IPV6</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+              <div class="md-layout-item">
+                <md-field>
+                  <label>健康状态</label>
                   <md-select
                     name="node_status"
                     id="node_status"
                     v-model="searchParams.node_status"
                     md-dense
                   >
-                    <md-option value="0">ALL</md-option>
+                    <md-option value="0">全部</md-option>
                     <md-option value="1">健康</md-option>
                     <md-option value="2">异常</md-option>
-                  </md-select>
-                </md-field>
-              </div>
-              <div class="md-layout-item">
-                <md-field>
-                  <label>启用状态</label>
-                  <md-select
-                    name="is_enable"
-                    id="is_enable"
-                    v-model="searchParams.is_enable"
-                    md-dense
-                  >
-                    <md-option value="0">ALL</md-option>
-                    <md-option value="1">ON</md-option>
-                    <md-option value="2">OFF</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -54,25 +54,31 @@
             <md-table>
 
               <md-table-row class="md-head">
+                <md-table-head>ID</md-table-head>
                 <md-table-head>节点IP</md-table-head>
+                <md-table-head>类型</md-table-head>
                 <md-table-head>状态</md-table-head>
-                <md-table-head>启用</md-table-head>
                 <md-table-head>操作</md-table-head>
               </md-table-row>
 
               <md-table-row v-for="(item, index) in clusterNodeList" :key="index">
                 <md-table-cell>{{
+                    item.id
+                  }}</md-table-cell>
+                <md-table-cell>{{
                   item.node_ip
                 }}</md-table-cell>
-                <md-table-cell>{{
-                  item.node_status
-                }}</md-table-cell>
-                <md-table-cell>
-                  <md-switch
-                    v-model="item.is_enable"
-                    @change="putSwitchEnable(item)"
-                    class="md-primary"
-                  ></md-switch>
+                <md-table-cell v-if="item.ip_type == 1" class="color-blue font-bold">
+                  IPV4
+                </md-table-cell>
+                <md-table-cell v-else class="color-orange font-bold">
+                  IPV6
+                </md-table-cell>
+                <md-table-cell v-if="item.node_status == 1" class="color-green font-bold">
+                  健康
+                </md-table-cell>
+                <md-table-cell v-else class="color-red font-bold">
+                  异常
                 </md-table-cell>
                 <md-table-cell class="list_manage">
                   <i
@@ -110,14 +116,15 @@ export default {
   data() {
     return {
       searchParams: {
+        ip_type: "",
         node_status: "",
-        is_enable: "",
         search: "",
         page: 1,
         page_size: 10,
       },
       clusterNodeList: [],
       total: 0,
+      sidebarBackground: "blue",
     };
   },
   mounted() {
@@ -130,6 +137,7 @@ export default {
      */
     handleCurrentChange: function (page) {
       this.searchParams.page = page.currentPage;
+      this.$store.commit("currentPage", page.currentPage);
     },
     /**
      * 获取分页数据
@@ -139,25 +147,13 @@ export default {
         if (res.code === 0) {
           this.total = res.data["total"];
           this.clusterNodeList = res.data["data"];
-          this.clusterNodeList.forEach(function (item) {
-            item.is_enable = item.is_enable === 1;
-          });
         }
       });
     },
     /**
-     * 证书开关
+     * 节点删除
+     * @param id
      */
-    putSwitchEnable: function (item) {
-      let status = item.is_enable === true ? 1 : 2;
-      ApiClusterNode.putSwitchEnable(item.id, status).then((res) => {
-        if (res.code === 0) {
-          this.$notify({ message: res.msg, type: "primary" });
-        } else {
-          this.$notify({ message: res.msg });
-        }
-      });
-    },
     deleteClusterNode: function (id) {
       this.$dialog
         .modal({

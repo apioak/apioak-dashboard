@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8312085",
+      "name": "漏斗",
+      "font_class": "loudou",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "7684991",
+      "name": "apex_plugin",
+      "font_class": "apex_plugin1",
+      "unicode": "e6d7",
+      "unicode_decimal": 59095
+    },
+    {
+      "icon_id": "1167354",
+      "name": "auth",
+      "font_class": "auth",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "11488052",
+      "name": "help",
+      "font_class": "help",
+      "unicode": "e752",
+      "unicode_decimal": 59218
+    },
+    {
       "icon_id": "24886142",
       "name": "云同步",
       "font_class": "yuntongbu",

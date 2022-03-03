@@ -23,9 +23,9 @@
                       v-model="searchParams.is_enable"
                       md-dense
                   >
-                    <md-option value="0">ALL</md-option>
-                    <md-option value="1">ON</md-option>
-                    <md-option value="2">OFF</md-option>
+                    <md-option value="0">全部</md-option>
+                    <md-option value="1">启用</md-option>
+                    <md-option value="2">停用</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -57,7 +57,16 @@
                 <md-table-head>方法</md-table-head>
                 <md-table-head>路径</md-table-head>
                 <md-table-head>插件</md-table-head>
-                <md-table-head>发布</md-table-head>
+                <md-table-head>
+                  发布
+                  <i class="iconfont icon-help color-orange">
+                    <md-tooltip md-direction="top">
+                      未发布：新增但未发布到数据面<br/>
+                      待发布：当前配置与数据面不符<br/>
+                      已发布：当前配置已发布数据面
+                    </md-tooltip>
+                  </i>
+                </md-table-head>
                 <md-table-head>启用</md-table-head>
                 <md-table-head>操作</md-table-head>
               </md-table-row>
@@ -81,18 +90,22 @@
                 </md-table-cell>
                 <md-table-cell>
                   <span v-for="(method, index) in item.request_methods" :key="index">
-                    <el-tag v-if="method == `ALL`" class="color-black font-bold" >{{ method }}  </el-tag>
-                    <el-tag v-if="method == `GET`" class="color-green font-bold" >{{ method }}  </el-tag>
-                    <el-tag v-if="method == `POST`" class="color-orange font-bold" >{{ method }}  </el-tag>
-                    <el-tag v-if="method == `PUT`" class="color-blue font-bold" >{{ method }}  </el-tag>
-                    <el-tag v-if="method == `DELETE`" class="color-red font-bold" >{{ method }}  </el-tag>
-                    <el-tag v-if="method == `OPTIONS`" class="color-purple font-bold" >{{ method }}  </el-tag>
+                    <el-tag v-if="method === `ALL`" class="font-bold font-block background-color-black"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `GET`" class="font-bold font-block background-color-green"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `POST`" class="font-bold font-block background-color-orange"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `PUT`" class="font-bold font-block background-color-blue"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `DELETE`" class="font-bold font-block background-color-red"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `OPTIONS`" class="font-bold font-block background-color-purple"> {{ method }} </el-tag>
                   </span>
                 </md-table-cell>
                 <md-table-cell>{{
                     item.route_path
                   }}</md-table-cell>
-                <md-table-cell></md-table-cell>
+                <md-table-cell>
+                  <i v-for="(plugin, index) in item.plugin_list" :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 2px;">
+                    <md-tooltip md-direction="top">{{ plugin.name }}</md-tooltip>
+                  </i>
+                </md-table-cell>
                 <md-table-cell>
                   <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
                   <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
@@ -172,7 +185,7 @@
         title="插件列表"
         :display.sync="drawerPlugInDisplay"
         :inner="true"
-        width="800px"
+        width="830px"
     >
       <PlugInList
           v-if="isDrawerPlugInShow"
@@ -217,6 +230,7 @@ export default {
       isCopyRoute: false,
       isDrawerRouteShow: true,
       isDrawerPlugInShow: true,
+      sidebarBackground: "blue",
     };
   },
   mounted() {
@@ -230,6 +244,7 @@ export default {
      */
     handleCurrentChange: function (page) {
       this.searchParams.page = page.currentPage;
+      this.$store.commit("currentPage", page.currentPage);
     },
     saveHandle: function () {
       this.drawerRouteDisplay = false;
@@ -246,6 +261,18 @@ export default {
           this.routeList.forEach(function (item) {
             item.is_enable = item.is_enable === 1;
             item.edit_name = false;
+            if (item.plugin_list.length > 0) {
+              item.plugin_list.forEach((value, index) => {
+                if ((value.is_enable === 1) && (value.release_status === 3)) {
+                  value.color = "color-plugin-" + value.type;
+                } else {
+                  value.color = "color-plugin-0";
+                }
+                if (value.icon.length === 0) {
+                  value.icon = "icon-apex_plugin1";
+                }
+              });
+            }
           });
         }
       });
