@@ -144,7 +144,7 @@
         </div>
         <div class="plug-td" style="width: 90px">{{ item.name }}</div>
         <div class="plug-td" style="width: 110px">{{ item.tag }}</div>
-        <div class="plug-td" style="width: 60px">{{ item.type_cn }}</div>
+        <div class="plug-td font-bold" style="width: 60px" :class="[item.color]">{{ item.type_cn }}</div>
         <div class="plug-td" style="width: 180px">{{ item.description }}</div>
         <div class="plug-td" style="width: 80px">
           <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>

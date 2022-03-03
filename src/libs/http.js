@@ -4,8 +4,7 @@ import store from "../store/index";
 export function request(url, params, method = "get") {
   /*let baseUrl =
     process.env.NODE_ENV === "production" ? process.env.VUE_APP_ROOT : "/api/";*/
-  let baseUrl = "/";
-  url = baseUrl + url;
+  url = "/" + url;
   //添加header头
   let header = {
     "auth-token": store.state.token,

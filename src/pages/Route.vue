@@ -90,12 +90,12 @@
                 </md-table-cell>
                 <md-table-cell>
                   <span v-for="(method, index) in item.request_methods" :key="index">
-                    <el-tag v-if="method === `ALL`" class="font-bold font-block background-color-black"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `GET`" class="font-bold font-block background-color-green"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `POST`" class="font-bold font-block background-color-orange"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `PUT`" class="font-bold font-block background-color-blue"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `DELETE`" class="font-bold font-block background-color-red"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `OPTIONS`" class="font-bold font-block background-color-purple"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `ALL`" class="font-block background-color-black"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `GET`" class="font-block background-color-green"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `POST`" class="font-block background-color-orange"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `PUT`" class="font-block background-color-blue"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `DELETE`" class="font-block background-color-red"> {{ method }} </el-tag>
+                    <el-tag v-if="method === `OPTIONS`" class="font-block background-color-purple"> {{ method }} </el-tag>
                   </span>
                 </md-table-cell>
                 <md-table-cell>{{
