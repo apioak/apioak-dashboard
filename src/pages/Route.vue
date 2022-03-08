@@ -79,7 +79,9 @@
                     <i
                         class="iconfont icon-xiugai"
                         @click="editRouteName(item)"
-                    />
+                    >
+                      <md-tooltip md-direction="top">修改名称</md-tooltip>
+                    </i>
                   </span>
                   <md-field class="field-edit-name" v-else>
                     <md-input
@@ -328,6 +330,7 @@ export default {
       this.currentRouteId = id;
       this.isCopyRoute = isCopy;
       this.drawerRouteDisplay = true;
+      this.getList();
     },
     drawerRoutePlugIn: function (routeId) {
       this.isDrawerPlugInShow = false; //销毁组件
@@ -336,6 +339,7 @@ export default {
       });
       this.currentRouteId = routeId;
       this.drawerPlugInDisplay = true;
+      this.getList();
     },
     /**
      * 删除

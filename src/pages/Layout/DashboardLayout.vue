@@ -3,6 +3,7 @@
     <side-bar
         :sidebar-item-color="sidebarBackground"
         :sidebar-background-image="sidebarBackgroundImage"
+        :sidebar-background-color="sidebarBackgroundColor"
     >
       <mobile-menu slot="content"></mobile-menu>
       <sidebar-link to="/services">
@@ -43,6 +44,7 @@ export default {
     return {
       sidebarBackground: "blue",
       sidebarBackgroundImage: require("@/assets/img/sidebar-2.jpg"),
+      sidebarBackgroundColor: "#002140",
     };
   },
 };

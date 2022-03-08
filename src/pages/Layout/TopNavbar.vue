@@ -29,8 +29,9 @@
                       class="md-button md-just-icon md-simple"
                       data-toggle="dropdown"
                     >
-                      <md-icon>person</md-icon>
-                      <p class="hidden-lg hidden-md">Profile</p>
+<!--                      <md-icon>person</md-icon>-->
+<!--                      <p class="hidden-lg hidden-md">Profile</p>-->
+                      <img  style="height: 40px; width: 40px; border-radius: 20px;" src="../../assets/img/user.gif">
                     </md-button>
                     <ul class="dropdown-menu dropdown-menu-right">
                       <li><a href="#" @click="logout">退出</a></li>

@@ -1,4 +1,5 @@
 module.exports = {
+  productionSourceMap: false,
   // API_ROOT: "http://demo.apioak.com/",
   // 配置接口转发
   // devServer: {

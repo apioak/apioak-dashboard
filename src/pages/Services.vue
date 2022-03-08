@@ -15,7 +15,7 @@
                       v-model="serviceParams.protocol"
                       md-dense
                   >
-                    <md-option value="0">ALL</md-option>
+                    <md-option value="0">全部</md-option>
                     <md-option value="1">HTTP</md-option>
                     <md-option value="2">HTTPS</md-option>
                     <md-option value="3">HTTP&HTTPS</md-option>
@@ -108,7 +108,9 @@
                     <i
                         class="iconfont icon-xiugai"
                         @click="editServiceName(item)"
-                    />
+                    >
+                      <md-tooltip md-direction="top">修改名称</md-tooltip>
+                    </i>
                   </span>
                   <md-field class="field-edit-name" v-else>
                     <md-input
@@ -145,7 +147,7 @@
                 </md-table-cell>
                 <md-table-cell>
                   <md-switch
-                      class="md-primary"
+                      class="md-primary color-blue"
                       v-model="item.health_check"
                       @change="putSwitchHealthCheck(item)"
                   ></md-switch>

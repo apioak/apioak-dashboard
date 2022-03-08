@@ -5,13 +5,19 @@
     cursor: pointer;
   }
   i.icon-shanchu {
-    color: #ff5722;
+    color: red;
   }
   i.icon-xiugai {
-    color: #2196f3;
+    color: #2979ff;
   }
   i.icon-yuntongbu {
-    color: green;
+    color: #00c853;
+  }
+  i.icon-lianjie {
+    color: #2979ff;
+  }
+  i.icon-chajiangongneng {
+    color: #d500f9;
   }
 }
 .md-list.md-dense .md-list-item-text {
@@ -30,7 +36,7 @@
   color: darkgrey;
 }
 .color-plugin-1 {
-  color: limegreen;
+  color: #00e676;
 }
 .color-plugin-2 {
   color: orangered;
@@ -49,23 +55,23 @@
 }
 
 .color-red {
-  color: red;
+  color: #ff1744;
 }
 
 .color-orange {
-  color: orange;
+  color: #ff9100;
 }
 
 .color-green {
-  color: green;
+  color: #00e676;
 }
 
 .color-purple {
-  color: purple;
+  color: #d500f9;
 }
 
 .color-blue {
-  color: blue;
+  color: #2979ff;
 }
 
 .background-color-grey {

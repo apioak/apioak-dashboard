@@ -5,14 +5,14 @@
       <div class="login-card">
         <md-card>
           <div class="logo">
-            <div><img src="../assets/img/logo.png" class="login-logo" /></div>
+            <div><img src="../assets/img/apioak-logo.png" class="login-logo" /></div>
             <h1>欢迎登录APIOAK</h1>
           </div>
           <md-card-content>
             <md-field :class="getValidationClass('email')">
               <md-icon>email</md-icon>
               <label>邮箱...</label>
-              <md-input v-model.trim="email" required></md-input>
+              <md-input v-model.trim="email" required @keyup.enter="login"></md-input>
               <span class="md-error" v-if="!$v.email.required"
               >邮箱不能为空</span
               >
@@ -27,15 +27,16 @@
                   v-model.trim="password"
                   type="password"
                   required
+                  @keyup.enter="login"
               ></md-input>
               <span class="md-error" v-if="!$v.password.required"
               >密码不能为空</span
               >
             </md-field>
             <div class="login-button">
-              <md-button class="md-raised md-primary" @click="login"
-              >登录</md-button
-              >
+              <md-button class="md-raised md-primary" @click="login">
+                登录
+              </md-button>
             </div>
             <div class="to-login">
               <router-link :to="{ name: 'Register' }">暂无账号，去注册 ></router-link>

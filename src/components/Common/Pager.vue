@@ -327,7 +327,7 @@ li {
 .page-wrapper .activePage {
   color: #fff;
   /*background: #1AB394;*/
-  background: #1e88e5;
+  background: #2979ff;
 }
 
 .canNot {

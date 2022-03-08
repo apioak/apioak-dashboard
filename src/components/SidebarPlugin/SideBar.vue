@@ -53,7 +53,7 @@ export default {
     },
     imgLogo: {
       type: String,
-      default: require("@/assets/img/logo.png"),
+      default: require("@/assets/img/apioak-logo.png"),
     },
     sidebarItemColor: {
       type: String,
@@ -81,14 +81,14 @@ export default {
     sidebarStyle() {
       return {
         //backgroundImage: `url(${this.sidebarBackgroundImage})`,
-        backgroundColor: `#ABACAD`,
+        backgroundColor: `#01579b`,
       };
     },
   },
 };
 </script>
 <style>
-@media screen and (min-width: 991px) {
+@media screen and (min-width: 900px) {
   .nav-mobile-menu {
     display: none;
   }

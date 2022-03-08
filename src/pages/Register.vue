@@ -5,7 +5,7 @@
       <div class="login-card">
         <md-card>
           <div class="logo">
-            <div><img src="../assets/img/logo.png" class="login-logo" /></div>
+            <div><img src="../assets/img/apioak-logo.png" class="login-logo" /></div>
             <h1>欢迎注册APIOAK</h1>
           </div>
           <md-card-content>
