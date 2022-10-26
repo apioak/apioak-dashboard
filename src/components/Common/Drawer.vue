@@ -90,10 +90,10 @@ export default {
   },
   methods: {
     closeByMask() {
-      this.maskClosable && this.$emit("update:display", false);
+      this.maskClosable && this.$emit("update:display", false) && this.$emit("refreshList");
     },
     closeByButton() {
-      this.$emit("update:display", false);
+      this.$emit("update:display", false) && this.$emit("refreshList");
     },
   },
 };

@@ -173,6 +173,7 @@
         :display.sync="drawerRouteDisplay"
         width="700px"
         :inner="true"
+        @refreshList = "refreshList"
     >
       <RouteModify
           v-if="isDrawerRouteShow"
@@ -188,6 +189,7 @@
         :display.sync="drawerPlugInDisplay"
         :inner="true"
         width="830px"
+        @refreshList = "refreshList"
     >
       <PlugInList
           v-if="isDrawerPlugInShow"
@@ -250,6 +252,9 @@ export default {
     },
     saveHandle: function () {
       this.drawerRouteDisplay = false;
+      this.getList();
+    },
+    refreshList: function () {
       this.getList();
     },
     /**

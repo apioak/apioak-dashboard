@@ -218,7 +218,7 @@
     >
       <ServiceModify
         v-if="isShow"
-        @closeDrawer="drawerDisplay = false"
+        @closeDrawer="closeDrawer"
         :serviceId="currentServiceId"
         @saveHandle="saveHandle"
       />
