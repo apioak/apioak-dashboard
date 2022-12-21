@@ -3,9 +3,9 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="5ac5d906-61ee-424b-bb93-aae50adef4fc" name="self-apioak">
-        <fileTransfer rootFolder="/srv/app" accessType="SFTP" host="47.95.1.116" port="22" sshConfigId="803fddc1-5fce-4da2-bdd6-7bcbc31d6066" sshConfig="root@47.95.1.116:22 password">
+        <fileTransfer rootFolder="/srv/app" accessType="SFTP" sshConfigId="803fddc1-5fce-4da2-bdd6-7bcbc31d6066" sshConfig="root@47.95.1.116:22 password">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
