@@ -1,6 +1,5 @@
 module.exports = {
   productionSourceMap: false,
-  // API_ROOT: "http://demo.apioak.com/",
   // 配置接口转发
   // devServer: {
   //   proxy: {
@@ -8,7 +7,7 @@ module.exports = {
   //       target: process.env.VUE_APP_ROOT,
   //       changeOrigin: true,
   //       pathRewrite: {
-  //         "^/api": "",
+  //         "^/api": "/",
   //       },
   //     },
   //   },

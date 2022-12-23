@@ -19,13 +19,13 @@ axios.interceptors.response.use(
     if (res.code === 401) {
       window.location.href = "/#/login";
     }
-    /*if (res.code === 401) {
+    if (res.code === 401) {
       message.error("登录状态失效")
       window.location.href = '/#/login'
     }else if(res.code === 403){
       message.error(res.msg)
       window.location.href = '/#/choose'
-    }*/
+    }
     return config;
   },
   function (error) {

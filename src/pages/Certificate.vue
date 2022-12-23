@@ -156,7 +156,7 @@ import Drawer from "../components/Common/Drawer";
 import ListHeader from "../components/Common/ListHeader";
 import CertificateModify from "./Certificate/Modify";
 import ApiCertificate from "../api/ApiCertificate";
-import ApiRoute from "../api/ApiRoute";
+import ApiRoute from "../api/ApiRouter";
 
 export default {
   components: {

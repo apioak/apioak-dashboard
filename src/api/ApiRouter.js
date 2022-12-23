@@ -3,112 +3,102 @@ import { request } from "../libs/http.js";
 export default {
   /**
    * 路由列表
-   * @param serviceId
    * @param params
    * @returns {Promise<unknown>}
    */
-  getList: (serviceId, params) => {
-    return request("admin/route/list/" + serviceId, params);
+  getList: (params) => {
+    return request("admin/router/list", params);
   },
 
   /**
    * 路由详情
-   * @param serviceId
-   * @param id
+   * @param serviceResId
+   * @param routerResId
    * @returns {Promise<unknown>}
    */
-  info: (serviceId, id) => {
-    return request("admin/route/info/" + serviceId + "/" + id);
+  info: (serviceResId, routerResId) => {
+    return request("admin/router/info/" + serviceResId + "/" + routerResId);
   },
 
   /**
    * 路由增加
-   * @param serviceId
    * @param params
    * @returns {Promise<unknown>}
    */
-  post: (serviceId, params) => {
-    return request("admin/route/add/" + serviceId, params, "post");
+  post: (params) => {
+    return request("admin/router/add", params, "post");
   },
 
   /**
    * 路由修改
-   * @param id
+   * @param serviceResId
+   * @param routerResId
    * @param params
    * @returns {Promise<unknown>}
    */
-  put: (id, params) => {
-    return request(
-      "admin/route/update/" + params.service_id + "/" + id,
-      params,
-      "put"
-    );
+  put: (serviceResId, routerResId, params) => {
+    return request("admin/router/update/" + serviceResId + "/" + routerResId, params, "put");
   },
 
   /**
-   * 路由修改
-   * @param id
-   * @param params
+   * 路由复制
+   * @param serviceResId
+   * @param routerResId
    * @returns {Promise<unknown>}
    */
-  copy: (id, params) => {
-    return request(
-      "admin/route/copy/" + params.service_id + "/" + id,
-      params,
-      "post"
-    );
+  copy: (serviceResId, routerResId) => {
+    return request("admin/router/copy/" + serviceResId + "/" + routerResId, null, "post");
   },
 
   /**
    * 路由名称更新
-   * @param serviceId
-   * @param id
-   * @param name
+   * @param serviceResId
+   * @param routerResId
+   * @param routerName
    * @returns {Promise<unknown>}
    */
-  putName: (serviceId, id, name) => {
+  putName: (serviceResId, routerResId, routerName) => {
     return request(
-      "admin/route/update/name/" + serviceId + "/" + id,
-      { name: name },
-      "put"
+        "admin/router/update/name/" + serviceResId + "/" + routerResId,
+        { name: routerName },
+        "put"
     );
   },
 
   /**
    * 路由发布
-   * @param serviceId
-   * @param id
-   * @param isRelease
+   * @param serviceResId
+   * @param routerResId
    * @returns {Promise<unknown>}
    */
-  putSwitchRelease: (serviceId, id) => {
-    return request("admin/route/switch/release/" + serviceId + "/" + id, null, "put");
+  putSwitchRelease: (serviceResId, routerResId) => {
+    return request("admin/router/switch/release/" + serviceResId + "/" + routerResId, null, "put");
   },
 
   /**
    * 路由开关
-   * @param serviceId
-   * @param id
-   * @param isEnable
+   * @param serviceResId
+   * @param routerResId
+   * @param enable
    * @returns {Promise<unknown>}
    */
-  putSwitchEnable: (serviceId, id, isEnable) => {
+  putSwitchEnable: (serviceResId, routerResId, enable) => {
     return request(
-      "admin/route/switch/enable/" + serviceId + "/" + id,
-      { is_enable: isEnable },
+      "admin/router/switch/enable/" + serviceResId + "/" + routerResId,
+      { enable: enable },
       "put"
     );
   },
 
   /**
    * 路由删除
-   * @param serviceId
-   * @param id
+   * @param serviceResId
+   * @param routerResId
    * @returns {Promise<unknown>}
    */
-  delete: (serviceId, id) => {
+  delete: (serviceResId, routerResId) => {
     return request(
-      "admin/route/delete/" + serviceId + "/" + id,
+      "admin/router/delete/" + serviceResId + "/" + routerResId,
       null,
       "delete"
     );

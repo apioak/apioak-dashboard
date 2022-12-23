@@ -4,6 +4,8 @@ import Services from "@/pages/Services.vue";
 import ServiceDetail from "@/pages/Service/Detail";
 import ServiceRoute from "@/pages/Route";
 
+import Router from "@/pages/Router.vue";
+
 import Certificate from "@/pages/Certificate.vue";
 
 import ClusterNode from "@/pages/ClusterNode";
@@ -36,6 +38,11 @@ const routes = [
         component: Services,
       },
       {
+        path: "/router",
+        name: "Router",
+        component: Router,
+      },
+      {
         path: "services/detail",
         name: "ServiceDetail",
         component: ServiceDetail,
@@ -62,6 +69,7 @@ const routes = [
       },
     ],
   },
+
 ];
 
 export default routes;

@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import ApiRoute from "../../api/ApiRoute";
+import ApiRoute from "../../api/ApiRouter";
 import ApiPlugIn from "../../api/ApiPlugIn";
 
 export default {

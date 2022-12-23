@@ -2,6 +2,14 @@ import { request } from "../libs/http.js";
 
 export default {
   /**
+   * 服务名称列表
+   * @returns {Promise<unknown>}
+   */
+  getNameList: () => {
+    return request("admin/service/name/list", null);
+  },
+
+  /**
    * 服务列表
    * @param params
    * @returns {Promise<unknown>}
@@ -60,23 +68,23 @@ export default {
 
   /**
    * 服务发布
-   * @param id
+   * @param res_id
    * @returns {Promise<unknown>}
    */
-  putSwitchRelease: (id) => {
-    return request("admin/service/switch/release/" + id, null, "put");
+  putSwitchRelease: (res_id) => {
+    return request("admin/service/switch/release/" + res_id, null, "put");
   },
 
   /**
    * 服务开关
-   * @param id
+   * @param res_id
    * @param isEnable
    * @returns {Promise<unknown>}
    */
-  putSwitchEnable: (id, isEnable) => {
+  putSwitchEnable: (res_id, isEnable) => {
     return request(
-      "admin/service/switch/enable/" + id,
-      { is_enable: isEnable },
+      "admin/service/switch/enable/" + res_id,
+      { enable: isEnable },
       "put"
     );
   },

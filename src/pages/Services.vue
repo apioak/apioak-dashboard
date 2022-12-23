@@ -78,9 +78,10 @@
             <md-table>
               <md-table-row class="md-head">
                 <md-table-head>ID/名称</md-table-head>
-                <md-table-head>域名</md-table-head>
-                <md-table-head>协议</md-table-head>
-                <md-table-head>负载均衡</md-table-head>
+                <md-table-head>服务</md-table-head>
+                <md-table-head>方法</md-table-head>
+                <md-table-head>路径</md-table-head>
+                <md-table-head>插件</md-table-head>
                 <md-table-head>
                   发布
                   <i class="iconfont icon-help color-orange">
@@ -91,16 +92,14 @@
                     </md-tooltip>
                   </i>
                 </md-table-head>
-                <md-table-head>WebSocket</md-table-head>
-                <md-table-head>健康检查</md-table-head>
                 <md-table-head>启用</md-table-head>
                 <md-table-head>操作</md-table-head>
               </md-table-row>
 
               <md-table-row v-for="(item, index) in serviceList" :key="index">
                 <md-table-cell>
-                  <router-link :to="{ name: 'ServiceDetail', params: { service_id: item.id } }">
-                    {{ item.id }}
+                  <router-link :to="{ name: '', params: { router_id: item.res_id } }">
+                    {{ item.res_id }}
                   </router-link>
                   <br/>
                   <span v-if="!item.edit_name">
@@ -232,7 +231,7 @@ import ListHeader from "../components/Common/ListHeader";
 import Drawer from "../components/Common/Drawer";
 import ServiceModify from "./Service/Modify";
 import ApiService from "../api/ApiService";
-import ApiRoute from "../api/ApiRoute";
+import ApiRoute from "../api/ApiRouter";
 
 export default {
   components: {
@@ -288,18 +287,19 @@ export default {
      * 获取分页数据
      */
     getList: function () {
-      ApiService.getList(this.serviceParams).then((res) => {
-        if (res.code === 0) {
-          this.total = res.data["total"];
-          this.serviceList = res.data["data"];
-          this.serviceList.forEach(function (item) {
-            item.health_check = item.health_check === 1;
-            item.web_socket = item.web_socket === 1;
-            item.is_enable = item.is_enable === 1;
-            item.edit_name = false;
-          });
-        }
-      });
+      // ApiService.getList(this.serviceParams).then((res) => {
+      //   if (res.code === 0) {
+      //     this.total = res.data["total"];
+      //     this.serviceList = res.data["data"];
+      //     this.serviceList.forEach(function (item) {
+      //       item.health_check = item.health_check === 1;
+      //       item.web_socket = item.web_socket === 1;
+      //       item.is_enable = item.is_enable === 1;
+      //       item.edit_name = false;
+      //     });
+      //   }
+      // });
+
     },
     /**
      * 打开service的编辑

@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import ApiRoute from "../../api/ApiRoute";
+import ApiRoute from "../../api/ApiRouter";
 import { required } from "vuelidate/lib/validators";
 
 export default {

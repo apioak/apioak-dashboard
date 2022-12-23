@@ -10,6 +10,10 @@
         <i class="iconfont icon-fuwuqi"/>
         <p>服务管理</p>
       </sidebar-link>
+      <sidebar-link to="/router">
+        <i class="iconfont icon-lianjie"/>
+        <p>路由管理</p>
+      </sidebar-link>
       <sidebar-link to="/certificate">
         <i class="iconfont icon-zhengshu-copy"/>
         <p>证书管理</p>
