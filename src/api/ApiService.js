@@ -20,23 +20,12 @@ export default {
 
   /**
    * 服务详情
-   * @param id
+   * @param resId
    * @returns {Promise<unknown>}
    */
-  info: (id) => {
-    return request("admin/service/info/" + id);
+  info: (resId) => {
+    return request("admin/service/info/" + resId);
   },
-
-  /**
-   * 服务负载均衡列表
-   * @param id
-   * @param healthCheck
-   * @returns {Promise<unknown>}
-   */
-  getBalanceList: (id, healthCheck) => {
-    return request("admin/service/common/load-balance/list");
-  },
-
   /**
    * 服务增加
    * @param params
@@ -48,81 +37,52 @@ export default {
 
   /**
    * 服务修改
-   * @param id
+   * @param resId
    * @param params
    * @returns {Promise<unknown>}
    */
-  put: (id, params) => {
-    return request("admin/service/update/" + id, params, "put");
+  put: (resId, params) => {
+    return request("admin/service/update" + resId, params, "put");
   },
 
   /**
    * 服务名称更新
-   * @param id
+   * @param resId
    * @param name
    * @returns {Promise<unknown>}
    */
-  putName: (id, name) => {
-    return request("admin/service/update/name/" + id, { name: name }, "put");
+  putName: (resId, name) => {
+    return request("admin/service/update/name/" + resId, { name: name }, "put");
   },
 
   /**
    * 服务发布
-   * @param res_id
+   * @param resId
    * @returns {Promise<unknown>}
    */
-  putSwitchRelease: (res_id) => {
-    return request("admin/service/switch/release/" + res_id, null, "put");
+  putSwitchRelease: (resId) => {
+    return request("admin/service/switch/release/" + resId, null, "put");
   },
 
   /**
    * 服务开关
-   * @param res_id
-   * @param isEnable
+   * @param resId
+   * @param enable
    * @returns {Promise<unknown>}
    */
-  putSwitchEnable: (res_id, isEnable) => {
+  putSwitchEnable: (resId, enable) => {
     return request(
-      "admin/service/switch/enable/" + res_id,
-      { enable: isEnable },
+      "admin/service/switch/enable/" + resId,
+      { enable: enable },
       "put"
     );
   },
-
-  /**
-   * 服务WebSocket开关
-   * @param id
-   * @param websocket
-   * @returns {Promise<unknown>}
-   */
-  putSwitchWebsocket: (id, websocket) => {
-    return request(
-      "admin/service/switch/websocket/" + id,
-      { web_socket: websocket },
-      "put"
-    );
-  },
-
-  /**
-   * 服务HealthCheck开关
-   * @param id
-   * @param healthCheck
-   * @returns {Promise<unknown>}
-   */
-  putSwitchHealthCheck: (id, healthCheck) => {
-    return request(
-      "admin/service/switch/health-check/" + id,
-      { health_check: healthCheck },
-      "put"
-    );
-  },
-
   /**
    * 服务删除
-   * @param id
+   * @param resId
    * @returns {Promise<unknown>}
    */
-  delete: (id) => {
-    return request("admin/service/delete/" + id, null, "delete");
+  delete: (resId) => {
+    return request("admin/service/delete/" + resId, null, "delete");
   },
 };

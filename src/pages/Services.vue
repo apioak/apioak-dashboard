@@ -10,8 +10,8 @@
                 <md-field>
                   <label>协议类型</label>
                   <md-select
-                      name="protocol_type"
-                      id="protocol_type"
+                      name="protocol"
+                      id="protocol"
                       v-model="serviceParams.protocol"
                       md-dense
                   >
@@ -26,9 +26,9 @@
                 <md-field>
                   <label>启用状态</label>
                   <md-select
-                      name="is_enable"
-                      id="is_enable"
-                      v-model="serviceParams.is_enable"
+                      name="enable"
+                      id="enable"
+                      v-model="serviceParams.enable"
                       md-dense
                   >
                     <md-option value="0">全部</md-option>
@@ -41,9 +41,9 @@
                 <md-field>
                   <label>发布状态</label>
                   <md-select
-                    name="release_status"
-                    id="release_status"
-                    v-model="serviceParams.release_status"
+                    name="release"
+                    id="release"
+                    v-model="serviceParams.release"
                     md-dense
                   >
                     <md-option value="0">全部</md-option>
@@ -78,9 +78,8 @@
             <md-table>
               <md-table-row class="md-head">
                 <md-table-head>ID/名称</md-table-head>
-                <md-table-head>服务</md-table-head>
-                <md-table-head>方法</md-table-head>
-                <md-table-head>路径</md-table-head>
+                <md-table-head>域名</md-table-head>
+                <md-table-head>协议</md-table-head>
                 <md-table-head>插件</md-table-head>
                 <md-table-head>
                   发布
@@ -98,9 +97,9 @@
 
               <md-table-row v-for="(item, index) in serviceList" :key="index">
                 <md-table-cell>
-                  <router-link :to="{ name: '', params: { router_id: item.res_id } }">
+                  <span class="font-link-color" @click="drawerService(item.res_id)">
                     {{ item.res_id }}
-                  </router-link>
+                  </span>
                   <br/>
                   <span v-if="!item.edit_name">
                     {{ item.name }}
@@ -135,39 +134,27 @@
                     item.protocol | protocolName
                   }}
                 </md-table-cell>
-                <md-table-cell>{{
-                    item.load_balance | loadBalanceName
-                  }}
+                <md-table-cell>
+                  <i v-for="(plugin, index) in item.plugin_list" :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 2px;">
+                    <md-tooltip md-direction="top">{{ plugin.name }}</md-tooltip>
+                  </i>
                 </md-table-cell>
                 <md-table-cell>
-                  <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
-                  <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
-                  <span v-if="item.release_status === 3" class="color-green font-bold">已发布</span>
+                  <span v-if="item.release === 1" class="color-grey font-bold">未发布</span>
+                  <span v-if="item.release === 2" class="color-orange font-bold">待发布</span>
+                  <span v-if="item.release === 3" class="color-green font-bold">已发布</span>
                 </md-table-cell>
-                <md-table-cell>
-                  <md-switch
-                      class="md-primary color-blue"
-                      v-model="item.health_check"
-                      @change="putSwitchHealthCheck(item)"
-                  ></md-switch>
-                </md-table-cell>
+
                 <md-table-cell>
                   <md-switch
-                      v-model="item.web_socket"
-                      @change="putSwitchWebsocket(item)"
-                      class="md-primary"
-                  ></md-switch>
-                </md-table-cell>
-                <md-table-cell>
-                  <md-switch
-                      v-model="item.is_enable"
+                      v-model="item.enable"
                       @change="putSwitchEnable(item)"
                       class="md-primary"
                   ></md-switch>
                 </md-table-cell>
                 <md-table-cell class="list_manage">
                   <i
-                      v-if="item.release_status !== 3"
+                      v-if="item.release !== 3"
                       @click="putSwitchRelease(item)"
                       class="iconfont icon-yuntongbu"
                   >
@@ -175,8 +162,8 @@
                   </i>
                   <router-link
                     :to="{
-                      name: 'ServiceRoute',
-                      params: { service_id: item.id },
+                      name: 'Router',
+                      params: { service_res_id: item.res_id },
                     }">
                     <i class="iconfont icon-lianjie">
                       <md-tooltip md-direction="top">路由</md-tooltip>
@@ -184,13 +171,13 @@
                   </router-link>
                   <i
                     class="iconfont icon-xiugai"
-                    @click="drawerService(item.id)"
+                    @click="drawerService(item.res_id)"
                   >
                     <md-tooltip md-direction="top">修改</md-tooltip>
                   </i>
                   <i
                     class="iconfont icon-shanchu"
-                    @click="deleteService(item.id)"
+                    @click="deleteService(item.res_id)"
                   >
                     <md-tooltip md-direction="top">删除</md-tooltip>
                   </i>
@@ -210,7 +197,7 @@
     </div>
 
     <Drawer
-      :title="currentServiceId ? '编辑服务' : '新增服务'"
+      :title="currentServiceResId ? '编辑服务' : '新增服务'"
       width="700px"
       :display.sync="drawerDisplay"
       :inner="true"
@@ -218,7 +205,7 @@
       <ServiceModify
         v-if="isShow"
         @closeDrawer="closeDrawer"
-        :serviceId="currentServiceId"
+        :serviceId="currentServiceResId"
         @saveHandle="saveHandle"
       />
     </Drawer>
@@ -255,7 +242,7 @@ export default {
       },
       serviceList: [],
       total: 0,
-      currentServiceId: "",
+      currentServiceResId: "",
       isShow: true,
       active: false,
     };
@@ -287,29 +274,26 @@ export default {
      * 获取分页数据
      */
     getList: function () {
-      // ApiService.getList(this.serviceParams).then((res) => {
-      //   if (res.code === 0) {
-      //     this.total = res.data["total"];
-      //     this.serviceList = res.data["data"];
-      //     this.serviceList.forEach(function (item) {
-      //       item.health_check = item.health_check === 1;
-      //       item.web_socket = item.web_socket === 1;
-      //       item.is_enable = item.is_enable === 1;
-      //       item.edit_name = false;
-      //     });
-      //   }
-      // });
-
+      ApiService.getList(this.serviceParams).then((res) => {
+        if (res.code === 0) {
+          this.total = res.data["total"];
+          this.serviceList = res.data["data"];
+          this.serviceList.forEach(function (item) {
+            item.enable = item.enable === 1;
+            item.edit_name = false;
+          });
+        }
+      });
     },
     /**
      * 打开service的编辑
      */
-    drawerService: function (id = "add") {
+    drawerService: function (resId = "") {
       this.isShow = false; //销毁组件
       this.$nextTick(() => {
         this.isShow = true; //重建组件
       });
-      this.currentServiceId = id;
+      this.currentServiceResId = resId;
       this.drawerDisplay = true;
     },
     /**
@@ -320,7 +304,7 @@ export default {
       this.$forceUpdate();
     },
     saveServiceName: function (item) {
-      ApiService.putName(item.id, item.name).then((res) => {
+      ApiService.putName(item.res_id, item.name).then((res) => {
         if (res.code !== 0) {
           this.$notify({ message: res.msg });
         } else {
@@ -333,59 +317,31 @@ export default {
     /**
      * 删除
      */
-    deleteService: function (id) {
+    deleteService: function (resId) {
       this.$dialog
         .modal({
           title: "提示",
           content: "确认要删除服务？",
         })
         .then(() => {
-          ApiService.delete(id).then((res) => {
+          ApiService.delete(resId).then((res) => {
             if (res.code === 0) {
               this.getList();
             } else {
               this.$notify({ message: res.msg });
+              this.getList();
             }
           });
         });
     },
     /**
-     * 健康检查
-     */
-    putSwitchHealthCheck: function (item) {
-      let status = item.health_check === true ? 1 : 2;
-      ApiService.putSwitchHealthCheck(item.id, status).then((res) => {
-        if (res.code !== 0) {
-          item.health_check = !item.health_check;
-          this.$notify({ message: res.msg });
-        } else {
-          this.$notify({ message: res.msg, type: "primary" });
-          this.getList();
-        }
-      });
-    },
-    /**
-     * Websocket
-     */
-    putSwitchWebsocket: function (item) {
-      let status = item.web_socket === true ? 1 : 2;
-      ApiService.putSwitchWebsocket(item.id, status).then((res) => {
-        if (res.code !== 0) {
-          item.web_socket = !item.web_socket;
-          this.$notify({ message: res.msg });
-        } else {
-          this.$notify({ message: res.msg, type: "primary" });
-          this.getList();
-        }
-      });
-    },
-    /**
      * 服务发布
      */
     putSwitchRelease: function (item) {
-      ApiService.putSwitchRelease(item.id).then((res) => {
+      ApiService.putSwitchRelease(item.res_id).then((res) => {
         if (res.code !== 0) {
           this.$notify({ message: res.msg });
+          this.getList();
         } else {
           this.$notify({ message: res.msg, type: "primary" });
           this.getList();
@@ -395,12 +351,13 @@ export default {
     /**
      * 服务开关
      */
-    putSwitchEnable: function (item, index) {
-      let status = item.is_enable === true ? 1 : 2;
-      ApiService.putSwitchEnable(item.id, status).then((res) => {
+    putSwitchEnable: function (item) {
+      let status = item.enable === true ? 1 : 2;
+      ApiService.putSwitchEnable(item.res_id, status).then((res) => {
         if (res.code !== 0) {
-          item.is_enable = !item.is_enable;
+          item.enable = !item.enable;
           this.$notify({ message: res.msg });
+          this.getList();
         } else {
           this.$notify({ message: res.msg, type: "primary" });
           this.getList();

@@ -252,7 +252,7 @@ export default {
       country: null,
       drawerDisplay: false,
       routerParams: {
-        service_res_id: "",
+        service_res_id: this.$route.params.service_res_id,
         enable: "",
         release: "",
         search: "",
