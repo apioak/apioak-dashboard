@@ -99,7 +99,7 @@
 
               <md-table-row v-for="(item, index) in routerList" :key="index">
                 <md-table-cell>
-                  <span class="font-link-color" @click="drawerRouter(item.res_id)">
+                  <span class="font-link-color" @click="drawerRouter(item)">
                     {{ item.res_id }}
                   </span>
 
@@ -170,6 +170,16 @@
                       <md-tooltip md-direction="top">插件</md-tooltip>
                     </i>
                   </a>
+
+                  <a
+                      href="javascript:void(0);"
+                      @click="copyRouter(item)"
+                  >
+                    <i class="iconfont icon-fuzhi">
+                      <md-tooltip md-direction="top">复制</md-tooltip>
+                    </i>
+                  </a>
+
                   <i
                     class="iconfont icon-xiugai"
                     @click="drawerRouter(item)"
@@ -207,9 +217,8 @@
     >
       <RouteModify
           v-if="isDrawerRouterShow"
-          :serviceId="serviceId"
-          :routeId="currentRouterResId"
-          :isCopy="isCopyRoute"
+          :serviceResId="serviceResId"
+          :routerResId="currentRouterResId"
           @closeDrawer="drawerRouterDisplay = false"
           @saveHandle="saveHandle"
       />
@@ -224,8 +233,8 @@
     >
       <PlugInList
           v-if="isDrawerPluginShow"
-          :serviceId="serviceId"
-          :routeId="currentRouterResId"
+          :serviceResId="serviceResId"
+          :routerResId="currentRouterResId"
       />
     </Drawer>
   </div>
@@ -250,7 +259,6 @@ export default {
     return {
       sidebarBackground: "blue",
       country: null,
-      drawerDisplay: false,
       routerParams: {
         service_res_id: this.$route.params.service_res_id,
         enable: "",
@@ -262,6 +270,7 @@ export default {
       routerList: [],
       serviceNameList: [],
       total: 0,
+      serviceResId: "",
       currentRouterResId: "",
       drawerRouterDisplay: false,
       drawerPluginDisplay: false,
@@ -292,7 +301,7 @@ export default {
       this.$store.commit("setCurrentPage", page.currentPage);
     },
     saveHandle: function () {
-      this.drawerDisplay = false;
+      this.drawerRouterDisplay = false;
       this.getList();
     },
     /**
@@ -340,10 +349,14 @@ export default {
       this.$nextTick(() => {
         this.isDrawerRouterShow = true; //重建组件
       });
+      this.serviceResId = item.service_res_id;
       this.currentRouterResId = item.res_id;
       this.drawerRouterDisplay = true;
-      this.getList();
     },
+
+    /**
+     * 打开插件列表
+     */
     drawerRouterPlugin: function (item) {
       this.isDrawerPluginShow = false; //销毁组件
       this.$nextTick(() => {
@@ -370,6 +383,26 @@ export default {
           this.$notify({ message: res.msg, type: "primary" });
         }
       });
+    },
+    /**
+     * 复制
+     */
+    copyRouter: function (item) {
+      this.$dialog
+          .modal({
+            title: "提示",
+            content: "路由复制会将其下的插件全量复制？",
+          })
+          .then(() => {
+            ApiRouter.copy(item.service_res_id, item.res_id).then((res) => {
+              if (res.code === 0) {
+                this.getList();
+              } else {
+                this.$notify({ message: res.msg });
+                this.getList();
+              }
+            });
+          });
     },
     /**
      * 删除
@@ -417,9 +450,6 @@ export default {
           this.getList();
         }
       });
-    },
-    closeDrawer: function () {
-      this.drawerDisplay = false;
     },
   },
   watch: {

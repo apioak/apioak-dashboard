@@ -2,9 +2,9 @@
   <div>
     <div class="md-layout md-gutter">
       <div class="md-layout-item">
-        <md-field v-if="routeId">
+        <md-field v-if="routerResId">
           <label>路由名称</label>
-          <md-input v-model="form.route_name" required />
+          <md-input v-model="form.router_name" required />
         </md-field>
       </div>
     </div>
@@ -12,8 +12,8 @@
       <div class="md-layout-item">
         <md-field :class="getValidationClass('route_path')">
           <label>路由路径</label>
-          <md-input v-model="form.route_path" required />
-          <span class="md-error" v-if="!$v.form.route_path.required"
+          <md-input v-model="form.router_path" required />
+          <span class="md-error" v-if="!$v.form.router_path.required"
             >路由路径不能为空</span
           >
         </md-field>
@@ -46,7 +46,7 @@
     <div class="md-layout md-gutter">
       <div class="form-item">
         <label class="form-label">启用：</label>
-        <md-switch v-model="form.is_enable" class="md-primary" />
+        <md-switch v-model="form.enable" class="md-primary" />
       </div>
     </div>
     <div class="service-button">
@@ -67,27 +67,23 @@ import { required } from "vuelidate/lib/validators";
 export default {
   name: "RouteModify",
   props: {
-    serviceId: {
+    serviceResId: {
       type: String,
       default: "",
     },
-    routeId: {
+    routerResId: {
       type: String,
       default: "",
-    },
-    isCopy: {
-      type: Boolean,
-      default: false,
     },
   },
   data() {
     return {
       form: {
-        service_id: "",
-        route_name: "",
+        service_res_id: "",
+        router_name: "",
         request_methods: [],
-        route_path: "",
-        is_enable: 1,
+        router_path: "",
+        enable: 1,
       },
     };
   },
@@ -96,7 +92,7 @@ export default {
   },
   validations: {
     form: {
-      route_path: { required },
+      router_path: { required },
       request_methods: { required },
     },
   },
@@ -109,22 +105,29 @@ export default {
         };
       }
     },
+    /**
+     * 获取路由详情
+     */
     getInfo: function () {
-      if (this.routeId.length === 0) {
+      if (this.routerResId.length === 0) {
         return;
       }
-      ApiRoute.info(this.serviceId, this.routeId).then((res) => {
+      ApiRoute.info(this.serviceResId, this.routerResId).then((res) => {
         if (res.code === 0) {
           for (let key of Object.keys(this.form)) {
             this.form[key] = res.data[key];
           }
-          this.form.is_enable = this.form.is_enable === 1;
+          this.form.enable = this.form.enable === 1;
         } else {
           this.$notify({ message: res.msg });
           return this.$emit("saveHandle");
         }
       });
     },
+
+    /**
+     * 提交数据
+     */
     submitForm: function () {
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -132,12 +135,10 @@ export default {
       }
       let routeHttp;
       let formData = JSON.parse(JSON.stringify(this.form));
-      formData.is_enable = formData.is_enable === true ? 1 : 2;
-      formData.service_id = this.serviceId;
+      formData.enable = formData.enable === true ? 1 : 2;
+      formData.service_res_id = this.serviceResId;
       formData.request_methods = formData.request_methods.join(",");
-      if (this.isCopy) { //复制
-        routeHttp = ApiRoute.copy(this.routeId, formData);
-      } else if (this.routeId) { //修改
+      if (this.routeId) { //修改
         routeHttp = ApiRoute.put(this.routeId, formData);
       } else { //添加
         routeHttp = ApiRoute.post(this.serviceId, formData);
