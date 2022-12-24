@@ -364,7 +364,6 @@ export default {
       });
       this.currentRouterResId = item.res_id;
       this.drawerPluginDisplay = true;
-      this.getList();
     },
     /**
      * 修改名称

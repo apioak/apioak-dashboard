@@ -42,7 +42,7 @@ export default {
    * @returns {Promise<unknown>}
    */
   put: (resId, params) => {
-    return request("admin/service/update" + resId, params, "put");
+    return request("admin/service/update/" + resId, params, "put");
   },
 
   /**

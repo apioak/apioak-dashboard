@@ -97,7 +97,7 @@
 
               <md-table-row v-for="(item, index) in serviceList" :key="index">
                 <md-table-cell>
-                  <span class="font-link-color" @click="drawerService(item.res_id)">
+                  <span class="font-link-color" @click="drawerService(item)">
                     {{ item.res_id }}
                   </span>
                   <br/>
@@ -160,6 +160,14 @@
                   >
                     <md-tooltip md-direction="top">发布</md-tooltip>
                   </i>
+                  <a
+                      @click="drawerPlugin(item.res_id)"
+                      href="javascript:void(0);"
+                  >
+                    <i class="iconfont icon-chajiangongneng">
+                      <md-tooltip md-direction="top">插件</md-tooltip>
+                    </i>
+                  </a>
                   <router-link
                     :to="{
                       name: 'Router',
@@ -171,13 +179,13 @@
                   </router-link>
                   <i
                     class="iconfont icon-xiugai"
-                    @click="drawerService(item.res_id)"
+                    @click="drawerService(item)"
                   >
                     <md-tooltip md-direction="top">修改</md-tooltip>
                   </i>
                   <i
                     class="iconfont icon-shanchu"
-                    @click="deleteService(item.res_id)"
+                    @click="deleteService(item)"
                   >
                     <md-tooltip md-direction="top">删除</md-tooltip>
                   </i>
@@ -205,8 +213,21 @@
       <ServiceModify
         v-if="isShow"
         @closeDrawer="closeDrawer"
-        :serviceId="currentServiceResId"
+        :serviceResId="currentServiceResId"
         @saveHandle="saveHandle"
+      />
+    </Drawer>
+
+    <Drawer
+        title="插件列表"
+        :display.sync="drawerPluginDisplay"
+        :inner="true"
+        width="830px"
+        @refreshList = "refreshList"
+    >
+      <PlugInList
+          v-if="isShow"
+          :serviceResId="currentServiceResId"
       />
     </Drawer>
   </div>
@@ -218,7 +239,6 @@ import ListHeader from "../components/Common/ListHeader";
 import Drawer from "../components/Common/Drawer";
 import ServiceModify from "./Service/Modify";
 import ApiService from "../api/ApiService";
-import ApiRoute from "../api/ApiRouter";
 
 export default {
   components: {
@@ -232,6 +252,7 @@ export default {
       sidebarBackground: "blue",
       country: null,
       drawerDisplay: false,
+      drawerPluginDisplay: false,
       serviceParams: {
         protocol: "",
         is_enable: "",
@@ -270,6 +291,9 @@ export default {
       this.drawerDisplay = false;
       this.getList();
     },
+    closeDrawer: function () {
+      this.drawerDisplay = false;
+    },
     /**
      * 获取分页数据
      */
@@ -288,13 +312,24 @@ export default {
     /**
      * 打开service的编辑
      */
-    drawerService: function (resId = "") {
+    drawerService: function (item) {
       this.isShow = false; //销毁组件
       this.$nextTick(() => {
         this.isShow = true; //重建组件
       });
-      this.currentServiceResId = resId;
+      this.currentServiceResId = item.res_id;
       this.drawerDisplay = true;
+    },
+    /**
+     * 打开插件列表
+     */
+    drawerPlugin: function (item) {
+      this.isShow = false; //销毁组件
+      this.$nextTick(() => {
+        this.isShow = true; //重建组件
+      });
+      this.currentServiceResId = item.res_id;
+      this.drawerPluginDisplay = true;
     },
     /**
      * 修改名称
@@ -317,14 +352,14 @@ export default {
     /**
      * 删除
      */
-    deleteService: function (resId) {
+    deleteService: function (item) {
       this.$dialog
         .modal({
           title: "提示",
           content: "确认要删除服务？",
         })
         .then(() => {
-          ApiService.delete(resId).then((res) => {
+          ApiService.delete(item.res_id).then((res) => {
             if (res.code === 0) {
               this.getList();
             } else {
@@ -363,9 +398,6 @@ export default {
           this.getList();
         }
       });
-    },
-    closeDrawer: function () {
-      this.drawerDisplay = false;
     },
   },
   watch: {
