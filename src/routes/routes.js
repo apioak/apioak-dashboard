@@ -1,8 +1,6 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
 import Services from "@/pages/Services.vue";
-import ServiceDetail from "@/pages/Service/Detail";
-import ServiceRoute from "@/pages/Route";
 
 import Router from "@/pages/Router.vue";
 
@@ -43,16 +41,6 @@ const routes = [
         component: Router,
       },
       {
-        path: "services/detail",
-        name: "ServiceDetail",
-        component: ServiceDetail,
-      },
-      {
-        path: "services/route",
-        name: "ServiceRoute",
-        component: ServiceRoute,
-      },
-      {
         path: "certificate",
         name: "Certificate",
         component: Certificate,
@@ -64,7 +52,7 @@ const routes = [
       },
       {
         path: "plugin",
-        name: "PlugIn",
+        name: "Plugin",
         component: PlugIn,
       },
     ],

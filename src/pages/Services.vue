@@ -119,7 +119,7 @@
                 </md-table-cell>
                 <md-table-cell>
                   <div style="cursor: pointer">
-                    {{ item.service_domains[0] }}<span v-if="Object.keys(item.service_domains).length > 1">...</span>
+                    {{ item.service_domains[0] }}<span v-if="Object.keys(item.service_domains).length > 1"> ......</span>
                     <md-tooltip md-direction="top">
                       <div
                           v-for="(domain, domainIndex) in item.service_domains"
@@ -130,9 +130,10 @@
                     </md-tooltip>
                   </div>
                 </md-table-cell>
-                <md-table-cell>{{
-                    item.protocol | protocolName
-                  }}
+                <md-table-cell>
+                  <span v-if="item.protocol === 1" class="color-blue">{{item.protocol | protocolName }}</span>
+                  <span v-if="item.protocol === 2" class="color-red">{{item.protocol | protocolName }}</span>
+                  <span v-if="item.protocol === 3" class="color-purple">{{item.protocol | protocolName }}</span>
                 </md-table-cell>
                 <md-table-cell>
                   <i v-for="(plugin, index) in item.plugin_list" :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 2px;">
@@ -161,7 +162,7 @@
                     <md-tooltip md-direction="top">发布</md-tooltip>
                   </i>
                   <a
-                      @click="drawerPlugin(item.res_id)"
+                      @click="drawerPlugin(item)"
                       href="javascript:void(0);"
                   >
                     <i class="iconfont icon-chajiangongneng">
@@ -223,7 +224,6 @@
         :display.sync="drawerPluginDisplay"
         :inner="true"
         width="830px"
-        @refreshList = "refreshList"
     >
       <PlugInList
           v-if="isShow"
@@ -237,6 +237,7 @@
 import Pager from "../components/Common/Pager";
 import ListHeader from "../components/Common/ListHeader";
 import Drawer from "../components/Common/Drawer";
+import PluginList from "./PlugIn/List";
 import ServiceModify from "./Service/Modify";
 import ApiService from "../api/ApiService";
 
@@ -305,6 +306,18 @@ export default {
           this.serviceList.forEach(function (item) {
             item.enable = item.enable === 1;
             item.edit_name = false;
+            if (item.plugin_list.length > 0) {
+              item.plugin_list.forEach((value, index) => {
+                if ((value.enable === 1) && (value.release === 3)) {
+                  value.color = "color-plugin-" + value.type;
+                } else {
+                  value.color = "color-plugin-0";
+                }
+                if (value.icon.length === 0) {
+                  value.icon = "icon-apex_plugin1";
+                }
+              });
+            }
           });
         }
       });
@@ -373,6 +386,11 @@ export default {
      * 服务发布
      */
     putSwitchRelease: function (item) {
+      if (item.release === 3) {
+        this.$notify({ message: "配置已发布1111" });
+        return
+      }
+
       ApiService.putSwitchRelease(item.res_id).then((res) => {
         if (res.code !== 0) {
           this.$notify({ message: res.msg });

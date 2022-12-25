@@ -163,7 +163,7 @@
                     <md-tooltip md-direction="top">发布</md-tooltip>
                   </i>
                   <a
-                      @click="drawerRouterPlugin(item.res_id)"
+                      @click="drawerRouterPlugin(item)"
                       href="javascript:void(0);"
                   >
                     <i class="iconfont icon-chajiangongneng">
@@ -213,9 +213,8 @@
         :display.sync="drawerRouterDisplay"
         width="700px"
         :inner="true"
-        @refreshList = "refreshList"
     >
-      <RouteModify
+      <RouterModify
           v-if="isDrawerRouterShow"
           :serviceResId="serviceResId"
           :routerResId="currentRouterResId"
@@ -229,9 +228,8 @@
         :display.sync="drawerPluginDisplay"
         :inner="true"
         width="830px"
-        @refreshList = "refreshList"
     >
-      <PlugInList
+      <PluginList
           v-if="isDrawerPluginShow"
           :serviceResId="serviceResId"
           :routerResId="currentRouterResId"
@@ -244,7 +242,8 @@
 import Pager from "../components/Common/Pager";
 import ListHeader from "../components/Common/ListHeader";
 import Drawer from "../components/Common/Drawer";
-import RouteModify from "./Route/Modify";
+import RouterModify from "./Router/Modify";
+import PluginList from "./PlugIn/List";
 import ApiService from "../api/ApiService";
 import ApiRouter from "../api/ApiRouter";
 
@@ -253,7 +252,8 @@ export default {
     ListHeader,
     Drawer,
     Pager,
-    RouteModify
+    RouterModify,
+    PluginList
   },
   data() {
     return {
