@@ -8,7 +8,7 @@ import Certificate from "@/pages/Certificate.vue";
 
 import ClusterNode from "@/pages/ClusterNode";
 
-import PlugIn from "@/pages/PlugIn";
+import Plugin from "@/pages/Plugin";
 
 import Register from "../pages/Register";
 
@@ -36,7 +36,7 @@ const routes = [
         component: Services,
       },
       {
-        path: "/router",
+        path: "router",
         name: "Router",
         component: Router,
       },
@@ -53,7 +53,7 @@ const routes = [
       {
         path: "plugin",
         name: "Plugin",
-        component: PlugIn,
+        component: Plugin,
       },
     ],
   },

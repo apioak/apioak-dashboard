@@ -79,7 +79,7 @@
 <script>
 import Pager from "../components/Common/Pager";
 import Drawer from "../components/Common/Drawer";
-import PlugInModify from "./PlugIn/Modify";
+import PlugInModify from "./Plugin/Modify";
 import ApiPlugIn from "../api/ApiPlugIn";
 
 export default {

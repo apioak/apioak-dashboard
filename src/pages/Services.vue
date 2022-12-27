@@ -132,7 +132,7 @@
                 </md-table-cell>
                 <md-table-cell>
                   <span v-if="item.protocol === 1" class="color-blue">{{item.protocol | protocolName }}</span>
-                  <span v-if="item.protocol === 2" class="color-red">{{item.protocol | protocolName }}</span>
+                  <span v-if="item.protocol === 2" class="color-orange">{{item.protocol | protocolName }}</span>
                   <span v-if="item.protocol === 3" class="color-purple">{{item.protocol | protocolName }}</span>
                 </md-table-cell>
                 <md-table-cell>
@@ -223,11 +223,12 @@
         title="插件列表"
         :display.sync="drawerPluginDisplay"
         :inner="true"
-        width="830px"
+        width="960px"
     >
-      <PlugInList
-          v-if="isShow"
-          :serviceResId="currentServiceResId"
+      <PluginList
+          v-if="isPluginShow"
+          :targetResId="currentServiceResId"
+          :pluginConfigType=pluginConfigType
       />
     </Drawer>
   </div>
@@ -237,7 +238,7 @@
 import Pager from "../components/Common/Pager";
 import ListHeader from "../components/Common/ListHeader";
 import Drawer from "../components/Common/Drawer";
-import PluginList from "./PlugIn/List";
+import PluginList from "./Plugin/List";
 import ServiceModify from "./Service/Modify";
 import ApiService from "../api/ApiService";
 
@@ -247,6 +248,7 @@ export default {
     Drawer,
     Pager,
     ServiceModify,
+    PluginList,
   },
   data() {
     return {
@@ -265,7 +267,9 @@ export default {
       serviceList: [],
       total: 0,
       currentServiceResId: "",
+      pluginConfigType: 1,
       isShow: true,
+      isPluginShow: true,
       active: false,
     };
   },
@@ -337,9 +341,9 @@ export default {
      * 打开插件列表
      */
     drawerPlugin: function (item) {
-      this.isShow = false; //销毁组件
+      this.isPluginShow = false; //销毁组件
       this.$nextTick(() => {
-        this.isShow = true; //重建组件
+        this.isPluginShow = true; //重建组件
       });
       this.currentServiceResId = item.res_id;
       this.drawerPluginDisplay = true;

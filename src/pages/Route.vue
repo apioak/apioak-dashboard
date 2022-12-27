@@ -205,7 +205,7 @@ import Pager from "../components/Common/Pager";
 import Drawer from "../components/Common/Drawer";
 import ListHeader from "../components/Common/ListHeader";
 import RouteModify from "./Router/Modify";
-import PlugInList from "./PlugIn/List";
+import PlugInList from "./Plugin/List";
 import ApiRoute from "../api/ApiRouter";
 import ApiService from "../api/ApiService";
 

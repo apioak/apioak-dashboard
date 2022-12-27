@@ -117,7 +117,7 @@
         </div>
         <div class="md-layout-item md-size-20 upstream-node-op">
           <i class="iconfont icon-tianjia" @click="addNode" />
-          <i class="iconfont icon-jian" @click="removeNode(index)" />
+          <i class="iconfont icon-jian" @click="removeNode(index)" v-if="index != 0"/>
         </div>
       </div>
     </div>

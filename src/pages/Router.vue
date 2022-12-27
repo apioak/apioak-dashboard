@@ -233,6 +233,7 @@
           v-if="isDrawerPluginShow"
           :serviceResId="serviceResId"
           :routerResId="currentRouterResId"
+          :pluginConfigType="pluginConfigType"
       />
     </Drawer>
   </div>
@@ -243,7 +244,7 @@ import Pager from "../components/Common/Pager";
 import ListHeader from "../components/Common/ListHeader";
 import Drawer from "../components/Common/Drawer";
 import RouterModify from "./Router/Modify";
-import PluginList from "./PlugIn/List";
+import PluginList from "./Plugin/List";
 import ApiService from "../api/ApiService";
 import ApiRouter from "../api/ApiRouter";
 
@@ -272,6 +273,7 @@ export default {
       total: 0,
       serviceResId: "",
       currentRouterResId: "",
+      pluginConfigType: 2,
       drawerRouterDisplay: false,
       drawerPluginDisplay: false,
       isDrawerRouterShow: true,
