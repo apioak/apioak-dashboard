@@ -227,12 +227,12 @@
         title="插件列表"
         :display.sync="drawerPluginDisplay"
         :inner="true"
-        width="830px"
+        width="960px"
     >
       <PluginList
           v-if="isDrawerPluginShow"
           :serviceResId="serviceResId"
-          :routerResId="currentRouterResId"
+          :targetResId="pluginRouterResId"
           :pluginConfigType="pluginConfigType"
       />
     </Drawer>
@@ -273,6 +273,7 @@ export default {
       total: 0,
       serviceResId: "",
       currentRouterResId: "",
+      pluginRouterResId: "",
       pluginConfigType: 2,
       drawerRouterDisplay: false,
       drawerPluginDisplay: false,
@@ -291,8 +292,9 @@ export default {
     this.getServiceNameList();
 
     //获取路由列表
-    this.getList();
+    // this.getList();
   },
+
   methods: {
     /**
      * 切换分页
@@ -364,7 +366,7 @@ export default {
       this.$nextTick(() => {
         this.isDrawerPluginShow = true; //重建组件
       });
-      this.currentRouterResId = item.res_id;
+      this.pluginRouterResId = item.res_id;
       this.drawerPluginDisplay = true;
     },
     /**

@@ -227,7 +227,7 @@
     >
       <PluginList
           v-if="isPluginShow"
-          :targetResId="currentServiceResId"
+          :targetResId="pluginServiceResId"
           :pluginConfigType=pluginConfigType
       />
     </Drawer>
@@ -267,6 +267,7 @@ export default {
       serviceList: [],
       total: 0,
       currentServiceResId: "",
+      pluginServiceResId: "",
       pluginConfigType: 1,
       isShow: true,
       isPluginShow: true,
@@ -280,8 +281,6 @@ export default {
   },
   mounted() {
     this.serviceParams.page = this.$store.state.currentPage;
-    //获取服务列表
-    this.getList();
   },
   methods: {
     /**
@@ -312,7 +311,7 @@ export default {
             item.edit_name = false;
             if (item.plugin_list.length > 0) {
               item.plugin_list.forEach((value, index) => {
-                if ((value.enable === 1) && (value.release === 3)) {
+                if (value.enable === 1) {
                   value.color = "color-plugin-" + value.type;
                 } else {
                   value.color = "color-plugin-0";
@@ -345,7 +344,7 @@ export default {
       this.$nextTick(() => {
         this.isPluginShow = true; //重建组件
       });
-      this.currentServiceResId = item.res_id;
+      this.pluginServiceResId = item.res_id;
       this.drawerPluginDisplay = true;
     },
     /**

@@ -322,11 +322,13 @@ export default {
     };
   },
   mounted() {
-    this.getPluginType().then(() => {
-      if (this.targetResId.length > 0 && this.pluginConfigType !== 0) {
-        this.getList();
-      }
-    });
+    if (this.targetResId) {
+      this.getPluginType().then(() => {
+        if (this.targetResId.length > 0 && this.pluginConfigType !== 0) {
+          this.getList();
+        }
+      });
+    }
   },
   methods: {
     /**
@@ -367,14 +369,15 @@ export default {
               }
 
               if (item.plugin_key === "mock") {
-                let http_headers = item.config.http_headers;
+                let httpHeaders = item.config.http_headers;
                 item.config.http_headers = [];
 
-                if (http_headers.length > 0) {
-                  http_headers.forEach((item, index) => {
-                    this.item.config.http_headers.push({
-                      key: index,
-                      value: item,
+                let httpHeadersKeys = Object.keys(httpHeaders);
+                if (httpHeadersKeys.length > 0) {
+                  httpHeadersKeys.forEach((header_item, header_index) => {
+                    item.config.http_headers.push({
+                      key: header_item,
+                      value: http_headers[header_item],
                     })
                   });
                 } else {
@@ -416,11 +419,12 @@ export default {
             let pluginMockHeader = this.plugInInfo.config.http_headers;
             this.plugInInfo.config.http_headers = [];
 
-            if (pluginMockHeader.length > 0) {
-              pluginMockHeader.forEach((item, index) => {
+            let pluginMockHeaderKeys = Object.keys(pluginMockHeader);
+            if (pluginMockHeaderKeys.length > 0) {
+              pluginMockHeaderKeys.forEach((header_item, header_index) => {
                 this.plugInInfo.config.http_headers.push({
-                  key: index,
-                  value: item,
+                  key: header_item,
+                  value: pluginMockHeader[header_item],
                 })
               });
             } else {
