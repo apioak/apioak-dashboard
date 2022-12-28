@@ -18,10 +18,10 @@
         <i class="iconfont icon-zhengshu-copy"/>
         <p>证书管理</p>
       </sidebar-link>
-      <sidebar-link to="/cluster-node">
-        <i class="iconfont icon-jiedian"/>
-        <p>节点管理</p>
-      </sidebar-link>
+<!--      <sidebar-link to="/cluster-node">-->
+<!--        <i class="iconfont icon-jiedian"/>-->
+<!--        <p>节点管理</p>-->
+<!--      </sidebar-link>-->
     </side-bar>
 
     <div class="main-panel">

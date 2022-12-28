@@ -14,28 +14,12 @@
                   <md-select
                     name="is_enable"
                     id="is_enable"
-                    v-model="certParams.is_enable"
+                    v-model="certParams.enable"
                     md-dense
                   >
                     <md-option value="0">全部</md-option>
                     <md-option value="1">启用</md-option>
                     <md-option value="2">停用</md-option>
-                  </md-select>
-                </md-field>
-              </div>
-              <div class="md-layout-item">
-                <md-field>
-                  <label>发布状态</label>
-                  <md-select
-                      name="release_status"
-                      id="release_status"
-                      v-model="certParams.release_status"
-                      md-dense
-                  >
-                    <md-option value="0">全部</md-option>
-                    <md-option value="1">未发布</md-option>
-                    <md-option value="2">待发布</md-option>
-                    <md-option value="3">已发布</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -60,26 +44,16 @@
           <md-card-content>
             <md-table>
               <md-table-row class="md-head">
-                <md-table-head>证书ID</md-table-head>
-                <md-table-head>SNI</md-table-head>
+                <md-table-head>ID</md-table-head>
+                <md-table-head>域名</md-table-head>
                 <md-table-head>过期时间</md-table-head>
-                <md-table-head>
-                  发布
-                  <i class="iconfont icon-help color-orange">
-                    <md-tooltip md-direction="top">
-                      未发布：新增但未发布到数据面<br/>
-                      待发布：当前配置与数据面不符<br/>
-                      已发布：当前配置已发布数据面
-                    </md-tooltip>
-                  </i>
-                </md-table-head>
                 <md-table-head>启用</md-table-head>
                 <md-table-head>操作</md-table-head>
               </md-table-row>
 
               <md-table-row v-for="(item, index) in certificateList" :key="index">
                 <md-table-cell>
-                  {{ item.id }}
+                  {{ item.res_id }}
                 </md-table-cell>
                 <md-table-cell>
                   {{ item.sni }}
@@ -91,32 +65,20 @@
                   {{ item.expired_at | formatTime }}
                 </md-table-cell>
                 <md-table-cell>
-                  <span v-if="item.release_status === 1" class="color-grey font-bold">未发布</span>
-                  <span v-if="item.release_status === 2" class="color-orange font-bold">待发布</span>
-                  <span v-if="item.release_status === 3" class="color-green font-bold">已发布</span>
-                </md-table-cell>
-                <md-table-cell>
                   <md-switch
-                    v-model="item.is_enable"
+                    v-model="item.enable"
                     @change="putSwitchEnable(item)"
                     class="md-primary"
                   ></md-switch>
                 </md-table-cell>
                 <md-table-cell class="list_manage">
-
-                  <i
-                      v-if="item.release_status !== 3"
-                      @click="putSwitchRelease(item)"
-                      class="iconfont icon-yuntongbu"
-                  ><md-tooltip md-direction="top">发布</md-tooltip></i>
-
                   <i
                     class="iconfont icon-xiugai"
-                    @click="drawerCertificate(item.id)"
+                    @click="drawerCertificate(item)"
                   ><md-tooltip md-direction="top">修改</md-tooltip></i>
                   <i
                     class="iconfont icon-shanchu"
-                    @click="deleteCertificate(item.id)"
+                    @click="deleteCertificate(item)"
                   ><md-tooltip md-direction="top">删除</md-tooltip></i>
                 </md-table-cell>
               </md-table-row>
@@ -135,7 +97,7 @@
       </div>
     </div>
     <Drawer
-      title="新增证书"
+      :title="currentCertificateId ? '编辑证书' : '新增证书'"
       :display.sync="drawerDisplay"
       :inner="true"
       width="700px"
@@ -143,7 +105,7 @@
       <CertificateModify
         v-if="isShow"
         @closeDrawer="drawerDisplay = false"
-        :certificateId="currentCertificateId"
+        :certificateResId="currentCertificateId"
         @saveHandle="saveHandle"
       />
     </Drawer>
@@ -156,7 +118,6 @@ import Drawer from "../components/Common/Drawer";
 import ListHeader from "../components/Common/ListHeader";
 import CertificateModify from "./Certificate/Modify";
 import ApiCertificate from "../api/ApiCertificate";
-import ApiRoute from "../api/ApiRouter";
 
 export default {
   components: {
@@ -168,8 +129,7 @@ export default {
   data() {
     return {
       certParams: {
-        is_enable: "",
-        release_status: "",
+        enable: "",
         search: "",
         page: 1,
         page_size: 10,
@@ -208,57 +168,54 @@ export default {
           this.total = res.data["total"];
           this.certificateList = res.data["data"];
           this.certificateList.forEach(function (item) {
-            item.is_enable = item.is_enable === 1;
+            item.enable = item.enable === 1;
           });
           this.newTimeStamp = Math.floor(new Date().getTime() / 1000);
         }
       });
     },
-    /**
-     * 证书发布
-     */
-    putSwitchRelease: function (item) {
-      ApiCertificate.putSwitchRelease(item.id).then((res) => {
-        if (res.code !== 0) {
-          this.$notify({ message: res.msg });
-        } else {
-          this.$notify({ message: res.msg, type: "primary" });
-          this.getList();
-        }
-      });
-    },
+
     /**
      * 证书开关
      */
     putSwitchEnable: function (item) {
-      let status = item.is_enable === true ? 1 : 2;
-      ApiCertificate.putSwitchEnable(item.id, status).then((res) => {
+      let status = item.enable === true ? 1 : 2;
+      ApiCertificate.putSwitchEnable(item.res_id, status).then((res) => {
         if (res.code !== 0) {
-          item.is_enable = !item.is_enable;
+          item.enable = !item.enable;
           this.$notify({ message: res.msg });
         } else {
-          item.is_release = false;
           this.$notify({ message: res.msg, type: "primary" });
           this.getList();
         }
       });
     },
-    drawerCertificate: function (id) {
+
+    /**
+     * 证书编辑
+     * @param item
+     */
+    drawerCertificate: function (item) {
       this.isShow = false; //销毁组件
       this.$nextTick(() => {
         this.isShow = true; //重建组件
       });
-      this.currentCertificateId = id;
+      this.currentCertificateId = item.res_id;
       this.drawerDisplay = true;
     },
-    deleteCertificate: function (id) {
+
+    /**
+     * 证书删除
+     * @param item
+     */
+    deleteCertificate: function (item) {
       this.$dialog
         .modal({
           title: "提示",
           content: "确认要删除证书？",
         })
         .then(() => {
-          ApiCertificate.delete(id).then((res) => {
+          ApiCertificate.delete(item.res_id).then((res) => {
             if (res.code === 0) {
               this.$notify({ message: res.msg, type: "primary" });
               this.getList();

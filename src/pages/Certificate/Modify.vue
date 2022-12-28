@@ -1,5 +1,18 @@
 <template>
   <div>
+
+    <div class="md-layout md-gutter">
+      <div class="md-layout-item">
+        <md-field :class="getValidationClass('sni')">
+          <label>域名</label>
+          <md-input v-model="form.sni" required/>
+          <span class="md-error" v-if="!$v.form.sni.required"
+          >域名不能为空</span
+          >
+        </md-field>
+      </div>
+    </div>
+
     <div class="md-layout md-gutter">
       <div class="md-layout-item">
         <md-field :class="getValidationClass('certificate')">
@@ -11,6 +24,7 @@
         </md-field>
       </div>
     </div>
+
     <div class="md-layout md-gutter">
       <div class="md-layout-item">
         <md-field :class="getValidationClass('private_key')">
@@ -22,12 +36,14 @@
         </md-field>
       </div>
     </div>
+
     <div class="md-layout md-gutter">
       <div class="form-item">
         <label class="form-label">启用：</label>
-        <md-switch v-model="form.is_enable" class="md-primary"></md-switch>
+        <md-switch v-model="form.enable" class="md-primary"></md-switch>
       </div>
     </div>
+
     <div class="service-button">
       <md-button class="md-raised" @click="$emit('closeDrawer')"
       >取消</md-button
@@ -46,7 +62,7 @@ import { required } from "vuelidate/lib/validators";
 export default {
   name: "CertificateModify",
   props: {
-    certificateId: {
+    certificateResId: {
       type: String,
       default: "",
     },
@@ -54,14 +70,16 @@ export default {
   data() {
     return {
       form: {
+        sni: "",
         certificate: null,
         private_key: null,
-        is_enable: 1,
+        enable: 2,
       },
     };
   },
   validations: {
     form: {
+      sni: { required },
       certificate: { required },
       private_key: { required },
     },
@@ -79,15 +97,16 @@ export default {
       }
     },
     getInfo: function () {
-      if (this.certificateId.length === 0) {
+      if (this.certificateResId.length === 0) {
         return;
       }
-      ApiCertificate.info(this.certificateId).then((res) => {
+
+      ApiCertificate.info(this.certificateResId).then((res) => {
         if (res.code === 0) {
           for (let key of Object.keys(this.form)) {
             this.form[key] = res.data[key];
           }
-          this.form.is_enable = this.form.is_enable === 1;
+          this.form.enable = this.form.enable === 1;
         } else {
           this.$notify({ message: res.msg });
           return this.$emit("saveHandle");
@@ -96,15 +115,15 @@ export default {
     },
     submitForm: function () {
       this.$v.$touch();
-
       if (this.$v.$invalid) {
         return;
       }
       let certificateHttp;
       let formData = JSON.parse(JSON.stringify(this.form));
-      formData.is_enable = formData.is_enable === true ? 1 : 2;
-      if (this.certificateId) {
-        certificateHttp = ApiCertificate.put(this.certificateId, formData);
+      formData.enable = formData.enable === true ? 1 : 2;
+
+      if (this.certificateResId) {
+        certificateHttp = ApiCertificate.put(this.certificateResId, formData);
       } else {
         certificateHttp = ApiCertificate.post(formData);
       }

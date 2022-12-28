@@ -12,11 +12,11 @@ export default {
 
   /**
    * 证书详情
-   * @param id
+   * @param resId
    * @returns {Promise<unknown>}
    */
-  info: (id) => {
-    return request("admin/certificate/info/" + id);
+  info: (resId) => {
+    return request("admin/certificate/info/" + resId);
   },
 
   /**
@@ -30,43 +30,30 @@ export default {
 
   /**
    * 证书修改
-   * @param id
+   * @param resId
    * @param params
    * @returns {Promise<unknown>}
    */
-  put: (id, params) => {
-    return request("admin/certificate/update/" + id, params, "put");
-  },
-
-  /**
-   * 证书发布
-   * @param id
-   * @returns {Promise<unknown>}
-   */
-  putSwitchRelease: (id) => {
-    return request("admin/certificate/switch/release/" + id, null, "put");
+  put: (resId, params) => {
+    return request("admin/certificate/update/" + resId, params, "put");
   },
 
   /**
    * 证书开关
-   * @param id
-   * @param isEnable
+   * @param resId
+   * @param enable
    * @returns {Promise<unknown>}
    */
-  putSwitchEnable: (id, isEnable) => {
-    return request(
-      "admin/certificate/switch/enable/" + id,
-      { is_enable: isEnable },
-      "put"
-    );
+  putSwitchEnable: (resId, enable) => {
+    return request("admin/certificate/switch/enable/" + resId, { enable: enable }, "put");
   },
 
   /**
    * 证书删除
-   * @param id
+   * @param resId
    * @returns {Promise<unknown>}
    */
-  delete: (id) => {
-    return request("admin/certificate/delete/" + id, null, "delete");
+  delete: (resId) => {
+    return request("admin/certificate/delete/" + resId, null, "delete");
   },
 };
