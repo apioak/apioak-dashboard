@@ -6,11 +6,53 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "8312085",
-      "name": "漏斗",
-      "font_class": "loudou",
-      "unicode": "e61f",
-      "unicode_decimal": 58911
+      "icon_id": "33567159",
+      "name": "limit-conn",
+      "font_class": "limit-conn",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "33567160",
+      "name": "limit-count",
+      "font_class": "limit-count",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "33567161",
+      "name": "limit-req",
+      "font_class": "limit-req",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "33556464",
+      "name": "cors",
+      "font_class": "cors",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "33556546",
+      "name": "jwt-auth",
+      "font_class": "jwt-auth",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "33556583",
+      "name": "mock",
+      "font_class": "mock",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "33556683",
+      "name": "key-auth",
+      "font_class": "key-auth",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
     },
     {
       "icon_id": "7684991",
@@ -18,13 +60,6 @@
       "font_class": "apex_plugin1",
       "unicode": "e6d7",
       "unicode_decimal": 59095
-    },
-    {
-      "icon_id": "1167354",
-      "name": "auth",
-      "font_class": "auth",
-      "unicode": "e635",
-      "unicode_decimal": 58933
     },
     {
       "icon_id": "11488052",
@@ -69,13 +104,6 @@
       "unicode_decimal": 59054
     },
     {
-      "icon_id": "2199003",
-      "name": "命令集管理",
-      "font_class": "config-command",
-      "unicode": "e749",
-      "unicode_decimal": 59209
-    },
-    {
       "icon_id": "5993150",
       "name": "复制",
       "font_class": "fuzhi",
@@ -116,13 +144,6 @@
       "font_class": "tianjia",
       "unicode": "e622",
       "unicode_decimal": 58914
-    },
-    {
-      "icon_id": "605828",
-      "name": "www",
-      "font_class": "www",
-      "unicode": "e642",
-      "unicode_decimal": 58946
     },
     {
       "icon_id": "666884",

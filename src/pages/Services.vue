@@ -136,7 +136,9 @@
                   <span v-if="item.protocol === 3" class="color-purple">{{item.protocol | protocolName }}</span>
                 </md-table-cell>
                 <md-table-cell>
-                  <i v-for="(plugin, index) in item.plugin_list" :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 2px;">
+                  <i v-for="(plugin, index) in item.plugin_list"
+                     :key="index"
+                     class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 3px;">
                     <md-tooltip md-direction="top">{{ plugin.name }}</md-tooltip>
                   </i>
                 </md-table-cell>
@@ -229,6 +231,7 @@
           v-if="isPluginShow"
           :targetResId="pluginServiceResId"
           :pluginConfigType=pluginConfigType
+          @refreshList="refreshList"
       />
     </Drawer>
   </div>
@@ -293,6 +296,9 @@ export default {
     },
     saveHandle: function () {
       this.drawerDisplay = false;
+      this.getList();
+    },
+    refreshList: function () {
       this.getList();
     },
     closeDrawer: function () {

@@ -137,7 +137,8 @@
                   {{item.router_path }}
                 </md-table-cell>
                 <md-table-cell>
-                  <i v-for="(plugin, index) in item.plugin_list" :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 2px;">
+                  <i v-for="(plugin, index) in item.plugin_list"
+                     :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 3px;">
                     <md-tooltip md-direction="top">{{ plugin.name }}</md-tooltip>
                   </i>
                 </md-table-cell>
@@ -234,6 +235,7 @@
           :serviceResId="serviceResId"
           :targetResId="pluginRouterResId"
           :pluginConfigType="pluginConfigType"
+          @refreshList="refreshList"
       />
     </Drawer>
   </div>
@@ -308,6 +310,9 @@ export default {
       this.drawerRouterDisplay = false;
       this.getList();
     },
+    refreshList: function () {
+      this.getList();
+    },
     /**
      * 获取分页数据
      */
@@ -321,7 +326,7 @@ export default {
             item.edit_name = false;
             if (item.plugin_list.length > 0) {
               item.plugin_list.forEach((value, index) => {
-                if ((value.enable === 1) && (value.release === 3)) {
+                if (value.enable === 1) {
                   value.color = "color-plugin-" + value.type;
                 } else {
                   value.color = "color-plugin-0";

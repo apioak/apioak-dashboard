@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2693038 */
-  src: url('iconfont.woff2?t=1646294801144') format('woff2'),
-       url('iconfont.woff?t=1646294801144') format('woff'),
-       url('iconfont.ttf?t=1646294801144') format('truetype');
+  src: url('iconfont.woff2?t=1672240180951') format('woff2'),
+       url('iconfont.woff?t=1672240180951') format('woff'),
+       url('iconfont.ttf?t=1672240180951') format('truetype');
 }
 
 .iconfont {
@@ -13,16 +13,36 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-loudou:before {
-  content: "\e61f";
+.icon-limit-conn:before {
+  content: "\e613";
+}
+
+.icon-limit-count:before {
+  content: "\e615";
+}
+
+.icon-limit-req:before {
+  content: "\e616";
+}
+
+.icon-cors:before {
+  content: "\e610";
+}
+
+.icon-jwt-auth:before {
+  content: "\e611";
+}
+
+.icon-mock:before {
+  content: "\e612";
+}
+
+.icon-key-auth:before {
+  content: "\e60e";
 }
 
 .icon-apex_plugin1:before {
   content: "\e6d7";
-}
-
-.icon-auth:before {
-  content: "\e635";
 }
 
 .icon-help:before {
@@ -49,10 +69,6 @@
   content: "\e6ae";
 }
 
-.icon-config-command:before {
-  content: "\e749";
-}
-
 .icon-fuzhi:before {
   content: "\ec7a";
 }
@@ -75,10 +91,6 @@
 
 .icon-tianjia:before {
   content: "\e622";
-}
-
-.icon-www:before {
-  content: "\e642";
 }
 
 .icon-shanchu:before {

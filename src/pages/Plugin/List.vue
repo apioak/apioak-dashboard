@@ -377,7 +377,7 @@ export default {
                   httpHeadersKeys.forEach((header_item, header_index) => {
                     item.config.http_headers.push({
                       key: header_item,
-                      value: http_headers[header_item],
+                      value: httpHeaders[header_item],
                     })
                   });
                 } else {
@@ -431,6 +431,7 @@ export default {
               this.plugInInfo.config.http_headers.push(this.pluginMockHeader)
             }
           }
+
         } else {
           this.$notify({ message: res.msg });
         }
@@ -498,8 +499,8 @@ export default {
         if (res.code === 0) {
           this.addPlugin = false;
           this.getList();
-
           this.$notify({ message: res.msg, type: "primary" });
+          this.$emit("refreshList");
         } else {
           this.$notify({ message: res.msg });
         }
@@ -516,8 +517,9 @@ export default {
         if (res.code === 0) {
           this.$notify({ message: res.msg, type: "primary" });
           this.getList();
+          this.$emit("refreshList");
         } else {
-          item.is_enable = !item.is_enable;
+          item.enable = !item.enable;
           this.$notify({ message: res.msg });
         }
       });
@@ -538,6 +540,7 @@ export default {
             if (res.code === 0) {
               this.$notify({ message: res.msg, type: "primary" });
               this.getList();
+              this.$emit("refreshList");
             } else {
               this.$notify({ message: res.msg });
             }
@@ -613,6 +616,7 @@ export default {
         if (res.code === 0) {
           this.$notify({ message: res.msg, type: "primary" });
           this.getList();
+          this.$emit("refreshList");
         } else {
           this.$notify({ message: res.msg });
         }
