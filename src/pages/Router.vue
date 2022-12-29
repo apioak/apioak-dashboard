@@ -294,7 +294,7 @@ export default {
     this.getServiceNameList();
 
     //获取路由列表
-    // this.getList();
+    this.getList();
   },
 
   methods: {

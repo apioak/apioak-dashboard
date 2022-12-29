@@ -284,6 +284,9 @@ export default {
   },
   mounted() {
     this.serviceParams.page = this.$store.state.currentPage;
+
+    //获取服务列表
+    this.getList();
   },
   methods: {
     /**
