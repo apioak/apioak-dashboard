@@ -72,7 +72,7 @@ apioak-dashboard/
     │   ├── Certificate
     │   ├── Layout
     │   ├── PlugIn
-    │   ├── Route
+    │   ├── Router
     │   └── Service
     ├── routes
     └── store
