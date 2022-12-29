@@ -180,13 +180,13 @@
         <div class="plug-td" style="width: 40px">
           <i class="iconfont" :class="[item.icon, item.color]"></i>
         </div>
-        <div class="plug-td" style="width: 250px">
+        <div class="plug-td font-bold" style="width: 250px">
           {{ item.name }}
         </div>
-        <div class="plug-td font-bold" :class="[item.color]" style="width: 110px">
+        <div class="plug-td" :class="[item.color]" style="width: 110px">
           {{ item.plugin_key }}
         </div>
-        <div class="plug-td font-bold" :class="[item.color]" style="width: 60px">
+        <div class="plug-td" :class="[item.color]" style="width: 60px">
           {{ item.type_name }}
         </div>
         <div class="plug-td" style="width: 240px">
