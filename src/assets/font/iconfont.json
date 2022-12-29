@@ -6,16 +6,16 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "33567159",
-      "name": "limit-conn",
-      "font_class": "limit-conn",
+      "icon_id": "33568370",
+      "name": "limit-count",
+      "font_class": "limit-count",
       "unicode": "e613",
       "unicode_decimal": 58899
     },
     {
-      "icon_id": "33567160",
-      "name": "limit-count",
-      "font_class": "limit-count",
+      "icon_id": "33568373",
+      "name": "limit-conn",
+      "font_class": "limit-conn",
       "unicode": "e615",
       "unicode_decimal": 58901
     },
