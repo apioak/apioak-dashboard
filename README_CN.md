@@ -16,28 +16,28 @@
 
 [简体中文](README_CN.md) | [English](README.md)
 
-## Introduction
-`apioak-dashboard` is the control plane of `apioak` gateway, based on <a target="_blank" href="https://github.com/vuejs/vue">Vue</a> and <a target="_blank" href=" https://github.com/creativetimofficial/vue-material-dashboard">Vue Material</a> development, the project cooperates with the back-end project of the control surface <a target="_blank" href="https://github.com /apioak/apioak-admin">apioak-admin</a>.
+## 简介
+`apioak-dashboard` 是`apioak`网关的控制面，基于 <a target="_blank" href="https://github.com/vuejs/vue">Vue</a> 和 <a target="_blank" href="https://github.com/creativetimofficial/vue-material-dashboard">Vue Material</a> 开发，项目配合控制面的后端项目 <a target="_blank" href="https://github.com/apioak/apioak-admin">apioak-admin</a> 一起使用。
 
-## Quick start
-<a target="_blank" href="https://github.com/apioak/apioak-dashboard">Download code from Github</a>
+## 快速开始
+<a target="_blank" href="https://github.com/apioak/apioak-dashboard"> 从 Github 下载代码</a>
 
-### Install cnpm
+### 安装cnpm
 ```
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 ```
 
-### Install project dependencies
+### 安装项目依赖
 ```
 cnpm install
 ```
 
-### Start the development environment
+### 开发环境启动项目
 ```
 npm run dev
 ```
 
-### Edit static files in production environment
+### 生产环境编辑静态文件
 ```
 npm run build
 ```
@@ -45,7 +45,7 @@ npm run build
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-## Project directory structure
+## 项目目录结构
 ```
 apioak-dashboard/
 ├── public
