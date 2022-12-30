@@ -129,7 +129,7 @@ export default {
         search: "",
       },
       page: 1,
-      page_size: 2,
+      page_size: 10,
       certificateList: [],
       total: 0,
       isTab: false,
