@@ -197,10 +197,11 @@
             </md-table>
             <Pager
               v-if="total > 0"
-              :pageSize="serviceParams.page_size"
+              :pageSize="page_size"
               :current-pages=currentPage
               :totals="total"
               @current-change="handleCurrentChange"
+              :tab="isTab"
             />
           </md-card-content>
         </md-card>
@@ -240,9 +241,9 @@
 <script>
 import Pager from "../components/Common/Pager";
 import ListHeader from "../components/Common/ListHeader";
+import ServiceModify from "./Service/Modify";
 import Drawer from "../components/Common/Drawer";
 import PluginList from "./Plugin/List";
-import ServiceModify from "./Service/Modify";
 import ApiService from "../api/ApiService";
 
 export default {
@@ -256,17 +257,16 @@ export default {
   data() {
     return {
       sidebarBackground: "blue",
-      country: null,
       drawerDisplay: false,
       drawerPluginDisplay: false,
       serviceParams: {
-        protocol: "",
-        is_enable: "",
-        release_status: "",
+        protocol: null,
+        enable: null,
         search: "",
-        page: 1,
-        page_size: 10,
       },
+      page: 1,
+      page_size: 10,
+      currentPage: 1,
       serviceList: [],
       total: 0,
       currentServiceResId: "",
@@ -275,16 +275,10 @@ export default {
       isShow: true,
       isPluginShow: true,
       active: false,
+      isTab: false,
     };
   },
-  computed: {
-    currentPage () {
-      return parseInt(this.$store.state.currentPage);
-    }
-  },
   mounted() {
-    this.serviceParams.page = this.$store.state.currentPage;
-
     //获取服务列表
     this.getList();
   },
@@ -294,8 +288,8 @@ export default {
      * @param page
      */
     handleCurrentChange: function (page) {
-      this.serviceParams.page = page.currentPage;
-      this.$store.commit("setCurrentPage", page.currentPage);
+      this.page = page.currentPage;
+      this.getList()
     },
     saveHandle: function () {
       this.drawerDisplay = false;
@@ -311,7 +305,11 @@ export default {
      * 获取分页数据
      */
     getList: function () {
-      ApiService.getList(this.serviceParams).then((res) => {
+      let params = JSON.parse(JSON.stringify(this.serviceParams));
+      params.page = this.page
+      params.page_size = this.page_size
+
+      ApiService.getList(params).then((res) => {
         if (res.code === 0) {
           this.total = res.data["total"];
           this.serviceList = res.data["data"];
@@ -399,7 +397,7 @@ export default {
      */
     putSwitchRelease: function (item) {
       if (item.release === 3) {
-        this.$notify({ message: "配置已发布1111" });
+        this.$notify({ message: "配置已发布" });
         return
       }
 
@@ -433,7 +431,10 @@ export default {
   watch: {
     serviceParams: {
       handler() {
+        this.page = 1;
+        this.currentPage = 1;
         this.getList();
+        this.isTab = true;
       },
       deep: true,
     },

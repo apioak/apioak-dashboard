@@ -3,14 +3,14 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/apioak/apioak-dashboard">
+    <img src="https://img.shields.io/badge/apioak--dashboard-v0.6.0-blue" alt="apioak-dashboard">
+  </a>
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.6.14-brightgreen.svg" alt="vue">
   </a>
   <a href="https://github.com/creativetimofficial/vue-material-dashboard">
     <img src="https://img.shields.io/badge/vue--material--dashboard-1.5.0-brightgreen" alt="vue-material-dashboard">
-  </a>
-  <a href="https://github.com/apioak/apioak-dashboard">
-    <img src="https://img.shields.io/badge/apioak--dashboard-v0.6.0-blue" alt="apioak-dashboard">
   </a>
 </p>
 

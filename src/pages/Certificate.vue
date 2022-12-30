@@ -11,12 +11,7 @@
               <div class="md-layout-item">
                 <md-field>
                   <label>启用状态</label>
-                  <md-select
-                    name="is_enable"
-                    id="is_enable"
-                    v-model="certParams.enable"
-                    md-dense
-                  >
+                  <md-select  md-dense v-model="certParams.enable" id="certParams.enable" name="certParams.enable">
                     <md-option value="0">全部</md-option>
                     <md-option value="1">启用</md-option>
                     <md-option value="2">停用</md-option>
@@ -87,10 +82,11 @@
 
             <Pager
               v-if="total > 0"
-              :pageSize="certParams.page_size"
-              :current-page="certParams.page"
+              :pageSize="page_size"
+              :current-page="page"
               :totals="total"
               @current-change="handleCurrentChange"
+              :tab="isTab"
             />
           </md-card-content>
         </md-card>
@@ -129,13 +125,14 @@ export default {
   data() {
     return {
       certParams: {
-        enable: "",
+        enable: null,
         search: "",
-        page: 1,
-        page_size: 10,
       },
+      page: 1,
+      page_size: 2,
       certificateList: [],
       total: 0,
+      isTab: false,
       isShow: true,
       drawerDisplay: false,
       currentCertificateId: "",
@@ -152,8 +149,8 @@ export default {
      * @param page
      */
     handleCurrentChange: function (page) {
-      this.certParams.page = page.currentPage;
-      this.$store.commit("currentPage", page.currentPage);
+      this.page = page.currentPage;
+      this.getList()
     },
     saveHandle: function () {
       this.drawerDisplay = false;
@@ -163,7 +160,11 @@ export default {
      * 获取分页数据
      */
     getList: function () {
-      ApiCertificate.getList(this.certParams).then((res) => {
+      let params = JSON.parse(JSON.stringify(this.certParams));
+      params.page = this.page
+      params.page_size = this.page_size
+
+      ApiCertificate.getList(params).then((res) => {
         if (res.code === 0) {
           this.total = res.data["total"];
           this.certificateList = res.data["data"];
@@ -229,7 +230,10 @@ export default {
   watch: {
     certParams: {
       handler() {
+        this.page = 1;
+        this.currentPage = 1;
         this.getList();
+        this.isTab = true;
       },
       deep: true,
     },

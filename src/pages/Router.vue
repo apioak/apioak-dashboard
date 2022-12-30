@@ -11,13 +11,13 @@
                 <md-field>
                   <label>所属服务</label>
                   <md-select
-                      name="bind_service"
-                      id="bind_service"
+                      name="service_res_id"
+                      id="service_res_id"
                       v-model="routerParams.service_res_id"
                       md-dense
                   >
                     <md-option value="0">全部</md-option>
-                    <md-option v-for="(item, index) in serviceNameList" :key="index" :value=item.res_id >{{ item.name }}</md-option>
+                    <md-option v-for="(serviceItem, index) in serviceNameList" :key="index" :value="serviceItem.res_id" >{{ serviceItem.name }}</md-option>
                   </md-select>
                 </md-field>
               </div>
@@ -125,23 +125,29 @@
                 </md-table-cell>
                 <md-table-cell>
                   <span v-for="(method, index) in item.request_methods" :key="index">
-                    <el-tag v-if="method === `ALL`" class="font-block background-color-black"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `GET`" class="font-block background-color-green"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `POST`" class="font-block background-color-orange"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `PUT`" class="font-block background-color-blue"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `DELETE`" class="font-block background-color-red"> {{ method }} </el-tag>
-                    <el-tag v-if="method === `OPTIONS`" class="font-block background-color-purple"> {{ method }} </el-tag>
+                    <span v-if="method === `ALL`" class="font-block background-color-black"> {{ method }} </span>
+                    <span v-if="method === `GET`" class="font-block background-color-green"> {{ method }} </span>
+                    <span v-if="method === `POST`" class="font-block background-color-orange"> {{ method }} </span>
+                    <span v-if="method === `PUT`" class="font-block background-color-blue"> {{ method }} </span>
+                    <span v-if="method === `DELETE`" class="font-block background-color-red"> {{ method }} </span>
+                    <span v-if="method === `OPTIONS`" class="font-block background-color-purple"> {{ method }} </span>
                   </span>
                 </md-table-cell>
                 <md-table-cell>
                   {{item.router_path }}
                 </md-table-cell>
                 <md-table-cell>
-                  <i v-for="(plugin, index) in item.plugin_list"
-                     :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 3px;">
-                    <md-tooltip md-direction="top">{{ plugin.name }}</md-tooltip>
-                  </i>
+
+                  <div v-if="item.plugin_list.length > 0">
+                    <i v-for="(plugin, index) in item.plugin_list"
+                       :key="index" class="iconfont" :class="[plugin.icon, plugin.color]" style="margin: 3px;">
+                      <md-tooltip md-direction="top">{{ plugin.name }}</md-tooltip>
+                    </i>
+                  </div>
+                  <div v-else></div>
+
                 </md-table-cell>
+
                 <md-table-cell>
                   <span v-if="item.release === 1" class="color-grey font-bold">未发布</span>
                   <span v-if="item.release === 2" class="color-orange font-bold">待发布</span>
@@ -199,10 +205,11 @@
             </md-table>
             <Pager
               v-if="total > 0"
-              :pageSize="routerParams.page_size"
+              :pageSize="page_size"
               :current-pages=currentPage
               :totals="total"
               @current-change="handleCurrentChange"
+              :tab="isTab"
             />
           </md-card-content>
         </md-card>
@@ -261,15 +268,15 @@ export default {
   data() {
     return {
       sidebarBackground: "blue",
-      country: null,
       routerParams: {
         service_res_id: this.$route.params.service_res_id,
-        enable: "",
-        release: "",
+        enable: null,
+        release: null,
         search: "",
-        page: 1,
-        page_size: 10,
       },
+      page: 1,
+      page_size: 10,
+      currentPage: 1,
       routerList: [],
       serviceNameList: [],
       total: 0,
@@ -281,15 +288,10 @@ export default {
       drawerPluginDisplay: false,
       isDrawerRouterShow: true,
       isDrawerPluginShow: true,
+      isTab: false,
     };
   },
-  computed: {
-    currentPage () {
-      return parseInt(this.$store.state.currentPage);
-    }
-  },
   mounted() {
-    this.routerParams.page = this.$store.state.currentPage;
     // 获取服务名称列表用于筛选
     this.getServiceNameList();
 
@@ -303,8 +305,8 @@ export default {
      * @param page
      */
     handleCurrentChange: function (page) {
-      this.routerParams.page = page.currentPage;
-      this.$store.commit("setCurrentPage", page.currentPage);
+      this.page = page.currentPage;
+      this.getList()
     },
     saveHandle: function () {
       this.drawerRouterDisplay = false;
@@ -317,26 +319,32 @@ export default {
      * 获取分页数据
      */
     getList: function () {
-      ApiRouter.getList(this.routerParams).then((res) => {
+      let params = JSON.parse(JSON.stringify(this.routerParams));
+      params.page = this.page
+      params.page_size = this.page_size
+
+      ApiRouter.getList(params).then((res) => {
         if (res.code === 0) {
           this.total = res.data["total"];
           this.routerList = res.data["data"];
-          this.routerList.forEach(function (item) {
-            item.enable = item.enable === 1;
-            item.edit_name = false;
-            if (item.plugin_list.length > 0) {
-              item.plugin_list.forEach((value, index) => {
-                if (value.enable === 1) {
-                  value.color = "color-plugin-" + value.type;
-                } else {
-                  value.color = "color-plugin-0";
-                }
-                if (value.icon.length === 0) {
-                  value.icon = "icon-apex_plugin1";
-                }
-              });
-            }
-          });
+          if (this.routerList.length > 0) {
+            this.routerList.forEach(function (item) {
+              item.enable = item.enable === 1;
+              item.edit_name = false;
+              if (item.plugin_list.length > 0) {
+                item.plugin_list.forEach((value, index) => {
+                  if (value.enable === 1) {
+                    value.color = "color-plugin-" + value.type;
+                  } else {
+                    value.color = "color-plugin-0";
+                  }
+                  if (value.icon.length === 0) {
+                    value.icon = "icon-apex_plugin1";
+                  }
+                });
+              }
+            });
+          }
         }
       });
     },
@@ -463,7 +471,10 @@ export default {
   watch: {
     routerParams: {
       handler() {
+        this.page = 1;
+        this.currentPage = 1;
         this.getList();
+        this.isTab = true;
       },
       deep: true,
     },
