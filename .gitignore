@@ -5,3 +5,4 @@ dist/
 package-lock.json
 /docs
 /dist
+**/.DS_Store
