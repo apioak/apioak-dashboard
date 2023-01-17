@@ -1,0 +1,45 @@
+import axios from 'axios'
+import router from '@/router'
+import store from '@/store'
+
+// 初始化
+const instance = axios.create({
+  timeout: 20000
+})
+
+// 开发环境增加api前缀，在代理服务中使用
+if (process.env.NODE_ENV == 'development') {
+  instance.defaults.baseURL = '/api'
+}
+
+// 请求拦截
+instance.interceptors.request.use(
+  config => {
+    const { userInfo } = store.state.user
+    if (userInfo.token) {
+      config.headers['auth-token'] = userInfo.token
+    }
+    return config
+  },
+  err => {
+    return Promise.reject(err)
+  }
+)
+
+// 响应拦截
+instance.interceptors.response.use(
+  response => {
+    return response.data
+  },
+  err => {
+    if (err.response && err.response.status === 401) {
+      // 清除用户信息
+      store.commit('user/setToken', {})
+      // 跳转登录页
+      router.push('/login')
+    }
+    return Promise.reject(err)
+  }
+)
+
+export default instance

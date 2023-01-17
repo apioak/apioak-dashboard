@@ -1,0 +1,1 @@
+<template>upstream-index</template>

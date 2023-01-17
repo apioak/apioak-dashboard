@@ -1,0 +1,1 @@
+<template>ssl-index</template>
