@@ -16,29 +16,11 @@
           autocomplete="off"
           @finish="loginFn"
         >
-          <a-form-item
-            label="邮箱"
-            name="email"
-            :rules="[
-              { required: true, message: '请输入邮箱!' },
-              {
-                pattern: /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/,
-                message: '邮箱格式错误！!'
-              }
-            ]"
-          >
+          <a-form-item label="邮箱" name="email" :rules="schemaUser.email">
             <a-input v-model:value="form.email" />
           </a-form-item>
 
-          <a-form-item
-            label="密码"
-            name="password"
-            :rules="[
-              { required: true, message: '请输入密码!' },
-              { min: 8, message: '密码最小8个字符' },
-              { max: 16, message: '密码最长16个字符' }
-            ]"
-          >
+          <a-form-item label="密码" name="password" :rules="schemaUser.password">
             <a-input-password v-model:value="form.password" />
           </a-form-item>
 
@@ -59,6 +41,7 @@ import router from '@/router'
 import { message } from 'ant-design-vue'
 import { $login } from '@/api'
 import store from '@/store'
+import { schemaUser } from '@/schema'
 
 export default {
   setup() {
@@ -85,7 +68,8 @@ export default {
 
     return {
       form,
-      loginFn
+      loginFn,
+      schemaUser
     }
   }
 }

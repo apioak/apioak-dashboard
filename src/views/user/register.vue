@@ -15,54 +15,19 @@
           autocomplete="off"
           @finish="onFinish"
         >
-          <a-form-item
-            label="昵称"
-            name="name"
-            :rules="[
-              { required: true, message: '请输入昵称!' },
-              { pattern: /^[A-Za-z\d_]+$/, message: '昵称仅包含字母数字下划线字符!' },
-              { max: 15, message: '昵称最长15个字符' }
-            ]"
-          >
+          <a-form-item label="昵称" name="name" :rules="schemaUser.userName">
             <a-input v-model:value="form.name" />
           </a-form-item>
 
-          <a-form-item
-            label="邮箱"
-            name="email"
-            :rules="[
-              { required: true, message: '请输入邮箱!' },
-              {
-                pattern: /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/,
-                message: '邮箱格式错误！!'
-              }
-            ]"
-          >
+          <a-form-item label="邮箱" name="email" :rules="schemaUser.email">
             <a-input v-model:value="form.email" />
           </a-form-item>
 
-          <a-form-item
-            label="密码"
-            name="password"
-            :rules="[
-              { required: true, message: '请输入密码!' },
-              { min: 8, message: '密码最小8个字符' },
-              { max: 16, message: '密码最长16个字符' }
-            ]"
-          >
+          <a-form-item label="密码" name="password" :rules="schemaUser.password">
             <a-input-password v-model:value="form.password" />
           </a-form-item>
 
-          <a-form-item
-            label="确认密码"
-            :rules="[
-              { required: true, message: '请输入确认密码!' },
-              {
-                validator: confirmPassValidator
-              }
-            ]"
-            name="re_password"
-          >
+          <a-form-item label="确认密码" :rules="validateCheckPass" name="re_password">
             <a-input-password v-model:value="form.re_password" />
           </a-form-item>
 
@@ -82,6 +47,7 @@ import { reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { $register } from '@/api'
 import router from '@/router'
+import { schemaUser } from '@/schema'
 
 export default {
   setup() {
@@ -97,7 +63,6 @@ export default {
     const onFinish = async () => {
       const { code, msg } = await $register(form)
       if (code == 0) {
-        message.success('注册成功，请登录')
         router.replace('/login')
       } else {
         message.error(msg)
@@ -105,15 +70,21 @@ export default {
     }
 
     // 校验确认密码
-    const confirmPassValidator = async (_, value) => {
+    const checkPass = async (_, value) => {
       if (value.length !== 0 && value !== form.password) {
         return Promise.reject('两次密码输入不匹配！')
       } else {
         return Promise.resolve().callback
       }
     }
+    const validateCheckPass = [
+      { required: true, message: '请输入确认密码!' },
+      {
+        validator: checkPass
+      }
+    ]
 
-    return { form, onFinish, confirmPassValidator }
+    return { form, onFinish, validateCheckPass, schemaUser }
   }
 }
 </script>

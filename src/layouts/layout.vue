@@ -1,38 +1,50 @@
 <template>
-  <a-layout class="layout">
-    <!-- 左侧导航 -->
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
-
+  <!-- 左侧部分 -->
+  <a-layout>
+    <!-- 固定菜单 -->
+    <a-layout-sider
+      :style="{
+        marginTop: '60px',
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        bottom: 0
+      }"
+    >
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="service" @click="$router.push('/service')">
-          <user-outlined />
+          <i class="iconfont icon-fuwuqi" />
           <span>服务管理</span>
         </a-menu-item>
         <a-menu-item key="router" @click="$router.push('/router')">
-          <video-camera-outlined />
+          <i class="iconfont icon-lianjie" />
           <span>路由管理</span>
         </a-menu-item>
         <a-menu-item key="upstream" @click="$router.push('/upstream')">
-          <upload-outlined />
+          <i class="iconfont icon-jiedian" />
           <span>上游管理</span>
         </a-menu-item>
         <a-menu-item key="ssl" @click="$router.push('/ssl')">
-          <upload-outlined />
+          <i class="iconfont icon-zhengshu-copy" />
           <span>证书管理</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
+
     <!-- 右侧 -->
     <a-layout>
-      <!-- 头部 -->
-      <a-layout-header class="header">
-        <menu-unfold-outlined
-          v-if="collapsed"
-          class="trigger"
-          @click="() => (collapsed = !collapsed)"
-        />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+      <!-- 固定头部 -->
+      <a-layout-header class="header" :style="{ position: 'fixed', zIndex: 1, width: '100%' }">
+        <div class="logo">
+          <div>
+            <img src="@/assets/img/apioak-logo-no-text.png" />
+          </div>
+          <div>
+            <span>APIOAK-Admin</span>
+          </div>
+        </div>
 
         <!-- 用户信息 -->
         <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="horizontal">
@@ -49,35 +61,28 @@
       </a-layout-header>
 
       <!-- 主体 -->
-      <a-layout-content class="content">
-        <router-view></router-view>
-      </a-layout-content>
+      <a-layout :style="{ marginLeft: '200px', marginTop: '64px' }">
+        <!-- 内容 -->
+        <a-layout-content class="content">
+          <router-view></router-view>
+        </a-layout-content>
+
+        <!-- 页脚 -->
+        <!-- <a-layout-footer :style="{ textAlign: 'center' }">
+          Ant Design ©2018 Created by Ant UED
+        </a-layout-footer> -->
+      </a-layout>
     </a-layout>
   </a-layout>
 </template>
 
 <script>
-import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined
-} from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { $logout } from '@/api'
 import { message } from 'ant-design-vue'
 import router from '@/router'
 import store from '@/store'
 export default {
-  components: {
-    UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined
-  },
-
   setup() {
     const selectedKeys = ref(['service'])
     const collapsed = ref(false)
@@ -101,52 +106,41 @@ export default {
 </script>
 
 <style lange="scss" scoped>
-.layout {
-  width: 100vw;
-  height: 100vh;
+.content {
+  margin: 10px;
+  padding: 10px;
+  background: #fff;
 }
 .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
+  height: 30px;
+  margin: 15px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
 }
-
+.logo img {
+  height: 30px;
+  margin-left: 6px;
+}
+.logo span {
+  margin-left: 10px;
+  color: #fff;
+  font-size: 17px;
+}
 .header {
   background: #001529;
   padding: 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
-
 .user span {
-  margin-top: 10px;
   margin-right: 10px;
 }
-
 .user img {
   width: 40px;
   height: 40px;
   border-radius: 20px;
   margin-right: 10px;
-}
-
-.trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-  color: #ffffffa6;
-}
-
-.trigger:hover {
-  color: #1890ff;
-}
-
-.content {
-  margin: 10px;
-  padding: 10px;
-  background: #fff;
-  minheight: 280px;
 }
 </style>

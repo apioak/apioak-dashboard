@@ -29,7 +29,14 @@ instance.interceptors.request.use(
 // 响应拦截
 instance.interceptors.response.use(
   response => {
-    return response.data
+    let data = response.data
+    if (data.code == 401) {
+      // 清除用户信息
+      store.commit('user/setToken', {})
+      // 跳转登录页
+      router.push('/login')
+    }
+    return data
   },
   err => {
     if (err.response && err.response.status === 401) {

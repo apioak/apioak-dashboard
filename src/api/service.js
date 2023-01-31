@@ -1,11 +1,16 @@
-// import { $request } from '../utils/requestAxios'
+import request from '../utils/requestAxios'
 
-// // 登录
-// export const _serviceList = params => {
-//   // var url = '/admin/service/list'
-//   // var headers = { 'test-header-1': 'test-header-1-value' }
-//   // var result = $request(url, params, 'GET', headers)
+const serviceList = '/admin/service/list'
 
-//   console.log('---------------')
-//   console.log(result)
-// }
+/**
+ * 获取服务列表
+ * @param {*} params
+ * @returns
+ */
+export const $serviceList = params => {
+  return request.request({
+    url: serviceList,
+    method: 'GET',
+    params: params
+  })
+}
