@@ -63,7 +63,7 @@
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="fn.addFunc()"
+      <a-button type="primary" @click="fn.serviceOperate()"
         ><i class="iconfont icon-addNode" />新增服务</a-button
       >
     </div>
@@ -98,7 +98,10 @@
         <!-- 数据——ID增加连接跳转，名称增加可修改 -->
         <template v-if="column.dataIndex === 'res_id'">
           <!-- 数据ID -->
-          <a>{{ record.res_id }}</a> <br />
+          <a @click="fn.serviceOperate(record.res_id)">
+            {{ record.res_id }}
+          </a>
+          <br />
 
           <!-- 名称，支持单独修改 -->
           <div class="editable-cell">
@@ -185,7 +188,7 @@
 
         <!-- 启用状态 -->
         <template v-if="column.dataIndex === 'enable'">
-          <a-switch v-model:checked="record.enable" size="small" @click="fn.changeEnable(record)" />
+          <a-switch v-model:checked="record.enable" size="small" @click="fn.enableChange(record)" />
         </template>
 
         <!-- 数据——增加所有列表数据操作 -->
@@ -211,7 +214,7 @@
                 @confirm="fn.releaseFunc(record)"
               >
                 <a class="color-green a-release"
-                  ><a-tooltip placement="top">
+                  ><a-tooltip placement="topRight">
                     <template #title> 发布 </template>
                     <span> <i class="iconfont icon-yuntongbu" /></span>
                   </a-tooltip>
@@ -220,8 +223,8 @@
               </a-popconfirm>
             </span>
 
-            <a class="color-purple a-plugin">
-              <a-tooltip placement="top">
+            <a class="color-purple a-plugin" @click="fn.pluginList()">
+              <a-tooltip placement="topRight">
                 <template #title> 插件 </template>
                 <span>
                   <i class="iconfont icon-chajiangongneng" />
@@ -230,8 +233,8 @@
               <a-divider type="vertical" />
             </a>
 
-            <a class="color-blue a-router">
-              <a-tooltip placement="top">
+            <a class="color-blue a-router" @click="fn.routerList()">
+              <a-tooltip placement="topRight">
                 <template #title> 路由 </template>
                 <span>
                   <i class="iconfont icon-lianjie" />
@@ -240,8 +243,8 @@
               <a-divider type="vertical" />
             </a>
 
-            <a class="color-blue a-edit">
-              <a-tooltip placement="top">
+            <a class="color-blue a-edit" @click="fn.serviceOperate(record.res_id)">
+              <a-tooltip placement="topRight">
                 <template #title> 编辑 </template>
                 <span>
                   <i class="iconfont icon-xiugai" />
@@ -252,13 +255,18 @@
 
             <a-popconfirm
               placement="top"
-              title="确认删除?"
+              title="确认删除该配置?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
-                <i class="iconfont icon-shanchu" />
+                <a-tooltip placement="topRight">
+                  <template #title> 删除 </template>
+                  <span>
+                    <i class="iconfont icon-shanchu" />
+                  </span>
+                </a-tooltip>
               </a>
             </a-popconfirm>
           </span>
@@ -279,11 +287,23 @@
     </a-config-provider>
   </div>
 
+  <!-- 服务抽屉 -->
   <a-drawer
-    v-model:visible="visible"
+    v-model:visible="data.visibleService"
     class="custom-class"
-    style="color: red"
-    title="Basic Drawer"
+    :title="data.currentServiceResId ? '编辑服务' : '新增服务'"
+    placement="right"
+    width="45%"
+    @after-visible-change="afterVisibleChange"
+  >
+    <ServiceOperate></ServiceOperate>
+  </a-drawer>
+
+  <!-- 插件抽屉 -->
+  <a-drawer
+    v-model:visible="data.visiblePlugin"
+    class="custom-class"
+    :title="data.currentServiceResId ? '编辑服务' : '新增服务'"
     placement="right"
     width="45%"
     @after-visible-change="afterVisibleChange"
@@ -296,22 +316,25 @@
 
 <script>
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
+import ServiceOperate from './operate.vue'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { $serviceList, $serviceEditName, $serviceEnable } from '@/api'
+import { $serviceList, $serviceEditName, $serviceEnable, $serviceRelease } from '@/api'
 import { HookProtocolToName, HookReleaseToName, HookEnableToName } from '@/hooks'
 
 export default {
-  components: {},
+  components: { ServiceOperate },
 
   setup() {
+    // 初始化——服务列表
     onMounted(async () => {
-      // 调接口获取服务列表
       getList()
     })
 
+    // 数据变量
     const data = reactive({
       params: reactive({
+        // 服务列表查询参数
         protocol: null,
         enable: null,
         release: null,
@@ -319,12 +342,17 @@ export default {
         page: 1,
         page_size: 10
       }),
-      columns: reactive([]),
-      list: ref([]),
-      listCount: 0,
-      editName: reactive({})
+      columns: reactive([]), // 服务列表表头字段
+      list: ref([]), // 服务列表数据
+      listCount: 0, // 服务列表总条数
+      editName: reactive({}), // 编辑名称变量
+      currentServiceResId: null, // 当前服务ID
+      pluginConfigType: 1, // 插件类型——服务
+      visibleService: ref(false), // 服务抽屉开关
+      visiblePlugin: ref(false) // 插件抽屉开关
     })
 
+    // 过滤器
     const filter = reactive({
       HookProtocal: HookProtocolToName,
       HookRelease: HookReleaseToName,
@@ -383,12 +411,12 @@ export default {
       }
     }
 
-    // 编辑名称
+    // 编辑名称——填入输入框
     const editName = async (resId, name) => {
       data.editName[resId] = name
     }
 
-    // 修改名称
+    // 编辑名称——保存修改后新名称
     const saveName = async record => {
       let { code, msg } = await $serviceEditName(record.res_id, data.editName[record.res_id])
 
@@ -404,7 +432,7 @@ export default {
       delete data.editName[record.res_id]
     }
 
-    // 取消修改名称
+    // 编辑名称——取消修改名称
     const cancelName = async resId => {
       delete data.editName[resId]
     }
@@ -432,7 +460,7 @@ export default {
     }
 
     // 开关状态变化
-    const changeEnable = async record => {
+    const enableChange = async record => {
       let enableValue = record.enable == true ? 1 : 2
 
       let { code, msg } = await $serviceEnable(record.res_id, enableValue)
@@ -455,47 +483,71 @@ export default {
 
     // 配置发布
     const releaseFunc = async record => {
-      console.log(record)
-      message.success('发布按钮！')
+      if (record.release === 3) {
+        message.error('配置已发布!')
+        return
+      }
+
+      let { code, msg } = await $serviceRelease(record.res_id)
+
+      if (code != 0) {
+        message.error(msg)
+        return
+      } else {
+        message.success(msg)
+        record.release = 3
+      }
+    }
+
+    // 插件列表
+    const pluginList = async () => {
+      message.success('插件列表！')
+    }
+
+    const routerList = async () => {
+      message.success('路由列表！')
+    }
+
+    const serviceOperate = async resId => {
+      data.currentServiceResId = resId
+      data.visibleService = true
     }
 
     const deleteFunc = async record => {
       console.log(record)
       message.success('删除按钮！')
-    }
 
-    const visible = ref(false)
-
-    // 新增服务
-    const addFunc = async () => {
-      visible.value = true
-      message.success('新增服务！')
+      if (record.release !== 3 && record.enable !== 2) {
+        message.error('请先关【闭启用状态】且【已发布】后删除!')
+        return
+      }
     }
 
     const afterVisibleChange = async () => {
-      message.success('抽屉状态变化后！', visible.value)
+      message.success('抽屉状态变化后[' + data.visibleService + ']')
     }
 
     const fn = reactive({
       editName,
       saveName,
       cancelName,
-      changeEnable,
+      enableChange,
       paramsChange,
       pageChange,
       showSizeChange,
-      addFunc,
       releaseFunc,
-      deleteFunc
+      deleteFunc,
+      pluginList,
+      routerList,
+      serviceOperate
     })
 
     return {
       zh_CN,
       data,
       fn,
-      visible,
-      afterVisibleChange,
-      filter
+      filter,
+      afterVisibleChange
     }
   }
 }

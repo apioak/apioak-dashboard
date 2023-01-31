@@ -3,6 +3,7 @@ import request from '../utils/requestAxios'
 const serviceList = '/admin/service/list'
 const serviceEditName = '/admin/service/update/name/'
 const serviceEnable = '/admin/service/switch/enable/'
+const serviceRelease = '/admin/service/switch/release/'
 
 /**
  * 获取服务列表
@@ -50,5 +51,14 @@ export const $serviceEnable = async (resId, enable) => {
     data: {
       enable: enable
     }
+  })
+}
+
+export const $serviceRelease = async resId => {
+  let releaseUri = serviceRelease + resId
+
+  return request.request({
+    url: releaseUri,
+    method: 'PUT'
   })
 }
