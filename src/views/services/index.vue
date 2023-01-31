@@ -16,9 +16,9 @@
       <a-select
         class="select"
         ref="select"
-        v-model:value="params.protocol"
+        v-model:value="data.params.protocol"
         placeholder="请选择"
-        @change="handleChange"
+        @change="fn.paramsChange(data.params)"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">HTTP</a-select-option>
@@ -30,9 +30,9 @@
       <a-select
         class="select"
         ref="select"
-        v-model:value="params.enable"
+        v-model:value="data.params.enable"
         placeholder="请选择"
-        @change="handleChange"
+        @change="fn.paramsChange(data.params)"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">启用</a-select-option>
@@ -43,27 +43,27 @@
       <a-select
         class="select"
         ref="select"
-        v-model:value="params.release"
+        v-model:value="data.params.release"
         placeholder="请选择"
-        @change="handleChange"
+        @change="fn.paramsChange(data.params)"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">未发布</a-select-option>
         <a-select-option value="2">待发布</a-select-option>
-        <a-select-option value="2">已发布</a-select-option>
+        <a-select-option value="3">已发布</a-select-option>
       </a-select>
 
       <a-input-search
         class="search"
-        v-model:value="params.search"
+        v-model:value="data.params.search"
         placeholder="搜索内容"
         enter-button
-        @search="handleChange"
-        @pressEnter="handleChange"
+        @search="fn.paramsChange(data.params)"
+        @pressEnter="fn.paramsChange(data.params)"
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="addFn(aaaa)"
+      <a-button type="primary" @click="fn.addFunc()"
         ><i class="iconfont icon-addNode" />新增服务</a-button
       >
     </div>
@@ -73,8 +73,8 @@
       class="table"
       size="small"
       bordered
-      :data-source="list"
-      :columns="columns"
+      :columns="data.columns"
+      :data-source="data.list"
       :pagination="false"
     >
       <!-- 特殊标题头处理 -->
@@ -96,21 +96,33 @@
       <!-- 数据处理 -->
       <template #bodyCell="{ column, record }">
         <!-- 数据——ID增加连接跳转，名称增加可修改 -->
-        <template v-if="column.dataIndex === 'id'">
-          <a>{{ record.id }}</a> <br />
+        <template v-if="column.dataIndex === 'res_id'">
+          <!-- 数据ID -->
+          <a>{{ record.res_id }}</a> <br />
+
+          <!-- 名称，支持单独修改 -->
           <div class="editable-cell">
-            <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
+            <div v-if="data.editName[record.res_id]" class="">
               <a-input
                 class="edit-name"
-                v-model:value="editableData[record.key].name"
-                @pressEnter="save(record.key)"
+                v-model:value="data.editName[record.res_id]"
+                @pressEnter="fn.saveName(record)"
               />
-              <check-outlined class="editable-cell-icon-check" @click="save(record.key)" />
+
+              <a @click="fn.saveName(record)">
+                <i class="iconfont icon-right-1" />
+              </a>
+
+              <a class="color-red edit-name-cancel" @click="fn.cancelName(record.res_id)">
+                <i class="iconfont icon-error-1" />
+              </a>
             </div>
 
             <div v-else class="editable-cell-text-wrapper">
               {{ record.name || ' ' }}
-              <edit-outlined class="editable-cell-icon" @click="edit(record.key)" />
+              <a @click="fn.editName(record.res_id, record.name)">
+                <i class="iconfont icon-xiugai" />
+              </a>
             </div>
           </div>
         </template>
@@ -173,19 +185,82 @@
 
         <!-- 启用状态 -->
         <template v-if="column.dataIndex === 'enable'">
-          <a-switch v-model:checked="record.enable" @click="changeEnable" />
+          <a-switch v-model:checked="record.enable" size="small" @click="fn.changeEnable(record)" />
         </template>
 
         <!-- 数据——增加所有列表数据操作 -->
         <template v-if="column.dataIndex === 'operation'">
           <span>
             <!-- 转换协议的ID为协议名称 -->
+            <span v-if="record.release === 3" class="color-grey">
+              <a-tooltip placement="top">
+                <template #title> 发布 </template>
+                <span>
+                  <i class="iconfont icon-yuntongbu" />
+                </span>
+              </a-tooltip>
+              <a-divider type="vertical" />
+            </span>
 
-            <a>{{ record.name }}</a>
-            <a-divider type="vertical" />
-            <a>编辑</a>
-            <a-divider type="vertical" />
-            <a> 删除 </a>
+            <span v-else>
+              <a-popconfirm
+                placement="topLeft"
+                title="确认发布到数据面?"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="fn.releaseFunc(record)"
+              >
+                <a class="color-green a-release"
+                  ><a-tooltip placement="top">
+                    <template #title> 发布 </template>
+                    <span> <i class="iconfont icon-yuntongbu" /></span>
+                  </a-tooltip>
+                  <a-divider type="vertical"
+                /></a>
+              </a-popconfirm>
+            </span>
+
+            <a class="color-purple a-plugin">
+              <a-tooltip placement="top">
+                <template #title> 插件 </template>
+                <span>
+                  <i class="iconfont icon-chajiangongneng" />
+                </span>
+              </a-tooltip>
+              <a-divider type="vertical" />
+            </a>
+
+            <a class="color-blue a-router">
+              <a-tooltip placement="top">
+                <template #title> 路由 </template>
+                <span>
+                  <i class="iconfont icon-lianjie" />
+                </span>
+              </a-tooltip>
+              <a-divider type="vertical" />
+            </a>
+
+            <a class="color-blue a-edit">
+              <a-tooltip placement="top">
+                <template #title> 编辑 </template>
+                <span>
+                  <i class="iconfont icon-xiugai" />
+                </span>
+              </a-tooltip>
+              <a-divider type="vertical" />
+            </a>
+
+            <a-popconfirm
+              placement="top"
+              title="确认删除?"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="fn.deleteFunc(record)"
+            >
+              <a class="color-red a-delete">
+                <i class="iconfont icon-shanchu" />
+              </a>
+            </a-popconfirm>
           </span>
         </template>
       </template>
@@ -195,10 +270,11 @@
     <a-config-provider :locale="zh_CN">
       <a-pagination
         class="page"
-        v-model:current="current"
         show-quick-jumper
-        :total="500"
-        @change="onChange"
+        show-size-change
+        :total="data.listCount"
+        @showSizeChange="fn.showSizeChange"
+        @change="fn.pageChange"
       />
     </a-config-provider>
   </div>
@@ -220,19 +296,19 @@
 
 <script>
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { $serviceList } from '@/api'
+import { $serviceList, $serviceEditName, $serviceEnable } from '@/api'
 import { HookProtocolToName, HookReleaseToName, HookEnableToName } from '@/hooks'
-import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
-import { cloneDeep } from 'lodash-es'
 
 export default {
-  components: { CheckOutlined, EditOutlined },
+  components: {},
 
   setup() {
-    const onChange = () => {}
-    const onSearch = () => {}
+    onMounted(async () => {
+      // 调接口获取服务列表
+      getList()
+    })
 
     const data = reactive({
       params: reactive({
@@ -241,10 +317,12 @@ export default {
         release: null,
         search: '',
         page: 1,
-        pageSize: 10
+        page_size: 10
       }),
+      columns: reactive([]),
       list: ref([]),
-      listCount: 0
+      listCount: 0,
+      editName: reactive({})
     })
 
     const filter = reactive({
@@ -253,18 +331,9 @@ export default {
       HookEnable: HookEnableToName
     })
 
-    const params = reactive({
-      protocol: null,
-      enable: null,
-      release: null,
-      search: '',
-      page: 1,
-      pageSize: 10
-    })
-
     // 自带文本过长省略属性 ellipsis: true
-    const columns = reactive([
-      { title: 'ID/名称', dataIndex: 'id' },
+    data.columns = reactive([
+      { title: 'ID/名称', dataIndex: 'res_id' },
       { title: '域名', dataIndex: 'domian' },
       { title: '协议', dataIndex: 'protocol' },
       { title: '插件', dataIndex: 'plugin' },
@@ -273,46 +342,16 @@ export default {
       { title: '操作', dataIndex: 'operation' }
     ])
 
-    const dataList = reactive([
-      {
-        id: 'sv-HU4wzmiSmWJsDTN',
-        name: 'sv-HU4wzmiSmWJsDTN',
-        domian: ['www.apioak.com-1'],
-        protocol: 1,
-        plugin: [{}],
-        release: 1,
-        enable: 1
-      },
-      {
-        id: 'sv-ThD8Ga3NLnlSAAv',
-        name: 'sv-ThD8Ga3NLnlSAAvasd',
-        domian: ['www.apioak.com-2-1', 'www.apioak.com-2-2'],
-        protocol: 2,
-        plugin: [{}],
-        release: 2,
-        enable: 2
-      },
-      {
-        id: 'sv-ThD8Ga3NLnlSAAv',
-        name: 'sv-ThD8Ga3NLnlSAAvasd',
-        domian: ['www.apioak.com-2-1', 'www.apioak.com-2-2'],
-        protocol: 3,
-        plugin: [{}],
-        release: 3,
-        enable: 2
-      }
-    ])
-
-    const list = ref([])
-
     // 获取服务列表
     const getList = async params => {
       let { code, data: dataList, msg } = await $serviceList(params)
+
       if (code != 0) {
         message.error(msg)
       } else {
         data.listCount = dataList.total
         let key = 0
+        let tmpList = ref([])
         dataList.data.forEach(element => {
           let plugins = ref([])
           if (element.plugin_list.length > 0) {
@@ -325,14 +364,12 @@ export default {
                     : 'color-plugin-0',
                 icon: pluginElement.length != 0 ? pluginElement.icon : 'icon-apex_plugin1'
               })
-
-              console.log('==========', pluginElement)
             })
           }
 
-          list.value.push({
+          tmpList.value.push({
             key: key++,
-            id: element.res_id,
+            res_id: element.res_id,
             name: element.name,
             domian: element.service_domains,
             protocol: element.protocol,
@@ -342,66 +379,123 @@ export default {
           })
         })
 
-        console.log('------------', params, code, msg, '------', list)
+        data.list = tmpList
       }
     }
 
-    // 调接口获取服务列表
-    getList()
+    // 编辑名称
+    const editName = async (resId, name) => {
+      data.editName[resId] = name
+    }
 
-    const handleChange = () => {
-      message.success('触发筛选条件！')
+    // 修改名称
+    const saveName = async record => {
+      let { code, msg } = await $serviceEditName(record.res_id, data.editName[record.res_id])
+
+      if (code != 0) {
+        message.error(msg)
+        return
+      } else {
+        message.success(msg)
+        record.name = data.editName[record.res_id]
+      }
+
+      // 删除编辑名称本地内存中的数据
+      delete data.editName[record.res_id]
+    }
+
+    // 取消修改名称
+    const cancelName = async resId => {
+      delete data.editName[resId]
+    }
+
+    // 分页——页码变化
+    const pageChange = async page => {
+      data.params.page = page
+
+      getList(data.params)
+    }
+
+    // 分页——每页显示条数变化
+    const showSizeChange = async (current, size) => {
+      data.params.page = 1
+      data.params.page_size = size
+
+      getList(data.params)
+    }
+
+    // 参数变化筛选列表
+    const paramsChange = async () => {
+      data.params.page = 1
+
+      getList(data.params)
+    }
+
+    // 开关状态变化
+    const changeEnable = async record => {
+      let enableValue = record.enable == true ? 1 : 2
+
+      let { code, msg } = await $serviceEnable(record.res_id, enableValue)
+
+      if (code != 0) {
+        message.error(msg)
+        if (record.enable == true) {
+          record.enable = false
+        } else {
+          record.enable = true
+        }
+        return
+      } else {
+        message.success(msg)
+        if (record.release == 3) {
+          record.release = 2
+        }
+      }
+    }
+
+    // 配置发布
+    const releaseFunc = async record => {
+      console.log(record)
+      message.success('发布按钮！')
+    }
+
+    const deleteFunc = async record => {
+      console.log(record)
+      message.success('删除按钮！')
     }
 
     const visible = ref(false)
 
-    const addFn = async params => {
+    // 新增服务
+    const addFunc = async () => {
       visible.value = true
-      message.success('新增服务！', params)
+      message.success('新增服务！')
     }
 
     const afterVisibleChange = async () => {
       message.success('抽屉状态变化后！', visible.value)
     }
 
-    const changeEnable = async enable => {
-      message.success('开关状态：' + enable == true ? '1' : '2')
-    }
-
-    // 编辑名称
-    const editableData = reactive({})
-    const edit = key => {
-      editableData[key] = cloneDeep(list.value.filter(item => key === item.key)[0])
-    }
-    const save = key => {
-      Object.assign(list.value.filter(item => key === item.key)[0], editableData[key])
-      delete editableData[key]
-    }
-    const onDelete = key => {
-      list.value = list.value.filter(item => item.key !== key)
-    }
+    const fn = reactive({
+      editName,
+      saveName,
+      cancelName,
+      changeEnable,
+      paramsChange,
+      pageChange,
+      showSizeChange,
+      addFunc,
+      releaseFunc,
+      deleteFunc
+    })
 
     return {
       zh_CN,
       data,
-      value: '',
-      current: 1,
-      columns,
-      list,
-      dataList,
-      onChange,
-      onSearch,
-      handleChange,
-      params,
-      addFn,
+      fn,
       visible,
       afterVisibleChange,
-      filter,
-      changeEnable,
-      edit,
-      save,
-      onDelete,
-      editableData
+      filter
     }
   }
 }
@@ -432,12 +526,36 @@ export default {
   margin: 20px 0px;
 }
 .edit-name {
-  width: 90%;
+  width: 80%;
   margin-right: 5px;
 }
 .page {
   margin: 20px 0px 20px 0px;
   display: flex;
   justify-content: right;
+}
+.iconfont {
+  font-size: 18px;
+}
+.icon-addNode {
+  font-size: 14px;
+}
+.edit-name-cancel:hover {
+  color: #ff1744;
+}
+.a-delete:hover {
+  color: #ff1744;
+}
+.a-plugin:hover {
+  color: #d500f9;
+}
+.a-release:hover {
+  color: #00e676;
+}
+.a-router:hover {
+  color: #2979ff;
+}
+.a-edit:hover {
+  color: #2979ff;
 }
 </style>
