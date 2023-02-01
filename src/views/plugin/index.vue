@@ -1,0 +1,1 @@
+<template>plugin-index</template>

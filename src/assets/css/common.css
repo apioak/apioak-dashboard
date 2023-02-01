@@ -32,27 +32,12 @@
   margin: 0 !important;
 }
 
-.color-plugin-0 {
-  color: darkgrey;
-}
-.color-plugin-1 {
-  color: #00e676;
-}
-.color-plugin-2 {
-  color: orange;
-}
-.color-plugin-3 {
-  color: red;
-}
-.color-plugin-4 {
-  color: purple;
-}
-.color-plugin-99 {
-  color: blue;
-}
-
 .font-bold {
   font-weight: bold;
+}
+
+.color-light-grey {
+  color: lightgrey;
 }
 
 .color-grey {
@@ -64,23 +49,23 @@
 }
 
 .color-red {
-  color: #ff1744;
+  color: red;
 }
 
 .color-orange {
-  color: #ff9100;
+  color: orange;
 }
 
 .color-green {
-  color: #00e676;
+  color: green;
 }
 
 .color-purple {
-  color: #d500f9;
+  color: purple;
 }
 
 .color-blue {
-  color: #2979ff;
+  color: blue;
 }
 
 .background-color-grey {
@@ -112,7 +97,7 @@
 }
 
 .font-link-color {
-  color: #1e88e5;;
+  color: #1e88e5;
 }
 
 .font-block {
@@ -121,4 +106,8 @@
   border-radius: 3px;
   margin: 2px;
   font-size: 10px;
+}
+
+.a-delete:hover {
+  color: #ff1744;
 }

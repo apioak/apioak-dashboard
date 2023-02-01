@@ -4,13 +4,17 @@ const serviceList = '/admin/service/list'
 const serviceEditName = '/admin/service/update/name/'
 const serviceEnable = '/admin/service/switch/enable/'
 const serviceRelease = '/admin/service/switch/release/'
+const serviceDelete = '/admin/service/delete/'
+const serviceInfo = '/admin/service/info/'
+const serviceAdd = '/admin/service/add'
+const serviceUpdate = '/admin/service/update/'
 
 /**
  * 获取服务列表
  * @param {*} params
  * @returns
  */
-export const $serviceList = params => {
+export const $serviceList = async params => {
   return request.request({
     url: serviceList,
     method: 'GET',
@@ -54,11 +58,62 @@ export const $serviceEnable = async (resId, enable) => {
   })
 }
 
+/**
+ * 服务发布
+ * @param {*} resId 服务资源ID
+ * @returns
+ */
 export const $serviceRelease = async resId => {
   let releaseUri = serviceRelease + resId
 
   return request.request({
     url: releaseUri,
     method: 'PUT'
+  })
+}
+
+/**
+ * 服务删除
+ * @param {*} resId 服务资源ID
+ * @returns
+ */
+export const $serviceDelete = async resId => {
+  let deleteUri = serviceDelete + resId
+
+  return request.request({
+    url: deleteUri,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * 服务详情
+ * @param {*} resId
+ * @returns
+ */
+export const $serviceInfo = async resId => {
+  let infoUri = serviceInfo + resId
+
+  return request.request({
+    url: infoUri,
+    method: 'GET'
+  })
+}
+
+export const $serviceAdd = async data => {
+  return request.request({
+    url: serviceAdd,
+    method: 'POST',
+    data: data
+  })
+}
+
+export const $serviceUpdate = async (resId, data) => {
+  let updateUri = serviceUpdate + resId
+
+  return request.request({
+    url: updateUri,
+    method: 'PUT',
+    data: data
   })
 }

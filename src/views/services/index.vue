@@ -63,7 +63,7 @@
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="fn.serviceOperate()"
+      <a-button type="primary" @click="fn.drawerOperate(null, 1)"
         ><i class="iconfont icon-addNode" />新增服务</a-button
       >
     </div>
@@ -91,6 +91,17 @@
             <i class="iconfont icon-help color-orange" />
           </a-tooltip>
         </template>
+
+        <template v-if="column.dataIndex === 'plugin'">
+          插件
+          <a-tooltip placement="rightTop">
+            <template #title>
+              黑色：启用插件<br />
+              灰色：停用插件
+            </template>
+            <i class="iconfont icon-help color-orange" />
+          </a-tooltip>
+        </template>
       </template>
 
       <!-- 数据处理 -->
@@ -98,7 +109,7 @@
         <!-- 数据——ID增加连接跳转，名称增加可修改 -->
         <template v-if="column.dataIndex === 'res_id'">
           <!-- 数据ID -->
-          <a @click="fn.serviceOperate(record.res_id)">
+          <a @click="fn.drawerOperate(record.res_id, 1)">
             {{ record.res_id }}
           </a>
           <br />
@@ -148,15 +159,7 @@
 
         <!-- 协议类型 -->
         <template v-if="column.dataIndex === 'protocol'">
-          <span v-if="record.protocol === 1" class="color-blue">
-            {{ filter.HookProtocal(record.protocol) }}
-          </span>
-          <span v-if="record.protocol === 2" class="color-orange">
-            {{ filter.HookProtocal(record.protocol) }}
-          </span>
-          <span v-if="record.protocol === 3" class="color-purple">
-            {{ filter.HookProtocal(record.protocol) }}
-          </span>
+          {{ filter.HookProtocal(record.protocol) }}
         </template>
 
         <!-- 插件 -->
@@ -175,13 +178,13 @@
 
         <!-- 发布状态 -->
         <template v-if="column.dataIndex === 'release'">
-          <span v-if="record.release === 1" class="color-grey font-bold">
+          <span v-if="record.release === 1" class="color-grey">
             {{ filter.HookRelease(record.release) }}
           </span>
-          <span v-if="record.release === 2" class="color-orange font-bold">
+          <span v-if="record.release === 2" class="color-purple">
             {{ filter.HookRelease(record.release) }}
           </span>
-          <span v-if="record.release === 3" class="color-green font-bold">
+          <span v-if="record.release === 3" class="color-green">
             {{ filter.HookRelease(record.release) }}
           </span>
         </template>
@@ -195,13 +198,8 @@
         <template v-if="column.dataIndex === 'operation'">
           <span>
             <!-- 转换协议的ID为协议名称 -->
-            <span v-if="record.release === 3" class="color-grey">
-              <a-tooltip placement="top">
-                <template #title> 发布 </template>
-                <span>
-                  <i class="iconfont icon-yuntongbu" />
-                </span>
-              </a-tooltip>
+            <span v-if="record.release === 3" class="color-light-grey">
+              <i class="iconfont icon-yuntongbu" />
               <a-divider type="vertical" />
             </span>
 
@@ -213,7 +211,7 @@
                 cancel-text="否"
                 @confirm="fn.releaseFunc(record)"
               >
-                <a class="color-green a-release"
+                <a
                   ><a-tooltip placement="topRight">
                     <template #title> 发布 </template>
                     <span> <i class="iconfont icon-yuntongbu" /></span>
@@ -223,7 +221,7 @@
               </a-popconfirm>
             </span>
 
-            <a class="color-purple a-plugin" @click="fn.pluginList()">
+            <a @click="fn.drawerOperate(record.res_id, 2)">
               <a-tooltip placement="topRight">
                 <template #title> 插件 </template>
                 <span>
@@ -233,7 +231,7 @@
               <a-divider type="vertical" />
             </a>
 
-            <a class="color-blue a-router" @click="fn.routerList()">
+            <a @click="fn.routerList()">
               <a-tooltip placement="topRight">
                 <template #title> 路由 </template>
                 <span>
@@ -243,7 +241,7 @@
               <a-divider type="vertical" />
             </a>
 
-            <a class="color-blue a-edit" @click="fn.serviceOperate(record.res_id)">
+            <a @click="fn.drawerOperate(record.res_id, 1)">
               <a-tooltip placement="topRight">
                 <template #title> 编辑 </template>
                 <span>
@@ -279,51 +277,51 @@
       <a-pagination
         class="page"
         show-quick-jumper
-        show-size-change
         :total="data.listCount"
         @showSizeChange="fn.showSizeChange"
+        :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"
         @change="fn.pageChange"
       />
     </a-config-provider>
   </div>
 
-  <!-- 服务抽屉 -->
+  <!-- 抽屉 -->
   <a-drawer
-    v-model:visible="data.visibleService"
+    v-model:visible="data.visible"
     class="custom-class"
-    :title="data.currentServiceResId ? '编辑服务' : '新增服务'"
+    :title="data.drawerTitle"
+    :destroyOnClose="data.drawerDestroyOnClose"
     placement="right"
     width="45%"
-    @after-visible-change="afterVisibleChange"
+    @after-visible-change="fn.afterVisibleChange"
   >
-    <ServiceOperate></ServiceOperate>
-  </a-drawer>
-
-  <!-- 插件抽屉 -->
-  <a-drawer
-    v-model:visible="data.visiblePlugin"
-    class="custom-class"
-    :title="data.currentServiceResId ? '编辑服务' : '新增服务'"
-    placement="right"
-    width="45%"
-    @after-visible-change="afterVisibleChange"
-  >
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
+    <!-- 动态组件完成服务和插件抽屉的展示 -->
+    <component
+      :is="data.componentName"
+      :currentResId="data.currentResId"
+      @componentCloseDrawer="fn.componentCloseDrawer"
+      @componentRefreshList="fn.componentRefreshList"
+    />
   </a-drawer>
 </template>
 
 <script>
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import ServiceOperate from './operate.vue'
+import PluginIndex from '../plugin/index.vue'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { $serviceList, $serviceEditName, $serviceEnable, $serviceRelease } from '@/api'
+import {
+  $serviceList,
+  $serviceEditName,
+  $serviceEnable,
+  $serviceRelease,
+  $serviceDelete
+} from '@/api'
 import { HookProtocolToName, HookReleaseToName, HookEnableToName } from '@/hooks'
 
 export default {
-  components: { ServiceOperate },
+  components: { ServiceOperate, PluginIndex },
 
   setup() {
     // 初始化——服务列表
@@ -346,10 +344,13 @@ export default {
       list: ref([]), // 服务列表数据
       listCount: 0, // 服务列表总条数
       editName: reactive({}), // 编辑名称变量
-      currentServiceResId: null, // 当前服务ID
+      currentResId: null, // 当前资源ID
       pluginConfigType: 1, // 插件类型——服务
-      visibleService: ref(false), // 服务抽屉开关
-      visiblePlugin: ref(false) // 插件抽屉开关
+      visible: ref(false), // 抽屉开关
+      drawerType: 1, // 抽屉类型： 1服务   2插件
+      drawerTitle: null, // 抽屉标题
+      drawerDestroyOnClose: false, // 抽屉内组件销毁  false：不销毁（默认）  true：销毁
+      componentName: null // 动态组件名称
     })
 
     // 过滤器
@@ -380,29 +381,26 @@ export default {
         data.listCount = dataList.total
         let key = 0
         let tmpList = ref([])
-        dataList.data.forEach(element => {
+        dataList.data.forEach(item => {
           let plugins = ref([])
-          if (element.plugin_list.length > 0) {
-            element.plugin_list.forEach(pluginElement => {
+          if (item.plugin_list.length > 0) {
+            item.plugin_list.forEach(pluginItem => {
               plugins.value.push({
-                name: pluginElement.name,
-                color:
-                  pluginElement.enable == 1
-                    ? 'color-plugin-' + pluginElement.type
-                    : 'color-plugin-0',
-                icon: pluginElement.length != 0 ? pluginElement.icon : 'icon-apex_plugin1'
+                name: pluginItem.name,
+                color: pluginItem.enable == 1 ? 'color-black' : 'color-light-grey',
+                icon: pluginItem.length != 0 ? pluginItem.icon : 'icon-apex_plugin1'
               })
             })
           }
 
           tmpList.value.push({
             key: key++,
-            res_id: element.res_id,
-            name: element.name,
-            domian: element.service_domains,
-            protocol: element.protocol,
-            release: element.release,
-            enable: element.enable == 1 ? true : false,
+            res_id: item.res_id,
+            name: item.name,
+            domian: item.service_domains,
+            protocol: item.protocol,
+            release: item.release,
+            enable: item.enable == 1 ? true : false,
             plugin: plugins
           })
         })
@@ -499,32 +497,62 @@ export default {
       }
     }
 
-    // 插件列表
-    const pluginList = async () => {
-      message.success('插件列表！')
-    }
-
     const routerList = async () => {
       message.success('路由列表！')
     }
 
-    const serviceOperate = async resId => {
-      data.currentServiceResId = resId
-      data.visibleService = true
-    }
-
     const deleteFunc = async record => {
-      console.log(record)
-      message.success('删除按钮！')
-
-      if (record.release !== 3 && record.enable !== 2) {
-        message.error('请先关【闭启用状态】且【已发布】后删除!')
+      // 待发布且开启状态不允许删除
+      if (record.release === 2 && record.enable === 1) {
+        message.error('请先【关闭启用状态】且【已发布】后删除!')
         return
+      }
+
+      let { code, msg } = await $serviceDelete(record.res_id)
+
+      if (code != 0) {
+        message.error(msg)
+        return
+      } else {
+        message.success(msg)
+        getList()
       }
     }
 
+    const drawerOperate = async (resId, drawerType) => {
+      data.currentResId = resId
+      data.visible = true
+
+      if (drawerType == 2) {
+        data.componentName = 'PluginIndex'
+        data.drawerTitle = '服务插件'
+      } else {
+        data.componentName = 'ServiceOperate'
+        if (resId === null) {
+          data.drawerTitle = '新增服务'
+        } else {
+          data.drawerTitle = '编辑服务'
+        }
+      }
+    }
+
+    // 抽屉状态变化后钩子函数
     const afterVisibleChange = async () => {
-      message.success('抽屉状态变化后[' + data.visibleService + ']')
+      // 抽屉关闭时销毁抽屉内的组件（这里后期可能需要进一步优化）
+      if (data.visible == false) {
+        data.drawerDestroyOnClose = true
+      } else {
+        data.drawerDestroyOnClose = false
+      }
+    }
+
+    const componentCloseDrawer = async () => {
+      data.visible = false
+    }
+
+    const componentRefreshList = async () => {
+      data.visible = false
+      getList()
     }
 
     const fn = reactive({
@@ -537,17 +565,18 @@ export default {
       showSizeChange,
       releaseFunc,
       deleteFunc,
-      pluginList,
       routerList,
-      serviceOperate
+      drawerOperate,
+      afterVisibleChange,
+      componentCloseDrawer,
+      componentRefreshList
     })
 
     return {
       zh_CN,
       data,
       fn,
-      filter,
-      afterVisibleChange
+      filter
     }
   }
 }
@@ -594,20 +623,5 @@ export default {
 }
 .edit-name-cancel:hover {
   color: #ff1744;
-}
-.a-delete:hover {
-  color: #ff1744;
-}
-.a-plugin:hover {
-  color: #d500f9;
-}
-.a-release:hover {
-  color: #00e676;
-}
-.a-router:hover {
-  color: #2979ff;
-}
-.a-edit:hover {
-  color: #2979ff;
 }
 </style>
