@@ -307,8 +307,8 @@
 
 <script>
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
-import ServiceOperate from './operate.vue'
-import PluginIndex from '../plugin/index.vue'
+import ServiceOperate from './operate'
+import PluginIndex from '../plugin'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import {

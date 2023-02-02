@@ -5,8 +5,9 @@
       class="form"
       :label-col="{ style: { width: '100px' } }"
       :wrapper-col="{ span: 18 }"
+      @finish="fn.onSubmit"
     >
-      <a-form-item label="服务名称：">
+      <a-form-item label="服务名称：" name="name" :rules="schemaService.name">
         <a-input v-model:value="data.formData.name" />
       </a-form-item>
 
@@ -15,12 +16,14 @@
         :key="index"
         v-bind="{ xs: { span: 24 }, sm: { span: 4 } }"
         :wrapper-col="{ xs: { span: 24 }, sm: { span: 20 } }"
-        label="服务域名："
+        :name="['service_domains', index, 'domain']"
+        :rules="schemaService.domain"
+        label="域名："
       >
         <a-input
           v-model:value="item.domain"
           placeholder="请输入域名"
-          style="width: 80%; margin-right: 8px"
+          style="width: 80%; margin-right: 5px"
         />
 
         <a @click="fn.addDomain">
@@ -44,7 +47,7 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 10, offset: 16 }">
-        <a-button type="primary" @click="fn.onSubmit">保存</a-button>
+        <a-button type="primary" html-type="submit">保存</a-button>
         <a-button style="margin-left: 15px" @click="fn.cancel">取消</a-button>
       </a-form-item>
     </a-form>
@@ -55,6 +58,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { $serviceInfo, $serviceAdd, $serviceUpdate } from '@/api'
+import { schemaService } from '@/schema'
 
 export default {
   props: {
@@ -74,7 +78,7 @@ export default {
     // 默认域名数据
     const defaultDomain = {
       id: 0,
-      domain: ''
+      domain: null
     }
 
     // 定义变量
@@ -130,9 +134,6 @@ export default {
 
     // 点击提交保存当前数据
     const onSubmit = async () => {
-      console.log(data.formData)
-      message.success('提交保存')
-
       let formData = JSON.parse(JSON.stringify(data.formData))
       formData.protocol = parseInt(formData.protocol)
       formData.enable = formData.enable == true ? 1 : 2
@@ -141,7 +142,7 @@ export default {
       formData.service_domains = []
       if (domainList.length > 0) {
         domainList.forEach(item => {
-          if (item.domain.length > 0) {
+          if (item.domain !== null) {
             formData.service_domains.push(item.domain)
           }
         })
@@ -177,6 +178,7 @@ export default {
     })
 
     return {
+      schemaService,
       data,
       fn
     }
@@ -184,10 +186,9 @@ export default {
 }
 </script>
 
-<style scoped lange="scss">
+<style lange="scss" scoped>
 .main {
   padding: 10px;
-  /* background-color: aqua; */
 }
 .form {
   width: '150px';
