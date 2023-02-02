@@ -84,7 +84,7 @@ import router from '@/router'
 import store from '@/store'
 export default {
   setup() {
-    const selectedKeys = ref(['service'])
+    const selectedKeys = ref([router.currentRoute.value.name])
     const collapsed = ref(false)
     const { userInfo } = store.state.user
 

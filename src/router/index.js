@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Error404 from '@/layouts/error404.vue'
+import Error404 from '@/layouts/error404'
 import Login from '@/views/user/login'
 import Register from '@/views/user/register'
 import Service from '@/views/services'
