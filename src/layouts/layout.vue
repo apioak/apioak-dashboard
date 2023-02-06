@@ -77,14 +77,14 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onBeforeUpdate } from 'vue'
 import { $logout } from '@/api'
 import { message } from 'ant-design-vue'
 import router from '@/router'
 import store from '@/store'
 export default {
   setup() {
-    const selectedKeys = ref([router.currentRoute.value.name])
+    var selectedKeys = ref([router.currentRoute.value.name])
     const collapsed = ref(false)
     const { userInfo } = store.state.user
 
@@ -99,6 +99,12 @@ export default {
         message.error(msg)
       }
     }
+
+    onBeforeUpdate(() => {
+      selectedKeys = ref([router.currentRoute.value.name])
+
+      console.log('--------', selectedKeys)
+    })
 
     return { selectedKeys, collapsed, logout, userEmail: userInfo.email }
   }

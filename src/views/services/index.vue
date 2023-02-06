@@ -63,7 +63,7 @@
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="fn.drawerOperate(null, 1)"
+      <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeService)"
         ><i class="iconfont icon-addNode" />新增服务</a-button
       >
     </div>
@@ -109,7 +109,7 @@
         <!-- 数据——ID增加连接跳转，名称增加可修改 -->
         <template v-if="column.dataIndex === 'res_id'">
           <!-- 数据ID -->
-          <a @click="fn.drawerOperate(record.res_id, 1)">
+          <a @click="fn.drawerOperate(record.res_id, drawer.typeService)">
             {{ record.res_id }}
           </a>
           <br />
@@ -221,7 +221,7 @@
               </a-popconfirm>
             </span>
 
-            <a @click="fn.drawerOperate(record.res_id, 2)">
+            <a @click="fn.drawerOperate(record.res_id, drawer.typePlugin)">
               <a-tooltip placement="topRight">
                 <template #title> 插件 </template>
                 <span>
@@ -241,7 +241,7 @@
               <a-divider type="vertical" />
             </a>
 
-            <a @click="fn.drawerOperate(record.res_id, 1)">
+            <a @click="fn.drawerOperate(record.res_id, drawer.typeService)">
               <a-tooltip placement="topRight">
                 <template #title> 编辑 </template>
                 <span>
@@ -287,18 +287,19 @@
 
   <!-- 抽屉 -->
   <a-drawer
-    v-model:visible="data.visible"
+    v-model:visible="drawer.visible"
     class="custom-class"
-    :title="data.drawerTitle"
-    :destroyOnClose="data.drawerDestroyOnClose"
     placement="right"
-    width="45%"
+    :title="drawer.title"
+    :destroyOnClose="drawer.destroyOnClose"
+    :width="drawer.width"
     @after-visible-change="fn.afterVisibleChange"
   >
     <!-- 动态组件完成服务和插件抽屉的展示 -->
     <component
-      :is="data.componentName"
-      :currentResId="data.currentResId"
+      :is="drawer.componentName"
+      :currentResId="drawer.currentResId"
+      :pluginConfigType="drawer.pluginConfigType"
       @componentCloseDrawer="fn.componentCloseDrawer"
       @componentRefreshList="fn.componentRefreshList"
     />
@@ -319,6 +320,7 @@ import {
   $serviceDelete
 } from '@/api'
 import { HookProtocolToName, HookReleaseToName, HookEnableToName } from '@/hooks'
+import router from '@/router'
 
 export default {
   components: { ServiceOperate, PluginIndex },
@@ -343,13 +345,19 @@ export default {
       columns: reactive([]), // 服务列表表头字段
       list: ref([]), // 服务列表数据
       listCount: 0, // 服务列表总条数
-      editName: reactive({}), // 编辑名称变量
+      editName: reactive({}) // 编辑名称变量
+    })
+
+    // 抽屉变量
+    const drawer = reactive({
+      visible: ref(false), // 抽屉开关
+      title: null, // 抽屉标题
+      width: '45%', // 抽屉宽度
       currentResId: null, // 当前资源ID
       pluginConfigType: 1, // 插件类型——服务
-      visible: ref(false), // 抽屉开关
-      drawerType: 1, // 抽屉类型： 1服务   2插件
-      drawerTitle: null, // 抽屉标题
-      drawerDestroyOnClose: false, // 抽屉内组件销毁  false：不销毁（默认）  true：销毁
+      typeService: 1, // 抽屉类型： 服务
+      typePlugin: 2, // 抽屉类型： 插件
+      destroyOnClose: false, // 抽屉内组件销毁  false：不销毁（默认）  true：销毁
       componentName: null // 动态组件名称
     })
 
@@ -497,10 +505,7 @@ export default {
       }
     }
 
-    const routerList = async () => {
-      message.success('路由列表！')
-    }
-
+    // 配置删除
     const deleteFunc = async record => {
       // 待发布且开启状态不允许删除
       if (record.release === 2 && record.enable === 1) {
@@ -519,19 +524,22 @@ export default {
       }
     }
 
+    // 抽屉操作
     const drawerOperate = async (resId, drawerType) => {
-      data.currentResId = resId
-      data.visible = true
+      drawer.currentResId = resId
+      drawer.visible = true
 
-      if (drawerType == 2) {
-        data.componentName = 'PluginIndex'
-        data.drawerTitle = '服务插件'
+      if (drawerType == drawer.typePlugin) {
+        drawer.componentName = 'PluginIndex'
+        drawer.title = '插件列表'
+        drawer.width = '65%'
       } else {
-        data.componentName = 'ServiceOperate'
+        drawer.componentName = 'ServiceOperate'
+        drawer.width = '50%'
         if (resId === null) {
-          data.drawerTitle = '新增服务'
+          drawer.title = '新增服务'
         } else {
-          data.drawerTitle = '编辑服务'
+          drawer.title = '编辑服务'
         }
       }
     }
@@ -539,22 +547,30 @@ export default {
     // 抽屉状态变化后钩子函数
     const afterVisibleChange = async () => {
       // 抽屉关闭时销毁抽屉内的组件（这里后期可能需要进一步优化）
-      if (data.visible == false) {
-        data.drawerDestroyOnClose = true
+      if (drawer.visible == false) {
+        drawer.destroyOnClose = true
       } else {
-        data.drawerDestroyOnClose = false
+        drawer.destroyOnClose = false
       }
     }
 
+    // 动态组件——关闭抽屉
     const componentCloseDrawer = async () => {
-      data.visible = false
+      drawer.visible = false
     }
 
+    // 动态组件——刷新列表
     const componentRefreshList = async () => {
-      data.visible = false
+      drawer.visible = false
       getList()
     }
 
+    // 跳转到路由列表
+    const routerList = async () => {
+      router.push({ path: '/router', query: { resId: 'aaaaaa' } })
+    }
+
+    // 定义函数
     const fn = reactive({
       editName,
       saveName,
@@ -565,16 +581,17 @@ export default {
       showSizeChange,
       releaseFunc,
       deleteFunc,
-      routerList,
       drawerOperate,
       afterVisibleChange,
       componentCloseDrawer,
-      componentRefreshList
+      componentRefreshList,
+      routerList
     })
 
     return {
       zh_CN,
       data,
+      drawer,
       fn,
       filter
     }

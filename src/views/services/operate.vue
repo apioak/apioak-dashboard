@@ -26,7 +26,7 @@
           style="width: 80%; margin-right: 5px"
         />
 
-        <a @click="fn.addDomain">
+        <a @click="fn.addDomain()">
           <i class="iconfont icon-tianjia" />
         </a>
         <a @click="fn.removeDomain(index)" v-if="index != 0" class="color-red a-delete">
@@ -170,6 +170,7 @@ export default {
       emit('componentCloseDrawer')
     }
 
+    // 定义函数
     const fn = reactive({
       addDomain,
       removeDomain,
