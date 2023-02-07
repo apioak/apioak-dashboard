@@ -568,7 +568,7 @@ export default {
 
     // 跳转到路由列表
     const routerList = async () => {
-      router.push({ path: '/router', query: { resId: 'aaaaaa' } })
+      router.push({ path: '/router' })
     }
 
     // 定义函数
