@@ -118,18 +118,13 @@
 
             <a-popconfirm
               placement="top"
-              title="确认删除该配置?"
+              title="确认删除?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
-                <a-tooltip placement="topRight">
-                  <template #title> 删除 </template>
-                  <span>
-                    <i class="iconfont icon-shanchu" />
-                  </span>
-                </a-tooltip>
+                <i class="iconfont icon-shanchu" />
               </a>
             </a-popconfirm>
           </template>
@@ -157,7 +152,7 @@
 
 <script>
 import { reactive, ref, onMounted } from 'vue'
-import { $pluginConfigList, $pluginConfigEnable } from '@/api'
+import { $pluginConfigList, $pluginConfigEnable, $pluginConfigDelete } from '@/api'
 import { message } from 'ant-design-vue'
 import { HookPluginKeyComponentMap, HookPluginTypeIdNameMap, HookPluginList } from '@/hooks'
 import Plugin404 from '../plugin/components/err404.vue'
@@ -379,6 +374,18 @@ export default {
       } else {
         message.success(msg)
         record.color = record.enable == 1 ? 'color-black' : 'color-light-grey'
+      }
+    }
+
+    // 插件配置删除
+    const deleteFunc = async record => {
+      let { code, msg } = await $pluginConfigDelete(record.res_id, props.pluginConfigType)
+      if (code !== 0) {
+        message.error(msg)
+        return
+      } else {
+        message.success(msg)
+        getList(props.currentResId)
       }
     }
 
