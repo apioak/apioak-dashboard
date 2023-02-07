@@ -231,7 +231,7 @@
               <a-divider type="vertical" />
             </a>
 
-            <a @click="fn.routerList()">
+            <a @click="fn.routerList(record)">
               <a-tooltip placement="topRight">
                 <template #title> 路由 </template>
                 <span>
@@ -567,8 +567,8 @@ export default {
     }
 
     // 跳转到路由列表
-    const routerList = async () => {
-      router.push({ path: '/router' })
+    const routerList = async record => {
+      router.push({ name: 'router', query: { serviceResId: record.res_id } })
     }
 
     // 定义函数
