@@ -157,10 +157,15 @@ import { message } from 'ant-design-vue'
 import { HookPluginKeyComponentMap, HookPluginTypeIdNameMap, HookPluginList } from '@/hooks'
 import Plugin404 from '../plugin/components/err404.vue'
 import Cors from '../plugin/components/cors.vue'
+import Mock from '../plugin/components/mock.vue'
+import KeyAuth from '../plugin/components/keyAuth.vue'
+import JwtAuth from '../plugin/components/jwtAuth.vue'
+import LimitReq from '../plugin/components/limitReq.vue'
+import LimitConn from '../plugin/components/limitConn.vue'
 import LimitCount from '../plugin/components/limitCount.vue'
 
 export default {
-  components: { Plugin404, Cors, LimitCount },
+  components: { Plugin404, Cors, Mock, KeyAuth, JwtAuth, LimitReq, LimitConn, LimitCount },
 
   props: {
     currentResId: {
@@ -320,6 +325,8 @@ export default {
 
       if (exist == false) {
         data.expandedRowKeys.push(key)
+      } else {
+        data.expandedRowKeys = data.expandedRowKeys.filter(t => t !== key)
       }
     }
 
