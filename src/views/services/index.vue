@@ -231,7 +231,7 @@
               <a-divider type="vertical" />
             </a>
 
-            <a @click="fn.routerList()">
+            <a @click="fn.routerList(record)">
               <a-tooltip placement="topRight">
                 <template #title> 路由 </template>
                 <span>
@@ -549,6 +549,7 @@ export default {
       // 抽屉关闭时销毁抽屉内的组件（这里后期可能需要进一步优化）
       if (drawer.visible == false) {
         drawer.destroyOnClose = true
+        getList()
       } else {
         drawer.destroyOnClose = false
       }
@@ -566,8 +567,8 @@ export default {
     }
 
     // 跳转到路由列表
-    const routerList = async () => {
-      router.push({ path: '/router', query: { resId: 'aaaaaa' } })
+    const routerList = async record => {
+      router.push({ name: 'router', query: { serviceResId: record.res_id } })
     }
 
     // 定义函数

@@ -334,6 +334,13 @@ export default {
   components: {RouterOperate, PluginIndex},
 
   setup() {
+
+    if (router.currentRoute.value.query.serviceResId != null) {
+      console.log('==================', router.currentRoute.value.query.serviceResId)
+    } else {
+      console.log('****************')
+    }
+
     // 初始化——路由列表
     onMounted(async () => {
       data.params.page = 1

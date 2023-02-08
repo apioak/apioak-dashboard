@@ -68,23 +68,23 @@
         </a-layout-content>
 
         <!-- 页脚 -->
-        <!-- <a-layout-footer :style="{ textAlign: 'center' }">
-          Ant Design ©2018 Created by Ant UED
-        </a-layout-footer> -->
+        <a-layout-footer :style="{ textAlign: 'center' }">
+          <!-- Ant Design ©2018 Created by Ant UED -->
+        </a-layout-footer>
       </a-layout>
     </a-layout>
   </a-layout>
 </template>
 
 <script>
-import { ref, onBeforeUpdate } from 'vue'
+import { watch, ref } from 'vue'
 import { $logout } from '@/api'
 import { message } from 'ant-design-vue'
 import router from '@/router'
 import store from '@/store'
 export default {
   setup() {
-    var selectedKeys = ref([router.currentRoute.value.name])
+    const selectedKeys = ref([router.currentRoute.value.name])
     const collapsed = ref(false)
     const { userInfo } = store.state.user
 
@@ -100,11 +100,14 @@ export default {
       }
     }
 
-    onBeforeUpdate(() => {
-      selectedKeys = ref([router.currentRoute.value.name])
-
-      console.log('--------', selectedKeys)
-    })
+    // 监听路由变化更新选中菜单
+    watch(
+      () => router,
+      newRouter => {
+        selectedKeys.value[0] = newRouter.currentRoute.value.name
+      },
+      { deep: true }
+    )
 
     return { selectedKeys, collapsed, logout, userEmail: userInfo.email }
   }

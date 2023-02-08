@@ -8,6 +8,12 @@ import Upstream from '@/views/upstream'
 import Ssl from '@/views/ssl'
 import store from '@/store'
 
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// 关闭加载图标
+NProgress.configure({ showSpinner: false })
+
 const routes = [
   {
     path: '/login',
@@ -57,6 +63,7 @@ const router = new createRouter({
 
 // 路由前置守卫
 router.beforeEach(async (to, from, next) => {
+  NProgress.start()
   const { userInfo } = store.state.user
   if (to.path == '/login') {
     if (userInfo.token) {
@@ -71,6 +78,8 @@ router.beforeEach(async (to, from, next) => {
 })
 
 // 后置钩子
-router.afterEach(async () => {})
+router.afterEach(async () => {
+  NProgress.done()
+})
 
 export default router

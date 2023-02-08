@@ -53,11 +53,14 @@
             <div class="plugin-add-form">
               <component
                 :is="data.addPluginComponent.name"
+                :pluginConfigData="data.addPluginComponent.pluginConfigData"
                 :pluginOpType="data.pluginOpType"
                 :pluginTag="data.addPluginComponent.tag"
                 :pluginConfigType="pluginConfigType"
                 :targetResId="currentResId"
-                @pluginAddVisible="fn.pluginAddVisible()"
+                :pluginResId="data.addPluginComponent.pluginResId"
+                :pluginConfigResId="null"
+                @pluginAddVisible="fn.pluginAddVisible"
                 @componentRefreshList="fn.componentRefreshList"
               />
             </div>
@@ -72,7 +75,8 @@
         :columns="data.columns"
         :pagination="false"
         :data-source="data.list"
-        class="components-table-demo-nested"
+        v-model:expandedRowKeys="data.expandedRowKeys"
+        :expandedRowKeys="data.expandedRowKeys"
         :rowClassName="
           function (record) {
             return record.color
@@ -102,29 +106,25 @@
           </template>
 
           <template v-if="column.dataIndex === 'operation'">
-            <a @click="fn.drawerOperate(record.res_id, drawer.typeService)">
+            <a>
               <a-tooltip placement="topRight">
                 <template #title> 编辑 </template>
                 <span>
-                  <i class="iconfont icon-xiugai" />
+                  <i @click="fn.pluginConfigEditOn(record.key)" class="iconfont icon-xiugai" />
                 </span>
               </a-tooltip>
               <a-divider type="vertical" />
             </a>
+
             <a-popconfirm
               placement="top"
-              title="确认删除该配置?"
+              title="确认删除?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
-                <a-tooltip placement="topRight">
-                  <template #title> 删除 </template>
-                  <span>
-                    <i class="iconfont icon-shanchu" />
-                  </span>
-                </a-tooltip>
+                <i class="iconfont icon-shanchu" />
               </a>
             </a-popconfirm>
           </template>
@@ -138,7 +138,9 @@
               :pluginTag="record.tag"
               :pluginConfigType="pluginConfigType"
               :targetResId="currentResId"
-              @componentCloseDrawer="fn.componentCloseDrawer"
+              :pluginResId="null"
+              :pluginConfigResId="record.res_id"
+              @pluginEditVisibleOff="fn.pluginEditVisibleOff"
               @componentRefreshList="fn.componentRefreshList"
             />
           </div>
@@ -150,15 +152,20 @@
 
 <script>
 import { reactive, ref, onMounted } from 'vue'
-import { $pluginConfigList } from '@/api'
+import { $pluginConfigList, $pluginConfigEnable, $pluginConfigDelete } from '@/api'
 import { message } from 'ant-design-vue'
 import { HookPluginKeyComponentMap, HookPluginTypeIdNameMap, HookPluginList } from '@/hooks'
 import Plugin404 from '../plugin/components/err404.vue'
 import Cors from '../plugin/components/cors.vue'
+import Mock from '../plugin/components/mock.vue'
+import KeyAuth from '../plugin/components/keyAuth.vue'
+import JwtAuth from '../plugin/components/jwtAuth.vue'
+import LimitReq from '../plugin/components/limitReq.vue'
+import LimitConn from '../plugin/components/limitConn.vue'
 import LimitCount from '../plugin/components/limitCount.vue'
 
 export default {
-  components: { Plugin404, Cors, LimitCount },
+  components: { Plugin404, Cors, Mock, KeyAuth, JwtAuth, LimitReq, LimitConn, LimitCount },
 
   props: {
     currentResId: {
@@ -178,6 +185,7 @@ export default {
 
     // 定义变量
     const data = reactive({
+      expandedRowKeys: ref([]),
       columns: reactive([]),
       list: ref([]),
       pluginAddVisible: false, // 插件增加是否展示
@@ -189,7 +197,9 @@ export default {
       addPluginComponent: reactive({
         name: 'Plugin404',
         tag: '',
-        infomationShow: false
+        infomationShow: false,
+        pluginResId: '',
+        pluginConfigData: reactive({})
       })
     })
 
@@ -226,7 +236,7 @@ export default {
 
     // 获取插件列表
     const getList = async resId => {
-      let { code, data: dataList, msg } = await $pluginConfigList(resId)
+      let { code, data: dataList, msg } = await $pluginConfigList(resId, props.pluginConfigType)
 
       if (code !== 0) {
         message.error(msg)
@@ -249,6 +259,10 @@ export default {
               componentName = 'Plugin404'
             }
 
+            pluginConfigInfo.config.key = index
+            pluginConfigInfo.config.name = pluginConfigInfo.name
+            let pluginConfigData = reactive(pluginConfigInfo.config)
+
             pluginList.value.push({
               key: index,
               res_id: pluginConfigInfo.res_id,
@@ -262,7 +276,7 @@ export default {
               component: {
                 name: hookFnPluginKeyToComponent(pluginConfigInfo.plugin_key),
                 pluginOpType: 2,
-                pluginConfigData: pluginConfigInfo.config
+                pluginConfigData: pluginConfigData
               }
             })
           })
@@ -299,11 +313,39 @@ export default {
       }
     }
 
+    // 编辑按钮——展示对应插件的配置信息
+    const pluginConfigEditOn = async key => {
+      let exist = false
+      data.expandedRowKeys.forEach(k => {
+        if (k == key) {
+          exist = true
+          return
+        }
+      })
+
+      if (exist == false) {
+        data.expandedRowKeys.push(key)
+      } else {
+        data.expandedRowKeys = data.expandedRowKeys.filter(t => t !== key)
+      }
+    }
+
+    // 关闭对应的插件编辑模块
+    const pluginEditVisibleOff = async key => {
+      data.expandedRowKeys = data.expandedRowKeys.filter(t => t !== key)
+    }
+
+    // 刷新插件列表数据
+    const componentRefreshList = async () => {
+      getList(props.currentResId)
+    }
+
     // 新增加插件时选择的插件基础数据（名称和描述）
     const addPluginChange = async (resId, option) => {
       let addPluginInfo = hookData.pluginResIdInfoMap[resId]
       data.addPluginComponent.name = hookFnPluginKeyToComponent(option.name)
       data.addPluginComponent.tag = option.name
+      data.addPluginComponent.pluginResId = resId
 
       if (resId.length > 0) {
         data.addPluginComponent.infomationShow = true
@@ -317,10 +359,52 @@ export default {
       }
     }
 
+    // 插件配置开关变化
+    const enableChange = async record => {
+      let enableData = reactive({
+        enable: record.enable == true ? 1 : 2
+      })
+      let { code, msg } = await $pluginConfigEnable(
+        record.res_id,
+        enableData,
+        props.pluginConfigType
+      )
+
+      if (code !== 0) {
+        message.error(msg)
+        if (record.enable == true) {
+          record.enable = false
+        } else {
+          record.enable = true
+        }
+        return
+      } else {
+        message.success(msg)
+        record.color = record.enable == 1 ? 'color-black' : 'color-light-grey'
+      }
+    }
+
+    // 插件配置删除
+    const deleteFunc = async record => {
+      let { code, msg } = await $pluginConfigDelete(record.res_id, props.pluginConfigType)
+      if (code !== 0) {
+        message.error(msg)
+        return
+      } else {
+        message.success(msg)
+        getList(props.currentResId)
+      }
+    }
+
     // 定义函数
     const fn = reactive({
       pluginAddVisible, // 插件增加时的展示开关
-      addPluginChange
+      pluginEditVisibleOff,
+      addPluginChange,
+      componentRefreshList,
+      pluginConfigEditOn,
+      enableChange,
+      deleteFunc
     })
 
     return {

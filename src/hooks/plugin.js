@@ -3,11 +3,11 @@ import { $pluginTypeList, $pluginList } from '@/api'
 export const HookPluginKeyComponentMap = function () {
   return {
     cors: 'Cors',
-    // mock: 'Mock',
-    // 'key-auth': 'KeyAuth',
-    // 'jwt-auth': 'JwtAuth',
-    // 'limit-req': 'LimitReq',
-    // 'limit-conn': 'LimitConn',
+    mock: 'Mock',
+    'key-auth': 'KeyAuth',
+    'jwt-auth': 'JwtAuth',
+    'limit-req': 'LimitReq',
+    'limit-conn': 'LimitConn',
     'limit-count': 'LimitCount'
   }
 }
