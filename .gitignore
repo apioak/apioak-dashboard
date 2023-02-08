@@ -2,6 +2,7 @@
 node_modules
 /dist
 /static
+/html
 package-lock.json
 npminstall-debug.log
 

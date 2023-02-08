@@ -1,6 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
-  outputDir: 'static', // build打包时输出文件目录
+  outputDir: 'html', // build打包时输出文件目录
   assetsDir: 'assets', // 配置js、css等静态资源二级目录的位置
   lintOnSave: false, //  eslint 是否在保存时检查（语法检测）
   chainWebpack: config => {
