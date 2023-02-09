@@ -149,36 +149,12 @@ export default {
       }
     }
 
-    // 增加域名元素
-    // const addDomain = async () => {
-    //   data.formData.service_domains.push({
-    //     id: data.formData.service_domains.length,
-    //     demian: ''
-    //   })
-    // }
-    //
-    // // 删除域名元素
-    // const removeDomain = async item => {
-    //   if (data.formData.service_domains.length > 1) {
-    //     data.formData.service_domains = data.formData.service_domains.filter(t => t.id !== item)
-    //   }
-    // }
-
     // 点击提交保存当前数据
     const onSubmit = async () => {
       let formData = JSON.parse(JSON.stringify(data.formData))
-      formData.protocol = parseInt(formData.protocol)
       formData.enable = formData.enable == true ? 1 : 2
 
-      // let domainList = JSON.parse(JSON.stringify(formData.service_domains))
-      // formData.service_domains = []
-      // if (domainList.length > 0) {
-      //   domainList.forEach(item => {
-      //     if (item.domain !== null) {
-      //       formData.service_domains.push(item.domain)
-      //     }
-      //   })
-      // }
+      formData.request_methods = formData.request_methods.join(",")
 
       // 调用增加/修改接口
       let routerRes
