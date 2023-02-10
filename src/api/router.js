@@ -8,6 +8,7 @@ const routerDelete = '/admin/router/delete/'
 const routerInfo = '/admin/router/info/'
 const routerAdd = '/admin/router/add'
 const routerUpdate = '/admin/router/update/'
+const routerCopy = '/admin/router/copy/'
 
 /**
  * 获取路由列表
@@ -26,10 +27,11 @@ export const $routerList = async params => {
  * 编辑路由名称
  * @param {*} resId 路由资源ID
  * @param {*} newName 新名称
+ * @param {*} serviceResId 服务ID
  * @returns
  */
-export const $routerEditName = async (resId, newName) => {
-  let editNameUri = routerEditName + resId
+export const $routerEditName = async (resId, newName, serviceResId) => {
+  let editNameUri = routerEditName + serviceResId + '/' + resId
 
   return request.request({
     url: editNameUri,
@@ -44,10 +46,11 @@ export const $routerEditName = async (resId, newName) => {
  * 路由开关
  * @param {*} resId 路由资源ID
  * @param {*} enable 开关状态
+ * @param {*} serviceResId 服务ID
  * @returns
  */
-export const $routerEnable = async (resId, enable) => {
-  let enableUri = routerEnable + resId
+export const $routerEnable = async (resId, enable, serviceResId) => {
+  let enableUri = routerEnable + serviceResId + '/' + resId
 
   return request.request({
     url: enableUri,
@@ -61,10 +64,11 @@ export const $routerEnable = async (resId, enable) => {
 /**
  * 路由发布
  * @param {*} resId 路由资源ID
+ * @param {*} serviceResId 服务ID
  * @returns
  */
-export const $routerRelease = async resId => {
-  let releaseUri = routerRelease + resId
+export const $routerRelease = async (resId, serviceResId) => {
+  let releaseUri = routerRelease + serviceResId + '/' + resId
 
   return request.request({
     url: releaseUri,
@@ -75,10 +79,11 @@ export const $routerRelease = async resId => {
 /**
  * 路由删除
  * @param {*} resId 路由资源ID
+ * @param {*} serviceResId 服务ID
  * @returns
  */
-export const $routerDelete = async resId => {
-  let deleteUri = routerDelete + resId
+export const $routerDelete = async (resId, serviceResId) => {
+  let deleteUri = routerDelete + serviceResId + '/' + resId
 
   return request.request({
     url: deleteUri,
@@ -101,6 +106,11 @@ export const $routerInfo = async (serviceResId, resId) => {
   })
 }
 
+/**
+ * 路由新增
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
 export const $routerAdd = async data => {
   return request.request({
     url: routerAdd,
@@ -109,8 +119,15 @@ export const $routerAdd = async data => {
   })
 }
 
-export const $routerUpdate = async (resId, data) => {
-  let updateUri = routerUpdate + resId
+/**
+ * 路由修改
+ * @param serviceResId
+ * @param resId
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export const $routerUpdate = async (serviceResId, resId, data) => {
+  let updateUri = routerUpdate + serviceResId + '/' + resId
 
   return request.request({
     url: updateUri,
@@ -118,3 +135,14 @@ export const $routerUpdate = async (resId, data) => {
     data: data
   })
 }
+
+export const $routerCopy = async (serviceResId, resId) => {
+  let copyUri = routerCopy + serviceResId + '/' + resId
+
+  return request.request({
+    url: copyUri,
+    method: 'POST',
+    data: {}
+  })
+}
+

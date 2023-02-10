@@ -8,6 +8,12 @@ const servicePluginConfigUpdate = '/admin/service/plugin/config/update/'
 const servicePluginConfigEnable = '/admin/service/plugin/config/switch/enable/'
 const servicePluginConfigDelete = '/admin/service/plugin/config/delete/'
 
+const routerPluginConfigList = '/admin/router/plugin/config/list/'
+const routerPluginConfigAdd = '/admin/router/plugin/config/add'
+const routerPluginConfigUpdate = '/admin/router/plugin/config/update/'
+const routerPluginConfigEnable = '/admin/router/plugin/config/switch/enable/'
+const routerPluginConfigDelete = '/admin/router/plugin/config/delete/'
+
 /**
  * 插件配置列表
  * @param {*} targetResId
@@ -18,7 +24,7 @@ export const $pluginConfigList = async (targetResId, configType = configTypeServ
   if (configType == configTypeService) {
     return $servicePluginConfigList(targetResId)
   } else {
-    // return $routerPluginConfigList(resId)
+    return $routerPluginConfigList(targetResId)
   }
 }
 
@@ -32,7 +38,7 @@ export const $pluginConfigAdd = async (data, configType = configTypeService) => 
   if (configType == configTypeService) {
     return $servicePluginConfigAdd(data)
   } else {
-    // return
+    return $routerPluginConfigAdd(data)
   }
 }
 
@@ -47,7 +53,8 @@ export const $pluginConfigUpdate = async (resId, data, configType = configTypeSe
   if (configType == configTypeService) {
     return $servicePluginConfigUpdate(resId, data)
   } else {
-    // return
+    return $routerPluginConfigUpdate(resId, data)
+
   }
 }
 
@@ -62,7 +69,8 @@ export const $pluginConfigEnable = async (resId, data, configType = configTypeSe
   if (configType == configTypeService) {
     return $servicePluginConfigEnable(resId, data)
   } else {
-    // return
+    return $routerPluginConfigEnable(resId, data)
+
   }
 }
 
@@ -76,7 +84,8 @@ export const $pluginConfigDelete = async (resId, configType = configTypeService)
   if (configType == configTypeService) {
     return $servicePluginConfigDelete(resId)
   } else {
-    // return
+    return $routerPluginConfigDelete(resId)
+
   }
 }
 
@@ -156,3 +165,76 @@ let $servicePluginConfigDelete = async resId => {
 }
 
 // *************************************router-plugin-config*******************************************
+
+/**
+ * 插件配置列表
+ * @param {*} resId
+ * @returns
+ */
+let $routerPluginConfigList = async resId => {
+  let listUri = routerPluginConfigList + resId
+
+  return request.request({
+    url: listUri,
+    method: 'GET'
+  })
+}
+
+/**
+ * 插件配置增加
+ * @param {*} data
+ * @returns
+ */
+let $routerPluginConfigAdd = async data => {
+  return request.request({
+    url: routerPluginConfigAdd,
+    method: 'POST',
+    data: data
+  })
+}
+
+/**
+ * 插件配置更新
+ * @param {*} resId
+ * @param {*} data
+ * @returns
+ */
+let $routerPluginConfigUpdate = async (resId, data) => {
+  let updateUri = routerPluginConfigUpdate + resId
+
+  return request.request({
+    url: updateUri,
+    method: 'PUT',
+    data: data
+  })
+}
+
+/**
+ * 服务插件配置开关
+ * @param {*} resId
+ * @param {*} data
+ * @returns
+ */
+let $routerPluginConfigEnable = async (resId, data) => {
+  let enableUri = routerPluginConfigEnable + resId
+
+  return request.request({
+    url: enableUri,
+    method: 'PUT',
+    data: data
+  })
+}
+
+/**
+ * 服务插件配置删除
+ * @param {*} resId
+ * @returns
+ */
+let $routerPluginConfigDelete = async resId => {
+  let deleteUri = routerPluginConfigDelete + resId
+
+  return request.request({
+    url: deleteUri,
+    method: 'DELETE'
+  })
+}

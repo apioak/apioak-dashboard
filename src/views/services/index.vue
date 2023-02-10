@@ -277,6 +277,7 @@
       <a-pagination
         class="page"
         show-quick-jumper
+        show-size-changer
         :total="data.listCount"
         @showSizeChange="fn.showSizeChange"
         :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"

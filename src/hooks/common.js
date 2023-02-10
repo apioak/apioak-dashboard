@@ -28,6 +28,7 @@ export const HookEnableToName = function (enableId) {
 }
 
 export const MethodOption = [
+    "ALL",
     "GET",
     "POST",
     "PUT",

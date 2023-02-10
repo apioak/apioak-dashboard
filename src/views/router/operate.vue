@@ -14,6 +14,7 @@
       <a-form-item
           label="所属服务："
           name="service_res_id"
+          :rules="schemaRouter.service_res_id"
       >
         <a-select
             class="select"
@@ -29,16 +30,22 @@
         </a-select>
       </a-form-item>
 
-      <a-form-item label="路由路径：" name="router_path" :rules="schemaRouter.router_path">
+      <a-form-item
+          label="路由路径："
+          name="router_path"
+          :rules="schemaRouter.router_path">
         <a-input v-model:value="data.formData.router_path" />
       </a-form-item>
 
-      <a-form-item label="请求方法：" name="request_methods">
-        <a-checkbox-group v-model:value="data.formData.request_methods" :options="data.methodList" />
+      <a-form-item label="请求方法：" name="request_methods" :rules="schemaRouter.request_methods">
+        <a-checkbox-group
+            v-model:value="data.formData.request_methods"
+            :options="data.methodList"
+        />
       </a-form-item>
 
       <a-form-item
-          label="关联upstream："
+          label="upstream："
           name="upstream_res_id"
       >
         <a-select
@@ -70,7 +77,7 @@
 <script>
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { $serviceList, $routerInfo, $routerAdd, $routerUpdate } from '@/api'
+import { $serviceList, $upstreamList, $routerInfo, $routerAdd, $routerUpdate } from '@/api'
 import { MethodOption} from '@/hooks'
 import { schemaRouter } from '@/schema'
 
@@ -87,11 +94,14 @@ export default {
   setup(props, { emit }) {
     // 初始化——服务详情数据
     onMounted(async () => {
+
       if (props.currentResId !== null && props.serviceResId !== null) {
         getInfo(props.serviceResId, props.currentResId)
       }
 
       getServiceList(data.serviceParam)
+
+      getUpstreamList(data.upstreamParam)
     })
 
     // 定义变量
@@ -109,9 +119,13 @@ export default {
         page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
       }),
       serviceList: reactive({}), // 服务列表
+      upstreamParam: reactive({
+        page: 1,
+        page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
+      }),
+      upstreamList: reactive({}), // 服务列表
       methodList: MethodOption, // 请求方法列表
     })
-
 
     // 获取服务列表
     const getServiceList = async params => {
@@ -129,6 +143,25 @@ export default {
         })
 
         data.serviceList = tmpList
+      }
+    }
+
+    // 获取upstream列表
+    const getUpstreamList = async params => {
+      let {code, data: dataList, msg} = await $upstreamList(params)
+
+      if (code != 0) {
+        message.error(msg)
+      } else {
+        let tmpList = ref([])
+        dataList.data.forEach(item => {
+          tmpList.value.push({
+            res_id: item.res_id,
+            name: item.name,
+          })
+        })
+
+        data.upstreamList = tmpList
       }
     }
     // 获取详情
@@ -153,13 +186,12 @@ export default {
     const onSubmit = async () => {
       let formData = JSON.parse(JSON.stringify(data.formData))
       formData.enable = formData.enable == true ? 1 : 2
-
       formData.request_methods = formData.request_methods.join(",")
 
       // 调用增加/修改接口
       let routerRes
       if (props.currentResId !== null) {
-        routerRes = await $routerUpdate(props.currentResId, formData)
+        routerRes = await $routerUpdate(props.serviceResId, props.currentResId, formData)
       } else {
         routerRes = await $routerAdd(formData)
       }

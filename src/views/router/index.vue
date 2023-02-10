@@ -237,16 +237,24 @@
               </a-tooltip>
               <a-divider type="vertical" />
             </a>
+            <a-popconfirm
+                placement="top"
+                title="路由复制会将其下的插件全量复制,是否确认复制?"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="fn.routerCopy(record)"
+            >
+              <a>
+                <a-tooltip placement="topRight">
+                  <template #title> 复制 </template>
+                  <span>
+                    <i class="iconfont icon-fuzhi" />
+                  </span>
+                </a-tooltip>
+                <a-divider type="vertical" />
+              </a>
+            </a-popconfirm>
 
-            <a @click="fn.routerList()">
-              <a-tooltip placement="topRight">
-                <template #title> 路由 </template>
-                <span>
-                  <i class="iconfont icon-lianjie" />
-                </span>
-              </a-tooltip>
-              <a-divider type="vertical" />
-            </a>
 
             <a @click="fn.drawerOperate(record.res_id, drawer.typeRouter, record.service_res_id)">
               <a-tooltip placement="topRight">
@@ -284,6 +292,7 @@
       <a-pagination
           class="page"
           show-quick-jumper
+          show-size-changer
           :total="data.listCount"
           @showSizeChange="fn.showSizeChange"
           :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"
@@ -306,6 +315,7 @@
     <component
         :is="drawer.componentName"
         :currentResId="drawer.currentResId"
+        :serviceResId="drawer.serviceResId"
         :pluginConfigType="drawer.pluginConfigType"
         @componentCloseDrawer="fn.componentCloseDrawer"
         @componentRefreshList="fn.componentRefreshList"
@@ -325,7 +335,7 @@ import {
   $routerEditName,
   $routerEnable,
   $routerRelease,
-  $routerDelete
+  $routerDelete, $routerCopy
 } from '@/api'
 import {HookEnableToName, HookProtocolToName, HookReleaseToName} from '@/hooks'
 import router from '@/router'
@@ -334,17 +344,13 @@ export default {
   components: {RouterOperate, PluginIndex},
 
   setup() {
-
-    if (router.currentRoute.value.query.serviceResId != null) {
-      console.log('==================', router.currentRoute.value.query.serviceResId)
-    } else {
-      console.log('****************')
-    }
-
     // 初始化——路由列表
     onMounted(async () => {
-      data.params.page = 1
-      data.params.page_size = 10
+
+      if (router.currentRoute.value.query.serviceResId != null) {
+        data.params.service_res_id = router.currentRoute.value.query.serviceResId
+      }
+
       getList(data.params)
 
       getServiceList(data.serviceParam)
@@ -379,7 +385,7 @@ export default {
       width: '45%', // 抽屉宽度
       serviceResId: null, // 当前路由对应服务ID
       currentResId: null, // 当前资源ID
-      pluginConfigType: 1, // 插件类型——路由
+      pluginConfigType: 2, // 插件类型——路由
       typeRouter: 1, // 抽屉类型： 路由
       typePlugin: 2, // 抽屉类型： 插件
       destroyOnClose: false, // 抽屉内组件销毁  false：不销毁（默认）  true：销毁
@@ -395,11 +401,11 @@ export default {
 
     // 自带文本过长省略属性 ellipsis: true
     data.columns = reactive([
-      {title: 'ID/名称', dataIndex: 'res_id'},
-      {title: '服务', dataIndex: 'service'},
-      {title: '方法', dataIndex: 'method'},
-      {title: '路径', dataIndex: 'path'},
-      {title: '插件', dataIndex: 'plugin'},
+      {title: 'ID/名称', dataIndex: 'res_id', width: "15%"},
+      {title: '服务', dataIndex: 'service', width: "15%"},
+      {title: '方法', dataIndex: 'method', width: "10%"},
+      {title: '路径', dataIndex: 'path', width: "20%"},
+      {title: '插件', dataIndex: 'plugin', width: "10%"},
       {title: '发布', dataIndex: 'release'},
       {title: '启用', dataIndex: 'enable'},
       {title: '操作', dataIndex: 'operation'}
@@ -482,7 +488,7 @@ export default {
 
     // 编辑名称——保存修改后新名称
     const saveName = async record => {
-      let {code, msg} = await $routerEditName(record.res_id, data.editName[record.res_id])
+      let {code, msg} = await $routerEditName(record.res_id, data.editName[record.res_id], record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -527,7 +533,7 @@ export default {
     const enableChange = async record => {
       let enableValue = record.enable == true ? 1 : 2
 
-      let {code, msg} = await $routerEnable(record.res_id, enableValue)
+      let {code, msg} = await $routerEnable(record.res_id, enableValue, record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -552,7 +558,7 @@ export default {
         return
       }
 
-      let {code, msg} = await $routerRelease(record.res_id)
+      let {code, msg} = await $routerRelease(record.res_id, record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -560,6 +566,20 @@ export default {
       } else {
         message.success(msg)
         record.release = 3
+      }
+    }
+
+    // 复制
+    const routerCopy = async (record) => {
+
+      let {code, msg} = await $routerCopy(record.service_res_id, record.res_id)
+
+      if (code != 0) {
+        message.error(msg)
+        return
+      } else {
+        message.success(msg)
+        getList()
       }
     }
 
@@ -571,7 +591,7 @@ export default {
         return
       }
 
-      let {code, msg} = await $routerDelete(record.res_id)
+      let {code, msg} = await $routerDelete(record.res_id, record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -624,11 +644,6 @@ export default {
       getList()
     }
 
-    // 跳转到路由列表
-    const routerList = async () => {
-      router.push({path: '/router', query: {resId: 'aaaaaa'}})
-    }
-
     // 定义函数
     const fn = reactive({
       editName,
@@ -644,7 +659,7 @@ export default {
       afterVisibleChange,
       componentCloseDrawer,
       componentRefreshList,
-      routerList
+      routerCopy
     })
 
     return {
