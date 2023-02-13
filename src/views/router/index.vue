@@ -4,7 +4,7 @@
       <a-breadcrumb-item
       ><i
           style="color: #448ef7; font-size: 30px"
-          class="iconfont icon-fuwuqi"
+          class="iconfont icon-lianjie"
       />路由管理</a-breadcrumb-item
       >
     </a-breadcrumb>
