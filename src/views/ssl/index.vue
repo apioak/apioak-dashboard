@@ -69,13 +69,6 @@
           </a-text>
         </template>
 
-<!--        <md-table-cell v-if="newTimeStamp > item.expired_at" class="color-red">-->
-<!--          {{ item.expired_at | formatTime }}-->
-<!--        </md-table-cell>-->
-<!--        <md-table-cell v-else>-->
-<!--          {{ item.expired_at | formatTime }}-->
-<!--        </md-table-cell>-->
-
         <template v-if="column.dataIndex === 'enable'">
           <a-switch v-model:checked="record.enable" size="small" @click="fn.enableChange(record)" />
         </template>
