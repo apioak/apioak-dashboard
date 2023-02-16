@@ -8,7 +8,7 @@ const delayLenBetween = { type: 'number', min: 1, max: 60, message: '当前值�
 
 export const schemaPluginLimitConn = {
   name: [nameMax],
-  rate: [rateLenBetween],
-  burst: [burstLenBetween],
-  default_conn_delay: [delayLenBetween],
+  rate: [rateLenBetween,{required: true}],
+  burst: [burstLenBetween,{required: true}],
+  default_conn_delay: [delayLenBetween, {required: true}],
 }

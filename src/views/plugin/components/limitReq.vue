@@ -12,11 +12,11 @@
     </a-form-item>
 
     <a-form-item label="rate" name="rate" :rules="schemaPluginLimitReq.rate">
-      <a-input-number v-model:value="data.formData.rate" />
+      <a-input-number v-model:value="data.formData.rate" style="width: 200px"/>
     </a-form-item>
 
     <a-form-item label="burst" name="burst" :rules="schemaPluginLimitReq.burst">
-      <a-input-number v-model:value="data.formData.burst" />
+      <a-input-number v-model:value="data.formData.burst" style="width: 200px"/>
     </a-form-item>
 
 

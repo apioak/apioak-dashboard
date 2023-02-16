@@ -4,5 +4,5 @@ const jwtKeyLenBetween = { type: 'string', min: 10, max: 32, message: '当前字
 
 export const schemaPluginJwtAuth = {
   name: [nameMax],
-  jwt_key: [jwtKeyLenBetween],
+  jwt_key: [jwtKeyLenBetween, {required: true}],
 }

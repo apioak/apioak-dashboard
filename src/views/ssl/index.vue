@@ -256,7 +256,10 @@ export default {
         return
       } else {
         message.success(msg)
+        getList(data.params)
       }
+
+
     }
 
     // 配置删除
@@ -330,7 +333,6 @@ export default {
       data,
       drawer,
       fn,
-      filter
     }
   }
 }

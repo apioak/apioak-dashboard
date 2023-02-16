@@ -120,6 +120,8 @@ export default {
       }),
       serviceList: reactive({}), // 服务列表
       upstreamParam: reactive({
+        enable: 1,
+        release: 3,
         page: 1,
         page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
       }),

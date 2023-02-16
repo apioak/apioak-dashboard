@@ -1,6 +1,6 @@
 import request from '../utils/requestAxios'
 
-const upstreamList = '/admin/service/list' //TODO 替换为upstream列表URI
+const upstreamList = '/admin/upstream/list'
 
 /**
  * 获取upstream列表

@@ -4,5 +4,5 @@ const secretLenBetween = { type: 'string', min: 10, max: 32, message: '当前字
 
 export const schemaPluginKeyAuth = {
   name: [nameMax],
-  secret: [secretLenBetween],
+  secret: [secretLenBetween, {required: true}],
 }

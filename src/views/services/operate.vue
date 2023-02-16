@@ -13,7 +13,7 @@
 
       <a-form-item
         v-for="(item, index) in data.formData.service_domains"
-        :key="index"
+        :key="item.id"
         v-bind="{ xs: { span: 24 }, sm: { span: 4 } }"
         :wrapper-col="{ xs: { span: 24 }, sm: { span: 20 } }"
         :name="['service_domains', index, 'domain']"

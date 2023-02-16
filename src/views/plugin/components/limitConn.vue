@@ -12,15 +12,15 @@
     </a-form-item>
 
     <a-form-item label="rate" name="rate" :rules="schemaPluginLimitConn.rate">
-      <a-input-number v-model:value="data.formData.rate" />
+      <a-input-number v-model:value="data.formData.rate" style="width: 200px"/>
     </a-form-item>
 
     <a-form-item label="burst" name="burst" :rules="schemaPluginLimitConn.burst">
-      <a-input-number v-model:value="data.formData.burst" />
+      <a-input-number v-model:value="data.formData.burst" style="width: 200px"/>
     </a-form-item>
 
     <a-form-item label="default_conn_delay" name="default_conn_delay" :rules="schemaPluginLimitConn.default_conn_delay">
-      <a-input-number v-model:value="data.formData.default_conn_delay" />
+      <a-input-number v-model:value="data.formData.default_conn_delay" style="width: 200px"/>
     </a-form-item>
 
 

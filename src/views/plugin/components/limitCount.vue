@@ -12,11 +12,11 @@
     </a-form-item>
 
     <a-form-item label="time_window" name="time_window" :rules="schemaPluginLimitCount.time_window">
-      <a-input-number v-model:value="data.formData.time_window" />
+      <a-input-number v-model:value="data.formData.time_window" style="width: 200px"/>
     </a-form-item>
 
     <a-form-item label="count" name="count" :rules="schemaPluginLimitCount.count">
-      <a-input-number v-model:value="data.formData.count" />
+      <a-input-number v-model:value="data.formData.count" style="width: 200px"/>
     </a-form-item>
 
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">

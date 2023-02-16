@@ -330,6 +330,8 @@ export default {
     // 初始化——服务列表
     onMounted(async () => {
       getList()
+
+      drawerOperate("sv-4bDoPcWoJ7waFdH", drawer.typePlugin)
     })
 
     // 数据变量
