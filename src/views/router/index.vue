@@ -2,43 +2,37 @@
   <div class="main">
     <a-breadcrumb class="breadcrumb">
       <a-breadcrumb-item
-      ><i
+        ><i
           style="color: #448ef7; font-size: 30px"
           class="iconfont icon-lianjie"
-      />路由管理</a-breadcrumb-item
+        />路由管理</a-breadcrumb-item
       >
     </a-breadcrumb>
     <a-divider style="margin: 10px 0" />
 
     <!-- 筛选 -->
     <div class="filter">
-
       <span>所属服务: </span>
       <a-select
-          class="select"
-          ref="select"
-          v-model:value="data.params.service_res_id"
-          placeholder="请选择"
-          @change="fn.paramsChange(data.params)"
+        class="select"
+        ref="select"
+        v-model:value="data.params.service_res_id"
+        placeholder="请选择"
+        @change="fn.paramsChange(data.params)"
       >
-
         <a-select-option :value="0">全部</a-select-option>
-        <a-select-option
-            v-for="item in data.serviceList"
-            :value="item.res_id"
-        >
+        <a-select-option v-for="item in data.serviceList" :value="item.res_id">
           {{ item.name }}
         </a-select-option>
-
       </a-select>
 
       <span>启用状态: </span>
       <a-select
-          class="select"
-          ref="select"
-          v-model:value="data.params.enable"
-          placeholder="请选择"
-          @change="fn.paramsChange(data.params)"
+        class="select"
+        ref="select"
+        v-model:value="data.params.enable"
+        placeholder="请选择"
+        @change="fn.paramsChange(data.params)"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">启用</a-select-option>
@@ -47,11 +41,11 @@
 
       <span>发布状态: </span>
       <a-select
-          class="select"
-          ref="select"
-          v-model:value="data.params.release"
-          placeholder="请选择"
-          @change="fn.paramsChange(data.params)"
+        class="select"
+        ref="select"
+        v-model:value="data.params.release"
+        placeholder="请选择"
+        @change="fn.paramsChange(data.params)"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">未发布</a-select-option>
@@ -60,27 +54,28 @@
       </a-select>
 
       <a-input-search
-          class="search"
-          v-model:value="data.params.search"
-          placeholder="搜索内容"
-          enter-button
-          @search="fn.paramsChange(data.params)"
-          @pressEnter="fn.paramsChange(data.params)"
+        class="search"
+        v-model:value="data.params.search"
+        placeholder="搜索内容"
+        enter-button
+        @search="fn.paramsChange(data.params)"
+        @pressEnter="fn.paramsChange(data.params)"
       />
 
       <!-- 新增 -->
       <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeRouter)">
-        <i class="iconfont icon-addNode" />新增路由</a-button>
+        <i class="iconfont icon-addNode" />新增路由</a-button
+      >
     </div>
 
     <!-- 列表 -->
     <a-table
-        class="table"
-        size="small"
-        bordered
-        :columns="data.columns"
-        :data-source="data.list"
-        :pagination="false"
+      class="table"
+      size="small"
+      bordered
+      :columns="data.columns"
+      :data-source="data.list"
+      :pagination="false"
     >
       <!-- 特殊标题头处理 -->
       <!-- 标题头——发布状态提醒 -->
@@ -123,9 +118,9 @@
           <div class="editable-cell">
             <div v-if="data.editName[record.res_id]" class="">
               <a-input
-                  class="edit-name"
-                  v-model:value="data.editName[record.res_id]"
-                  @pressEnter="fn.saveName(record)"
+                class="edit-name"
+                v-model:value="data.editName[record.res_id]"
+                @pressEnter="fn.saveName(record)"
               />
 
               <a @click="fn.saveName(record)">
@@ -155,12 +150,8 @@
 
         <!-- 方法 -->
         <template v-if="column.dataIndex === 'method'">
-          <a-tooltip
-              placement="bottomRight"
-              v-for="(mv, mi) in record.method"
-              :key="mi"
-          >
-            {{ mv.name }}<br>
+          <a-tooltip placement="bottomRight" v-for="(mv, mi) in record.method" :key="mi">
+            {{ mv.name }}<br />
           </a-tooltip>
         </template>
 
@@ -172,9 +163,9 @@
         <!-- 插件 -->
         <template v-if="column.dataIndex === 'plugin'">
           <a-tooltip
-              placement="bottomRight"
-              v-for="(pluginInfo, pluginIndex) in record.plugin"
-              :key="pluginIndex"
+            placement="bottomRight"
+            v-for="(pluginInfo, pluginIndex) in record.plugin"
+            :key="pluginIndex"
           >
             <template #title>
               {{ pluginInfo.name }}
@@ -212,19 +203,19 @@
 
             <span v-else>
               <a-popconfirm
-                  placement="topLeft"
-                  title="确认发布到数据面?"
-                  ok-text="是"
-                  cancel-text="否"
-                  @confirm="fn.releaseFunc(record)"
+                placement="topLeft"
+                title="确认发布到数据面?"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="fn.releaseFunc(record)"
               >
                 <a
-                ><a-tooltip placement="topRight">
+                  ><a-tooltip placement="topRight">
                     <template #title> 发布 </template>
                     <span> <i class="iconfont icon-yuntongbu" /></span>
                   </a-tooltip>
                   <a-divider type="vertical"
-                  /></a>
+                /></a>
               </a-popconfirm>
             </span>
 
@@ -238,11 +229,11 @@
               <a-divider type="vertical" />
             </a>
             <a-popconfirm
-                placement="top"
-                title="路由复制会将其下的插件全量复制,是否确认复制?"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="fn.routerCopy(record)"
+              placement="top"
+              title="路由复制会将其下的插件全量复制,是否确认复制?"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="fn.routerCopy(record)"
             >
               <a>
                 <a-tooltip placement="topRight">
@@ -255,7 +246,6 @@
               </a>
             </a-popconfirm>
 
-
             <a @click="fn.drawerOperate(record.res_id, drawer.typeRouter, record.service_res_id)">
               <a-tooltip placement="topRight">
                 <template #title> 编辑 </template>
@@ -267,11 +257,11 @@
             </a>
 
             <a-popconfirm
-                placement="top"
-                title="确认删除该配置?"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="fn.deleteFunc(record)"
+              placement="top"
+              title="确认删除该配置?"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
                 <a-tooltip placement="topRight">
@@ -290,35 +280,35 @@
     <!-- 分页 -->
     <a-config-provider :locale="zh_CN">
       <a-pagination
-          class="page"
-          show-quick-jumper
-          show-size-changer
-          :total="data.listCount"
-          @showSizeChange="fn.showSizeChange"
-          :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"
-          @change="fn.pageChange"
+        class="page"
+        show-quick-jumper
+        show-size-changer
+        :total="data.listCount"
+        @showSizeChange="fn.showSizeChange"
+        :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"
+        @change="fn.pageChange"
       />
     </a-config-provider>
   </div>
 
   <!-- 抽屉 -->
   <a-drawer
-      v-model:visible="drawer.visible"
-      class="custom-class"
-      placement="right"
-      :title="drawer.title"
-      :destroyOnClose="drawer.destroyOnClose"
-      :width="drawer.width"
-      @after-visible-change="fn.afterVisibleChange"
+    v-model:visible="drawer.visible"
+    class="custom-class"
+    placement="right"
+    :title="drawer.title"
+    :destroyOnClose="drawer.destroyOnClose"
+    :width="drawer.width"
+    @after-visible-change="fn.afterVisibleChange"
   >
     <!-- 动态组件完成路由和插件抽屉的展示 -->
     <component
-        :is="drawer.componentName"
-        :currentResId="drawer.currentResId"
-        :serviceResId="drawer.serviceResId"
-        :pluginConfigType="drawer.pluginConfigType"
-        @componentCloseDrawer="fn.componentCloseDrawer"
-        @componentRefreshList="fn.componentRefreshList"
+      :is="drawer.componentName"
+      :currentResId="drawer.currentResId"
+      :serviceResId="drawer.serviceResId"
+      :pluginConfigType="drawer.pluginConfigType"
+      @componentCloseDrawer="fn.componentCloseDrawer"
+      @componentRefreshList="fn.componentRefreshList"
     />
   </a-drawer>
 </template>
@@ -335,18 +325,18 @@ import {
   $routerEditName,
   $routerEnable,
   $routerRelease,
-  $routerDelete, $routerCopy
+  $routerDelete,
+  $routerCopy
 } from '@/api'
-import {HookEnableToName, HookProtocolToName, HookReleaseToName} from '@/hooks'
+import { HookEnableToName, HookProtocolToName, HookReleaseToName } from '@/hooks'
 import router from '@/router'
 
 export default {
-  components: {RouterOperate, PluginIndex},
+  components: { RouterOperate, PluginIndex },
 
   setup() {
     // 初始化——路由列表
     onMounted(async () => {
-
       if (router.currentRoute.value.query.serviceResId != null) {
         data.params.service_res_id = router.currentRoute.value.query.serviceResId
       }
@@ -373,7 +363,7 @@ export default {
       editName: reactive({}), // 编辑名称变量
       serviceParam: reactive({
         page: 1,
-        page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
+        page_size: 1000 // 此处暂时不做轮询获取 暂定获取前1000条
       }),
       serviceList: reactive({}) // 服务列表
     })
@@ -396,24 +386,24 @@ export default {
     const filter = reactive({
       HookEnable: HookEnableToName,
       HookProtocal: HookProtocolToName,
-      HookRelease: HookReleaseToName,
+      HookRelease: HookReleaseToName
     })
 
     // 自带文本过长省略属性 ellipsis: true
     data.columns = reactive([
-      {title: 'ID/名称', dataIndex: 'res_id', width: "15%"},
-      {title: '服务', dataIndex: 'service', width: "15%"},
-      {title: '方法', dataIndex: 'method', width: "10%"},
-      {title: '路径', dataIndex: 'path', width: "20%"},
-      {title: '插件', dataIndex: 'plugin', width: "10%"},
-      {title: '发布', dataIndex: 'release'},
-      {title: '启用', dataIndex: 'enable'},
-      {title: '操作', dataIndex: 'operation'}
+      { title: 'ID/名称', dataIndex: 'res_id', width: '15%' },
+      { title: '服务', dataIndex: 'service', width: '15%' },
+      { title: '方法', dataIndex: 'method', width: '10%' },
+      { title: '路径', dataIndex: 'path', width: '20%' },
+      { title: '插件', dataIndex: 'plugin', width: '10%' },
+      { title: '发布', dataIndex: 'release' },
+      { title: '启用', dataIndex: 'enable' },
+      { title: '操作', dataIndex: 'operation', width: 200 }
     ])
 
     // 获取路由列表
     const getList = async params => {
-      let {code, data: dataList, msg} = await $routerList(params)
+      let { code, data: dataList, msg } = await $routerList(params)
 
       if (code != 0) {
         message.error(msg)
@@ -422,16 +412,14 @@ export default {
         let key = 0
         let tmpList = ref([])
         dataList.data.forEach(item => {
-
           // 方法列表
           let methods = ref([])
           if (item.request_methods.length > 0) {
             item.request_methods.forEach(methodItem => {
               methods.value.push({
-                name: methodItem,
+                name: methodItem
               })
             })
-
           }
 
           // 插件列表
@@ -465,7 +453,7 @@ export default {
     }
 
     const getServiceList = async params => {
-      let {code, data: dataList, msg} = await $serviceList(params)
+      let { code, data: dataList, msg } = await $serviceList(params)
 
       if (code != 0) {
         message.error(msg)
@@ -474,7 +462,7 @@ export default {
         dataList.data.forEach(item => {
           tmpList.value.push({
             res_id: item.res_id,
-            name: item.name,
+            name: item.name
           })
         })
 
@@ -488,7 +476,11 @@ export default {
 
     // 编辑名称——保存修改后新名称
     const saveName = async record => {
-      let {code, msg} = await $routerEditName(record.res_id, data.editName[record.res_id], record.service_res_id)
+      let { code, msg } = await $routerEditName(
+        record.res_id,
+        data.editName[record.res_id],
+        record.service_res_id
+      )
 
       if (code != 0) {
         message.error(msg)
@@ -533,7 +525,7 @@ export default {
     const enableChange = async record => {
       let enableValue = record.enable == true ? 1 : 2
 
-      let {code, msg} = await $routerEnable(record.res_id, enableValue, record.service_res_id)
+      let { code, msg } = await $routerEnable(record.res_id, enableValue, record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -558,7 +550,7 @@ export default {
         return
       }
 
-      let {code, msg} = await $routerRelease(record.res_id, record.service_res_id)
+      let { code, msg } = await $routerRelease(record.res_id, record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -570,9 +562,8 @@ export default {
     }
 
     // 复制
-    const routerCopy = async (record) => {
-
-      let {code, msg} = await $routerCopy(record.service_res_id, record.res_id)
+    const routerCopy = async record => {
+      let { code, msg } = await $routerCopy(record.service_res_id, record.res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -591,7 +582,7 @@ export default {
         return
       }
 
-      let {code, msg} = await $routerDelete(record.res_id, record.service_res_id)
+      let { code, msg } = await $routerDelete(record.res_id, record.service_res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -714,5 +705,8 @@ export default {
 }
 .edit-name-cancel:hover {
   color: #ff1744;
+}
+.icon-lianjie {
+  margin-right: 10px;
 }
 </style>

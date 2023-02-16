@@ -2,10 +2,10 @@
   <div class="main">
     <a-breadcrumb class="breadcrumb">
       <a-breadcrumb-item
-      ><i
+        ><i
           style="color: #448ef7; font-size: 30px"
           class="iconfont icon-zhengshu-copy"
-      />证书管理</a-breadcrumb-item
+        />证书管理</a-breadcrumb-item
       >
     </a-breadcrumb>
     <a-divider style="margin: 10px 0" />
@@ -14,11 +14,11 @@
     <div class="filter">
       <span>启用状态: </span>
       <a-select
-          class="select"
-          ref="select"
-          v-model:value="data.params.enable"
-          placeholder="请选择"
-          @change="fn.paramsChange(data.params)"
+        class="select"
+        ref="select"
+        v-model:value="data.params.enable"
+        placeholder="请选择"
+        @change="fn.paramsChange(data.params)"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">启用</a-select-option>
@@ -26,32 +26,31 @@
       </a-select>
 
       <a-input-search
-          class="search"
-          v-model:value="data.params.search"
-          placeholder="搜索内容"
-          enter-button
-          @search="fn.paramsChange(data.params)"
-          @pressEnter="fn.paramsChange(data.params)"
+        class="search"
+        v-model:value="data.params.search"
+        placeholder="搜索内容"
+        enter-button
+        @search="fn.paramsChange(data.params)"
+        @pressEnter="fn.paramsChange(data.params)"
       />
 
       <!-- 新增 -->
       <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeRouter)">
-        <i class="iconfont icon-addNode" />新增证书</a-button>
+        <i class="iconfont icon-addNode" />新增证书</a-button
+      >
     </div>
 
     <!-- 列表 -->
     <a-table
-        class="table"
-        size="small"
-        bordered
-        :columns="data.columns"
-        :data-source="data.list"
-        :pagination="false"
+      class="table"
+      size="small"
+      bordered
+      :columns="data.columns"
+      :data-source="data.list"
+      :pagination="false"
     >
-
       <!-- 数据处理 -->
       <template #bodyCell="{ column, record }">
-
         <template v-if="column.dataIndex === 'res_id'">
           {{ record.res_id }}
         </template>
@@ -62,10 +61,10 @@
 
         <template v-if="column.dataIndex === 'expired_at'">
           <a-text v-if="data.newTimeStamp > record.expired_at" class="color-red">
-            {{ record.expired_at}}
+            {{ record.expired_at }}
           </a-text>
           <a-text v-else>
-            {{ record.expired_at}}
+            {{ record.expired_at }}
           </a-text>
         </template>
 
@@ -86,11 +85,11 @@
             </a>
 
             <a-popconfirm
-                placement="top"
-                title="确认要删除证书?"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="fn.deleteFunc(record)"
+              placement="top"
+              title="确认要删除证书?"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
                 <a-tooltip placement="topRight">
@@ -109,33 +108,33 @@
     <!-- 分页 -->
     <a-config-provider :locale="zh_CN">
       <a-pagination
-          class="page"
-          show-quick-jumper
-          show-size-changer
-          :total="data.listCount"
-          @showSizeChange="fn.showSizeChange"
-          :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"
-          @change="fn.pageChange"
+        class="page"
+        show-quick-jumper
+        show-size-changer
+        :total="data.listCount"
+        @showSizeChange="fn.showSizeChange"
+        :show-total="(total, range) => `当前${range[0]}-${range[1]}条，共${total}条`"
+        @change="fn.pageChange"
       />
     </a-config-provider>
   </div>
 
   <!-- 抽屉 -->
   <a-drawer
-      v-model:visible="drawer.visible"
-      class="custom-class"
-      placement="right"
-      :title="drawer.title"
-      :destroyOnClose="drawer.destroyOnClose"
-      :width="drawer.width"
-      @after-visible-change="fn.afterVisibleChange"
+    v-model:visible="drawer.visible"
+    class="custom-class"
+    placement="right"
+    :title="drawer.title"
+    :destroyOnClose="drawer.destroyOnClose"
+    :width="drawer.width"
+    @after-visible-change="fn.afterVisibleChange"
   >
     <!-- 动态组件完成路由和插件抽屉的展示 -->
     <component
-        :is="drawer.componentName"
-        :currentResId="drawer.currentResId"
-        @componentCloseDrawer="fn.componentCloseDrawer"
-        @componentRefreshList="fn.componentRefreshList"
+      :is="drawer.componentName"
+      :currentResId="drawer.currentResId"
+      @componentCloseDrawer="fn.componentCloseDrawer"
+      @componentRefreshList="fn.componentRefreshList"
     />
   </a-drawer>
 </template>
@@ -146,14 +145,10 @@ import SslOperate from './operate'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { formatDate } from '@/utils/time'
-import {
-  $sslList,
-  $sslEnable,
-  $sslDelete,
-} from '@/api'
+import { $sslList, $sslEnable, $sslDelete } from '@/api'
 
 export default {
-  components: {SslOperate},
+  components: { SslOperate },
 
   setup() {
     // 初始化——路由列表
@@ -172,7 +167,7 @@ export default {
       columns: reactive([]), // 路由列表表头字段
       list: ref([]), // 路由列表数据
       listCount: 0, // 路由列表总条数
-      newTimeStamp: ""
+      newTimeStamp: ''
     })
 
     // 抽屉变量
@@ -187,22 +182,22 @@ export default {
 
     // 自带文本过长省略属性 ellipsis: true
     data.columns = reactive([
-      {title: 'ID', dataIndex: 'res_id'},
-      {title: '域名', dataIndex: 'sni'},
-      {title: '过期时间', dataIndex: 'expired_at'},
-      {title: '启用', dataIndex: 'enable'},
-      {title: '操作', dataIndex: 'operation'}
+      { title: 'ID', dataIndex: 'res_id' },
+      { title: '域名', dataIndex: 'sni' },
+      { title: '过期时间', dataIndex: 'expired_at' },
+      { title: '启用', dataIndex: 'enable' },
+      { title: '操作', dataIndex: 'operation', width: 80 }
     ])
 
     // 获取路由列表
     const getList = async params => {
-      let {code, data: dataList, msg} = await $sslList(params)
+      let { code, data: dataList, msg } = await $sslList(params)
 
       if (code != 0) {
         message.error(msg)
       } else {
-        data.listCount    = dataList.total
-        data.newTimeStamp = formatDate(Math.floor(new Date().getTime() / 1000));
+        data.listCount = dataList.total
+        data.newTimeStamp = formatDate(Math.floor(new Date().getTime() / 1000))
         let key = 0
         let tmpList = ref([])
         dataList.data.forEach(item => {
@@ -211,7 +206,7 @@ export default {
             res_id: item.res_id,
             sni: item.sni,
             expired_at: formatDate(item.expired_at),
-            enable: item.enable == 1 ? true : false,
+            enable: item.enable == 1 ? true : false
           })
         })
 
@@ -244,7 +239,7 @@ export default {
     const enableChange = async record => {
       let enableValue = record.enable == true ? 1 : 2
 
-      let {code, msg} = await $sslEnable(record.res_id, enableValue)
+      let { code, msg } = await $sslEnable(record.res_id, enableValue)
 
       if (code != 0) {
         message.error(msg)
@@ -267,7 +262,7 @@ export default {
         return
       }
 
-      let {code, msg} = await $sslDelete(record.res_id)
+      let { code, msg } = await $sslDelete(record.res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -279,7 +274,7 @@ export default {
     }
 
     // 抽屉操作
-    const drawerOperate = async (resId) => {
+    const drawerOperate = async resId => {
       drawer.currentResId = resId
       drawer.visible = true
 
@@ -322,15 +317,14 @@ export default {
       drawerOperate,
       afterVisibleChange,
       componentCloseDrawer,
-      componentRefreshList,
+      componentRefreshList
     })
 
     return {
       zh_CN,
       data,
       drawer,
-      fn,
-      filter
+      fn
     }
   }
 }
@@ -377,5 +371,8 @@ export default {
 }
 .edit-name-cancel:hover {
   color: #ff1744;
+}
+.icon-zhengshu-copy {
+  margin-right: 10px;
 }
 </style>

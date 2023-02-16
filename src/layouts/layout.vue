@@ -152,4 +152,7 @@ export default {
   border-radius: 20px;
   margin-right: 10px;
 }
+.iconfont {
+  margin-right: 10px;
+}
 </style>

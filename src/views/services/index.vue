@@ -377,7 +377,7 @@ export default {
       { title: '插件', dataIndex: 'plugin' },
       { title: '发布', dataIndex: 'release' },
       { title: '启用', dataIndex: 'enable' },
-      { title: '操作', dataIndex: 'operation' }
+      { title: '操作', dataIndex: 'operation', width: 200 }
     ])
 
     // 获取服务列表
@@ -642,5 +642,8 @@ export default {
 }
 .edit-name-cancel:hover {
   color: #ff1744;
+}
+.icon-fuwuqi {
+  margin-right: 10px;
 }
 </style>
