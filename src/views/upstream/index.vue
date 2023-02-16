@@ -63,7 +63,7 @@
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeService)"
+      <a-button type="primary" @click="fn.drawerOperate(null)"
         ><i class="iconfont icon-addNode" />新增上游</a-button
       >
     </div>
@@ -97,7 +97,7 @@
         <!-- 数据——ID增加连接跳转，名称增加可修改 -->
         <template v-if="column.dataIndex === 'res_id'">
           <!-- 数据ID -->
-          <a @click="fn.drawerOperate(record.res_id, drawer.typeService)">
+          <a @click="fn.drawerOperate(record.res_id)">
             {{ record.res_id }}
           </a>
           <br />
@@ -189,7 +189,7 @@
               </a-popconfirm>
             </span>
 
-            <a @click="fn.drawerOperate(record.res_id, drawer.typeService)">
+            <a @click="fn.drawerOperate(record.res_id)">
               <a-tooltip placement="topRight">
                 <template #title> 编辑 </template>
                 <span>
@@ -234,6 +234,25 @@
       />
     </a-config-provider>
   </div>
+
+  <!-- 抽屉 -->
+  <a-drawer
+    v-model:visible="drawer.visible"
+    class="custom-class"
+    placement="right"
+    :title="drawer.title"
+    :destroyOnClose="drawer.destroyOnClose"
+    :width="drawer.width"
+    @after-visible-change="fn.afterVisibleChange"
+  >
+    <!-- 动态组件完成上游的操作 -->
+    <component
+      :is="drawer.componentName"
+      :currentResId="drawer.currentResId"
+      @componentCloseDrawer="fn.componentCloseDrawer"
+      @componentRefreshList="fn.componentRefreshList"
+    />
+  </a-drawer>
 </template>
 
 <script>
@@ -245,8 +264,8 @@ import {
   $upstreamList,
   $upstreamEditName,
   $upstreamEnable,
-  $serviceRelease,
-  $serviceDelete
+  $upstreamRelease,
+  $upstreamDelete
 } from '@/api'
 import { HookAlgorithmToName, HookReleaseToName, HookEnableToName } from '@/hooks'
 
@@ -282,9 +301,6 @@ export default {
       title: null, // 抽屉标题
       width: '45%', // 抽屉宽度
       currentResId: null, // 当前资源ID
-      pluginConfigType: 1, // 插件类型——服务
-      typeService: 1, // 抽屉类型： 服务
-      typePlugin: 2, // 抽屉类型： 插件
       destroyOnClose: false, // 抽屉内组件销毁  false：不销毁（默认）  true：销毁
       componentName: null // 动态组件名称
     })
@@ -417,7 +433,7 @@ export default {
         return
       }
 
-      let { code, msg } = await $serviceRelease(record.res_id)
+      let { code, msg } = await $upstreamRelease(record.res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -436,7 +452,7 @@ export default {
         return
       }
 
-      let { code, msg } = await $serviceDelete(record.res_id)
+      let { code, msg } = await $upstreamDelete(record.res_id)
 
       if (code != 0) {
         message.error(msg)
@@ -448,22 +464,16 @@ export default {
     }
 
     // 抽屉操作
-    const drawerOperate = async (resId, drawerType) => {
+    const drawerOperate = async resId => {
       drawer.currentResId = resId
       drawer.visible = true
 
-      if (drawerType == drawer.typePlugin) {
-        drawer.componentName = 'PluginIndex'
-        drawer.title = '插件列表'
-        drawer.width = '65%'
+      drawer.componentName = 'UpstreamOperate'
+      drawer.width = '50%'
+      if (resId === null) {
+        drawer.title = '新增上游'
       } else {
-        drawer.componentName = 'ServiceOperate'
-        drawer.width = '50%'
-        if (resId === null) {
-          drawer.title = '新增服务'
-        } else {
-          drawer.title = '编辑服务'
-        }
+        drawer.title = '编辑上游'
       }
     }
 

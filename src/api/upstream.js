@@ -3,6 +3,8 @@ import request from '../utils/requestAxios'
 const upstreamList = '/admin/upstream/list'
 const upstreamEditName = '/admin/upstream/update/name/'
 const upstreamEnable = '/admin/upstream/switch/enable/'
+const upstreamDelete = '/admin/upstream/delete/'
+const upstreamRelease = '/admin/upstream/switch/release/'
 
 /**
  * 获取upstream列表
@@ -50,5 +52,33 @@ export const $upstreamEnable = async (resId, enable) => {
     data: {
       enable: enable
     }
+  })
+}
+
+/**
+ * 发布
+ * @param {*} resId
+ * @returns
+ */
+export const $upstreamRelease = async resId => {
+  let releaseUri = upstreamRelease + resId
+
+  return request.request({
+    url: releaseUri,
+    method: 'PUT'
+  })
+}
+
+/**
+ * 删除
+ * @param {*} resId
+ * @returns
+ */
+export const $upstreamDelete = async resId => {
+  let deleteUri = upstreamDelete + resId
+
+  return request.request({
+    url: deleteUri,
+    method: 'DELETE'
   })
 }
