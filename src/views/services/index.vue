@@ -551,7 +551,7 @@ export default {
       // 抽屉关闭时销毁抽屉内的组件（这里后期可能需要进一步优化）
       if (drawer.visible == false) {
         drawer.destroyOnClose = true
-        getList()
+        getList(data.params)
       } else {
         drawer.destroyOnClose = false
       }

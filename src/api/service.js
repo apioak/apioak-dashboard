@@ -100,6 +100,11 @@ export const $serviceInfo = async resId => {
   })
 }
 
+/**
+ * 服务增加
+ * @param {*} data
+ * @returns
+ */
 export const $serviceAdd = async data => {
   return request.request({
     url: serviceAdd,
@@ -108,6 +113,12 @@ export const $serviceAdd = async data => {
   })
 }
 
+/**
+ * 服务更新
+ * @param {*} resId
+ * @param {*} data
+ * @returns
+ */
 export const $serviceUpdate = async (resId, data) => {
   let updateUri = serviceUpdate + resId
 
