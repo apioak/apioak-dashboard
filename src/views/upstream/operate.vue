@@ -3,15 +3,14 @@
     <a-form
       :model="data.formData"
       class="form"
-      :label-col="{ style: { width: '100px' } }"
-      :wrapper-col="{ span: 18 }"
+      v-bind="{ labelCol: { xs: { span: 4 } }, wrapperCol: { xs: { span: 18 } } }"
       @finish="fn.onSubmit"
     >
-      <a-form-item label="上游名称：" name="name" :rules="{}">
+      <a-form-item label="上游名称：" name="name" :rules="schemaUpstream.name">
         <a-input v-model:value="data.formData.name" />
       </a-form-item>
 
-      <a-form-item label="负载均衡：" name="load_balance" :rules="{}">
+      <a-form-item label="负载均衡：" name="load_balance" :rules="schemaUpstream.load_balance">
         <a-select
           class="select"
           ref="select"
@@ -23,36 +22,56 @@
         </a-select>
       </a-form-item>
 
-      <a-form-item label="上游节点：" name="upstream_nodes">
+      <a-form-item class="upstream_nodes_main" label="上游节点：" name="upstream_nodes">
         <a-space
           v-for="(item, index) in data.formData.upstream_nodes"
           :key="item.id"
+          style="display: flex; margin-bottom: 0px"
           align="baseline"
         >
-          <a-form-item name="ip">
-            <a-input placeholder="IP" v-model:value="data.formData.upstream_nodes[index].node_ip" />
+          <a-form-item
+            class="upstream_nodes_item"
+            :name="['upstream_nodes', index, 'node_ip']"
+            :rules="schemaUpstream.node_ip"
+            label="IP"
+          >
+            <a-input
+              placeholder="IPV4"
+              v-model:value="data.formData.upstream_nodes[index].node_ip"
+            />
           </a-form-item>
 
-          <a-form-item name="port">
+          <a-form-item
+            class="upstream_nodes_item"
+            :name="['upstream_nodes', index, 'node_port']"
+            :rules="schemaUpstream.node_port"
+          >
             <a-input-number
               placeholder="Port"
               v-model:value="data.formData.upstream_nodes[index].node_port"
             />
           </a-form-item>
 
-          <a-form-item name="weight">
+          <a-form-item
+            class="upstream_nodes_item"
+            :name="['upstream_nodes', index, 'node_weight']"
+            :rules="schemaUpstream.node_weight"
+          >
             <a-input-number
               placeholder="Weight"
               v-model:value="data.formData.upstream_nodes[index].node_weight"
             />
           </a-form-item>
 
-          <a @click="fn.addIP()">
-            <i class="iconfont icon-tianjia"></i>
-          </a>
-          <a v-if="index > 0" @click="fn.removeIP(item)">
-            <i class="iconfont color-red icon-jian"></i>
-          </a>
+          <a-form-item class="upstream_nodes_item">
+            <a @click="fn.addIP()">
+              <i class="iconfont icon-tianjia"></i>
+            </a>
+
+            <a v-if="index > 0" @click="fn.removeIP(item)">
+              <i class="iconfont color-red icon-jian"></i>
+            </a>
+          </a-form-item>
         </a-space>
       </a-form-item>
 
@@ -84,13 +103,11 @@
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { $upstreamInfo, $upstreamAdd, $upstreamUpdate } from '@/api'
-import { schemaService } from '@/schema'
+import { schemaUpstream } from '@/schema'
 
 export default {
   props: {
-    currentResId: {
-      String
-    }
+    currentResId: null
   },
   emits: ['componentCloseDrawer', 'componentRefreshList'],
   setup(props, { emit }) {
@@ -155,9 +172,12 @@ export default {
 
     // 增加域名元素
     const addIP = () => {
-      let nodesInfo = JSON.parse(JSON.stringify(defaultNode))
-      nodesInfo.id = data.formData.upstream_nodes.length
-      data.formData.upstream_nodes.push(nodesInfo)
+      data.formData.upstream_nodes.push({
+        id: data.formData.upstream_nodes.length,
+        node_ip: null,
+        node_port: null,
+        node_weight: null
+      })
     }
 
     // 删除域名元素
@@ -208,7 +228,7 @@ export default {
     })
 
     return {
-      schemaService,
+      schemaUpstream,
       data,
       fn
     }
@@ -222,5 +242,13 @@ export default {
 }
 .form {
   width: '150px';
+}
+.upstream_nodes_main {
+  margin-bottom: 0px;
+}
+.upstream_nodes_item {
+  /* display: inline-block;
+  justify-content: center;
+  margin-right: 10px; */
 }
 </style>
