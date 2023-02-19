@@ -22,7 +22,12 @@
         </a-select>
       </a-form-item>
 
-      <a-form-item class="upstream_nodes_main" label="上游节点：" name="upstream_nodes">
+      <a-form-item
+        class="upstream_nodes_main"
+        label="上游节点："
+        name="upstream_nodes"
+        :rules="schemaUpstream.upstream_nodes"
+      >
         <a-space
           v-for="(item, index) in data.formData.upstream_nodes"
           :key="item.id"
@@ -33,7 +38,6 @@
             class="upstream_nodes_item"
             :name="['upstream_nodes', index, 'node_ip']"
             :rules="schemaUpstream.node_ip"
-            label="IP"
           >
             <a-input
               placeholder="IPV4"
