@@ -27,10 +27,11 @@
 </template>
 <script>
 import { reactive } from 'vue'
-import { message } from 'ant-design-vue'
+import { message, Form } from 'ant-design-vue'
 import { schemaPluginJwtAuth } from '@/schema'
 import { $pluginConfigAdd, $pluginConfigUpdate } from '@/api'
 
+const useForm = Form.useForm;
 export default {
   props: {
     pluginConfigData: {
@@ -54,6 +55,7 @@ export default {
   },
   emits: ['pluginAddVisible', 'pluginEditVisibleOff', 'componentRefreshList'],
   setup(props, { emit }) {
+
     const data = reactive({
       formData: {
         name: '',
@@ -61,6 +63,8 @@ export default {
         enable: false
       }
     })
+
+    const { resetFields } = useForm(data.formData)
 
     // 接收的父级参数进行表单dom赋值，不需要监听其变化反应
     if (props.pluginConfigData != null) {
@@ -119,10 +123,13 @@ export default {
           emit('componentRefreshList')
         }
       }
+
+      resetFields()
     }
 
     // 取消按钮
     const cancel = async key => {
+
       if (props.pluginOpType == 1) {
         // 调用父组件方法，收起增加插件的表单
         emit('pluginAddVisible')
@@ -130,11 +137,13 @@ export default {
         // 调用父组件方法，收起编辑插件的表单
         emit('pluginEditVisibleOff', key)
       }
+
+      resetFields();
     }
 
     const fn = reactive({
       onSubmit,
-      cancel
+      cancel,
     })
 
     return { data, fn, schemaPluginJwtAuth }

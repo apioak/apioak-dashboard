@@ -22,24 +22,18 @@
     <a-form-item label="http_body" name="http_body" :rules="schemaPluginMock.http_body">
       <a-textarea v-model:value="data.formData.http_body" :rows="4"/>
     </a-form-item>
+
     <a-form-item label="http_headers" name="http_headers">
       <a-space
           v-for="(item, index) in data.formData.http_headers"
           :key="item.id"
           align="baseline"
       >
-        <a-form-item name="key">
-          <a-input
-              placeholder="key"
-              v-model:value="data.formData.http_headers[index].key"
-              style="width: 200px;"/>
+        <a-form-item :name="[ 'http_headers', index, 'key' ]" :rules="checkHttpHeader">
+          <a-input placeholder="key" v-model:value="item.key" style="width: 200px;"/>
         </a-form-item>
-        <a-form-item name="value">
-          <a-input
-              placeholder="value"
-              v-model:value="data.formData.http_headers[index].value"
-              style="width: 300px;"
-          />
+        <a-form-item :name="[ 'http_headers', index, 'value' ]">
+          <a-input placeholder="value" v-model:value="item.value" style="width: 300px;"/>
         </a-form-item>
         <a @click="fn.addHttpHeaders()">
           <i class="iconfont icon-tianjia"></i>
@@ -91,7 +85,9 @@ export default {
   setup(props, { emit }) {
 
     onMounted(async () => {
-      if (props.pluginConfigResId == null) {
+
+      if (props.pluginConfigResId == null ||
+          Object.keys(props.pluginConfigData.http_headers).length===0) {
         // 初始化一个空 http_headers
         addHttpHeaders()
       }
@@ -158,7 +154,13 @@ export default {
 
       let hh = reactive({})
       formData.http_headers.forEach(item => {
-        hh[item.key.toString()] = item.value.toString()
+        if (item.key != null) {
+          let hv = ''
+          if (item.value !== undefined) {
+            hv = item.value.toString()
+          }
+          hh[item.key.toString()] = hv
+        }
       })
 
       if (props.pluginConfigResId == null) {
@@ -225,14 +227,28 @@ export default {
       }
     }
 
+    const checkHttpHeader = [
+      {
+        validator: async (_, value) => {
+
+          let pattern = /^[A-Za-z1-9_-]+$/
+          if (value !== undefined && value.length !== 0 && !pattern.test(value)) {
+            return Promise.reject('当前值仅包含字母、数字、划线')
+          } else {
+            return Promise.resolve().callback
+          }
+        }
+      }
+    ]
+
     const fn = reactive({
       addHttpHeaders,
       removeHttpHeaders,
       onSubmit,
-      cancel
+      cancel,
     })
 
-    return { data, fn, schemaPluginMock }
+    return { data, fn, schemaPluginMock, checkHttpHeader }
   }
 }
 </script>
