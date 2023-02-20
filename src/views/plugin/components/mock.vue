@@ -56,10 +56,11 @@
 </template>
 <script>
 import { reactive, onMounted } from 'vue'
-import { message } from 'ant-design-vue'
+import {Form, message} from 'ant-design-vue'
 import { schemaPluginMock } from '@/schema'
 import { $pluginConfigAdd, $pluginConfigUpdate } from '@/api'
 
+const useForm = Form.useForm;
 export default {
   props: {
     pluginConfigData: {
@@ -103,6 +104,8 @@ export default {
         enable: false
       }
     })
+
+    const { resetFields } = useForm(data.formData)
 
     // 接收的父级参数进行表单dom赋值，不需要监听其变化反应
     if (props.pluginConfigData != null) {
@@ -188,6 +191,8 @@ export default {
           emit('pluginAddVisible')
           emit('componentRefreshList')
         }
+
+        resetFields()
       } else {
         // 更新插件配置
         let configData = reactive({
@@ -221,6 +226,8 @@ export default {
       if (props.pluginOpType == 1) {
         // 调用父组件方法，收起增加插件的表单
         emit('pluginAddVisible')
+
+        resetFields()
       } else {
         // 调用父组件方法，收起编辑插件的表单
         emit('pluginEditVisibleOff', key)
