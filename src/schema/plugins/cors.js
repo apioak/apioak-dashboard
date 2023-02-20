@@ -7,7 +7,7 @@ const configFormat = {
 
 const configMax = { max: 80, message: '当前值最长80个字符' }
 
-const maxAgeBetween = { type: 'number', min: 0, max: 10, message: '当前值必须在 0-86400 之间！' }
+const maxAgeBetween = { type: 'number', min: 0, max: 86400, message: '当前值必须在 0-86400 之间！' }
 
 export const schemaPluginCors = {
   name: [nameMax],

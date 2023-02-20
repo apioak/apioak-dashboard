@@ -151,7 +151,11 @@
         <!-- 方法 -->
         <template v-if="column.dataIndex === 'method'">
           <a-tooltip placement="bottomRight" v-for="(mv, mi) in record.method" :key="mi">
-            {{ mv.name }}<br />
+            <a-tag v-if="mv.name == 'ALL'" color="purple">{{ mv.name }}</a-tag>
+            <a-tag v-else-if="mv.name == 'GET'" color="green">{{ mv.name }}</a-tag>
+            <a-tag v-else-if="mv.name == 'POST'" color="orange">{{ mv.name }}</a-tag>
+            <a-tag v-else-if="mv.name == 'PUT'" color="blue">{{ mv.name }}</a-tag>
+            <a-tag v-else-if="mv.name == 'DELETE'" color="red">{{ mv.name }}</a-tag>
           </a-tooltip>
         </template>
 
@@ -392,11 +396,11 @@ export default {
 
     // 自带文本过长省略属性 ellipsis: true
     data.columns = reactive([
-      { title: 'ID/名称', dataIndex: 'res_id', width: '15%' },
-      { title: '服务', dataIndex: 'service', width: '15%' },
-      { title: '方法', dataIndex: 'method', width: '10%' },
-      { title: '路径', dataIndex: 'path', width: '20%' },
-      { title: '插件', dataIndex: 'plugin', width: '10%' },
+      { title: 'ID/名称', dataIndex: 'res_id' },
+      { title: '服务', dataIndex: 'service' },
+      { title: '方法', dataIndex: 'method' },
+      { title: '路径', dataIndex: 'path' },
+      { title: '插件', dataIndex: 'plugin' },
       { title: '发布', dataIndex: 'release' },
       { title: '启用', dataIndex: 'enable' },
       { title: '操作', dataIndex: 'operation', width: 200 }
@@ -620,6 +624,7 @@ export default {
       // 抽屉关闭时销毁抽屉内的组件（这里后期可能需要进一步优化）
       if (drawer.visible == false) {
         drawer.destroyOnClose = true
+        getList(data.params)
       } else {
         drawer.destroyOnClose = false
       }

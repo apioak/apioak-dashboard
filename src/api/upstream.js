@@ -5,6 +5,9 @@ const upstreamEditName = '/admin/upstream/update/name/'
 const upstreamEnable = '/admin/upstream/switch/enable/'
 const upstreamDelete = '/admin/upstream/delete/'
 const upstreamRelease = '/admin/upstream/switch/release/'
+const upstreamInfo = '/admin/upstream/info/'
+const upstreamAdd = '/admin/upstream/add'
+const upstreamUpdate = '/admin/upstream/update/'
 
 /**
  * 获取upstream列表
@@ -80,5 +83,48 @@ export const $upstreamDelete = async resId => {
   return request.request({
     url: deleteUri,
     method: 'DELETE'
+  })
+}
+
+/**
+ * 详情
+ * @param {*} resId
+ * @returns
+ */
+export const $upstreamInfo = async resId => {
+  let infoUri = upstreamInfo + resId
+
+  return request.request({
+    url: infoUri,
+    method: 'GET'
+  })
+}
+
+/**
+ * 上游增加
+ * @param {*} data
+ * @returns
+ */
+export const $upstreamAdd = async data => {
+  return request.request({
+    url: upstreamAdd,
+    method: 'POST',
+    data: data
+  })
+}
+
+/**
+ * 上游更新
+ * @param {*} resId
+ * @param {*} data
+ * @returns
+ */
+export const $upstreamUpdate = async (resId, data) => {
+  let updateUri = upstreamUpdate + resId
+
+  return request.request({
+    url: updateUri,
+    method: 'PUT',
+    data: data
   })
 }

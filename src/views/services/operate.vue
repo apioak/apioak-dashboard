@@ -3,9 +3,8 @@
     <a-form
       :model="data.formData"
       class="form"
-      :label-col="{ style: { width: '100px' } }"
-      :wrapper-col="{ span: 18 }"
       @finish="fn.onSubmit"
+      v-bind="{ labelCol: { xs: { span: 4 } }, wrapperCol: { xs: { span: 18 } } }"
     >
       <a-form-item label="服务名称：" name="name" :rules="schemaService.name">
         <a-input v-model:value="data.formData.name" />
@@ -14,11 +13,10 @@
       <a-form-item
         v-for="(item, index) in data.formData.service_domains"
         :key="item.id"
-        v-bind="{ xs: { span: 24 }, sm: { span: 4 } }"
-        :wrapper-col="{ xs: { span: 24 }, sm: { span: 20 } }"
+        v-bind="index === 0 ? { wrapperCol: { offset: 0 } } : { wrapperCol: { offset: 4 } }"
         :name="['service_domains', index, 'domain']"
         :rules="schemaService.domain"
-        label="域名："
+        :label="index === 0 ? '域名：' : ''"
       >
         <a-input
           v-model:value="item.domain"
@@ -29,7 +27,7 @@
         <a @click="fn.addDomain()">
           <i class="iconfont icon-tianjia" />
         </a>
-        <a @click="fn.removeDomain(index)" v-if="index != 0" class="color-red a-delete">
+        <a @click="fn.removeDomain(item)" v-if="index != 0" class="color-red a-delete">
           <i class="iconfont icon-jian" />
         </a>
       </a-form-item>
@@ -42,7 +40,7 @@
         </a-radio-group>
       </a-form-item>
 
-      <a-form-item label="启用：">
+      <a-form-item label="启用：" name="enable">
         <a-switch v-model:checked="data.formData.enable" />
       </a-form-item>
 
@@ -127,8 +125,9 @@ export default {
 
     // 删除域名元素
     const removeDomain = async item => {
-      if (data.formData.service_domains.length > 1) {
-        data.formData.service_domains = data.formData.service_domains.filter(t => t.id !== item)
+      let index = data.formData.service_domains.indexOf(item)
+      if (index !== -1) {
+        data.formData.service_domains.splice(index, 1)
       }
     }
 

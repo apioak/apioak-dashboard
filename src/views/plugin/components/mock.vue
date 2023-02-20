@@ -35,6 +35,7 @@
         <a-form-item :name="[ 'http_headers', index, 'value' ]">
           <a-input placeholder="value" v-model:value="item.value" style="width: 300px;"/>
         </a-form-item>
+        
         <a @click="fn.addHttpHeaders()">
           <i class="iconfont icon-tianjia"></i>
         </a>
