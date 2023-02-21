@@ -63,7 +63,10 @@
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeRouter)">
+      <a-button
+        type="primary"
+        @click="fn.drawerOperate(null, drawer.typeRouter, data.params.service_res_id)"
+      >
         <i class="iconfont icon-addNode" />新增路由</a-button
       >
     </div>
@@ -109,7 +112,7 @@
         <!-- 数据——ID增加连接跳转，名称增加可修改 -->
         <template v-if="column.dataIndex === 'res_id'">
           <!-- 数据ID -->
-          <a @click="fn.drawerOperate(record.res_id, drawer.typeRouter)">
+          <a @click="fn.drawerOperate(record.res_id, drawer.typeRouter, record.service_res_id)">
             {{ record.res_id }}
           </a>
           <br />

@@ -11,54 +11,40 @@
         <a-input v-model:value="data.formData.router_name" />
       </a-form-item>
 
-      <a-form-item
-          label="所属服务："
-          name="service_res_id"
-          :rules="schemaRouter.service_res_id"
-      >
+      <a-form-item label="所属服务：" name="service_res_id" :rules="schemaRouter.service_res_id">
         <a-select
-            class="select"
-            ref="select"
-            v-model:value="data.formData.service_res_id"
-            placeholder="请选择"
+          class="select"
+          ref="select"
+          v-model:value="data.formData.service_res_id"
+          placeholder="请选择"
         >
-          <a-select-option
-              v-for="item in data.serviceList"
-              :value="item.res_id"
-          >{{ item.name }}</a-select-option>
-
+          <a-select-option v-for="item in data.serviceList" :value="item.res_id">{{
+            item.name
+          }}</a-select-option>
         </a-select>
       </a-form-item>
 
-      <a-form-item
-          label="路由路径："
-          name="router_path"
-          :rules="schemaRouter.router_path">
+      <a-form-item label="路由路径：" name="router_path" :rules="schemaRouter.router_path">
         <a-input v-model:value="data.formData.router_path" />
       </a-form-item>
 
       <a-form-item label="请求方法：" name="request_methods" :rules="schemaRouter.request_methods">
         <a-checkbox-group
-            v-model:value="data.formData.request_methods"
-            :options="data.methodList"
+          v-model:value="data.formData.request_methods"
+          :options="data.methodList"
         />
       </a-form-item>
 
-      <a-form-item
-          label="upstream："
-          name="upstream_res_id"
-      >
+      <a-form-item label="upstream：" name="upstream_res_id">
         <a-select
-            class="select"
-            ref="select"
-            v-model:value="data.formData.upstream_res_id"
-            placeholder="请选择"
+          class="select"
+          ref="select"
+          v-model:value="data.formData.upstream_res_id"
+          placeholder="请选择"
         >
-          <a-select-option
-              v-for="item in data.upstreamList"
-              :value="item.res_id"
-          >{{ item.name }}</a-select-option>
-
+          <a-select-option v-for="item in data.upstreamList" :value="item.res_id">{{
+            item.name
+          }}</a-select-option>
         </a-select>
       </a-form-item>
 
@@ -78,7 +64,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { $serviceList, $upstreamNameList, $routerInfo, $routerAdd, $routerUpdate } from '@/api'
-import { MethodOption} from '@/hooks'
+import { MethodOption } from '@/hooks'
 import { schemaRouter } from '@/schema'
 
 export default {
@@ -94,6 +80,9 @@ export default {
   setup(props, { emit }) {
     // 初始化——服务详情数据
     onMounted(async () => {
+      if (props.serviceResId !== null) {
+        data.formData.service_res_id = props.serviceResId
+      }
 
       if (props.currentResId !== null && props.serviceResId !== null) {
         getInfo(props.serviceResId, props.currentResId)
@@ -107,31 +96,31 @@ export default {
     // 定义变量
     const data = reactive({
       formData: {
-        service_res_id:'',
-        upstream_res_id:'',
-        router_name:'',
-        request_methods:[],
-        router_path:'',
-        enable:false,
+        service_res_id: '',
+        upstream_res_id: '',
+        router_name: '',
+        request_methods: [],
+        router_path: '',
+        enable: false
       },
       serviceParam: reactive({
         page: 1,
-        page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
+        page_size: 1000 // 此处暂时不做轮询获取 暂定获取前1000条
       }),
       serviceList: reactive({}), // 服务列表
       upstreamParam: reactive({
         enable: 1,
         release: 3,
         page: 1,
-        page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
+        page_size: 1000 // 此处暂时不做轮询获取 暂定获取前1000条
       }),
       upstreamList: reactive({}), // upstream列表
-      methodList: MethodOption, // 请求方法列表
+      methodList: MethodOption // 请求方法列表
     })
 
     // 获取服务列表
     const getServiceList = async params => {
-      let {code, data: dataList, msg} = await $serviceList(params)
+      let { code, data: dataList, msg } = await $serviceList(params)
 
       if (code != 0) {
         message.error(msg)
@@ -140,7 +129,7 @@ export default {
         dataList.data.forEach(item => {
           tmpList.value.push({
             res_id: item.res_id,
-            name: item.name,
+            name: item.name
           })
         })
 
@@ -150,7 +139,7 @@ export default {
 
     // 获取upstream列表
     const getUpstreamNameList = async () => {
-      let {code, data: dataList, msg} = await $upstreamNameList()
+      let { code, data: dataList, msg } = await $upstreamNameList()
 
       if (code != 0) {
         message.error(msg)
@@ -159,7 +148,7 @@ export default {
         dataList.forEach(item => {
           tmpList.value.push({
             res_id: item.res_id,
-            name: item.name,
+            name: item.name
           })
         })
 
@@ -189,7 +178,7 @@ export default {
     const onSubmit = async () => {
       let formData = JSON.parse(JSON.stringify(data.formData))
       formData.enable = formData.enable == true ? 1 : 2
-      formData.request_methods = formData.request_methods.join(",")
+      formData.request_methods = formData.request_methods.join(',')
 
       // 调用增加/修改接口
       let routerRes
