@@ -100,6 +100,8 @@ export default {
           emit('pluginAddVisible')
           emit('componentRefreshList')
         }
+
+        resetFields()
       } else {
         // 更新插件配置
         let configData = reactive({
@@ -123,8 +125,6 @@ export default {
           emit('componentRefreshList')
         }
       }
-
-      resetFields()
     }
 
     // 取消按钮
@@ -133,12 +133,12 @@ export default {
       if (props.pluginOpType == 1) {
         // 调用父组件方法，收起增加插件的表单
         emit('pluginAddVisible')
+
+        resetFields();
       } else {
         // 调用父组件方法，收起编辑插件的表单
         emit('pluginEditVisibleOff', key)
       }
-
-      resetFields();
     }
 
     const fn = reactive({
