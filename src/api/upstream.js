@@ -1,6 +1,7 @@
 import request from '../utils/requestAxios'
 
 const upstreamList = '/admin/upstream/list'
+const upstreamNameList = '/admin/upstream/name/list'
 const upstreamEditName = '/admin/upstream/update/name/'
 const upstreamEnable = '/admin/upstream/switch/enable/'
 const upstreamDelete = '/admin/upstream/delete/'
@@ -19,6 +20,17 @@ export const $upstreamList = async params => {
     url: upstreamList,
     method: 'GET',
     params: params
+  })
+}
+
+/**
+ * 获取upstream列表
+ * @returns
+ */
+export const $upstreamNameList = async () => {
+  return request.request({
+    url: upstreamNameList,
+    method: 'GET',
   })
 }
 

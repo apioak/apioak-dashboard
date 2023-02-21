@@ -77,7 +77,7 @@
 <script>
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { $serviceList, $upstreamList, $routerInfo, $routerAdd, $routerUpdate } from '@/api'
+import { $serviceList, $upstreamNameList, $routerInfo, $routerAdd, $routerUpdate } from '@/api'
 import { MethodOption} from '@/hooks'
 import { schemaRouter } from '@/schema'
 
@@ -101,7 +101,7 @@ export default {
 
       getServiceList(data.serviceParam)
 
-      getUpstreamList(data.upstreamParam)
+      getUpstreamNameList()
     })
 
     // 定义变量
@@ -125,7 +125,7 @@ export default {
         page: 1,
         page_size: 1000, // 此处暂时不做轮询获取 暂定获取前1000条
       }),
-      upstreamList: reactive({}), // 服务列表
+      upstreamList: reactive({}), // upstream列表
       methodList: MethodOption, // 请求方法列表
     })
 
@@ -149,20 +149,21 @@ export default {
     }
 
     // 获取upstream列表
-    const getUpstreamList = async params => {
-      let {code, data: dataList, msg} = await $upstreamList(params)
+    const getUpstreamNameList = async () => {
+      let {code, data: dataList, msg} = await $upstreamNameList()
 
       if (code != 0) {
         message.error(msg)
       } else {
         let tmpList = ref([])
-        dataList.data.forEach(item => {
+        dataList.forEach(item => {
           tmpList.value.push({
             res_id: item.res_id,
             name: item.name,
           })
         })
 
+        console.log(tmpList)
         data.upstreamList = tmpList
       }
     }
