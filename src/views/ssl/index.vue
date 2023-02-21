@@ -60,12 +60,12 @@
         </template>
 
         <template v-if="column.dataIndex === 'expired_at'">
-          <a-text v-if="data.newTimeStamp > record.expired_at" class="color-red">
+          <span v-if="data.newTimeStamp > record.expired_at" class="color-red">
             {{ record.expired_at }}
-          </a-text>
-          <a-text v-else>
+          </span>
+          <span v-else>
             {{ record.expired_at }}
-          </a-text>
+          </span>
         </template>
 
         <template v-if="column.dataIndex === 'enable'">
