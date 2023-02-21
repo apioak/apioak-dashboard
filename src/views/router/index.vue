@@ -344,7 +344,7 @@ export default {
     onMounted(async () => {
       if (store.state.params.res_id != null) {
         data.params.service_res_id = store.state.params.res_id
-        store.commit('params/setParams', null)
+        store.commit('params/setParamsResId', null)
       }
 
       getList(data.params)

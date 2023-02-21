@@ -571,7 +571,7 @@ export default {
 
     // 跳转到路由列表
     const routerList = async record => {
-      store.commit('params/setParams', record.res_id)
+      store.commit('params/setParamsResId', record.res_id)
       router.push({ name: 'router' })
     }
 

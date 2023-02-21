@@ -8,7 +8,7 @@ export default {
     }
   },
   mutations: {
-    async setParams(state, resId) {
+    async setParamsResId(state, resId) {
       try {
         state.res_id = resId
         return Promise.resolve()
