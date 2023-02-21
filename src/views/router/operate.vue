@@ -12,7 +12,7 @@
       </a-form-item>
 
       <a-form-item label="所属服务：" name="service_res_id" :rules="schemaRouter.service_res_id">
-        <a-select
+        <!-- <a-select
           class="select"
           ref="select"
           v-model:value="data.formData.service_res_id"
@@ -21,7 +21,20 @@
           <a-select-option v-for="item in data.serviceList" :value="item.res_id">{{
             item.name
           }}</a-select-option>
-        </a-select>
+        </a-select> -->
+        <a-select
+          class="select"
+          ref="select"
+          :field-names="{
+            label: 'name',
+            value: 'res_id'
+          }"
+          show-search
+          v-model:value="data.formData.service_res_id"
+          placeholder="请选择"
+          :filter-option="fn.filterOption"
+          :options="data.serviceList"
+        ></a-select>
       </a-form-item>
 
       <a-form-item label="路由路径：" name="router_path" :rules="schemaRouter.router_path">
@@ -107,7 +120,7 @@ export default {
         page: 1,
         page_size: 1000 // 此处暂时不做轮询获取 暂定获取前1000条
       }),
-      serviceList: reactive({}), // 服务列表
+      serviceList: ref([]), // 服务列表
       upstreamParam: reactive({
         enable: 1,
         release: 3,
@@ -137,6 +150,11 @@ export default {
       }
     }
 
+    // 下拉选择服务列表搜索
+    const filterOption = (input, option) => {
+      return option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    }
+
     // 获取upstream列表
     const getUpstreamNameList = async () => {
       let { code, data: dataList, msg } = await $upstreamNameList()
@@ -152,7 +170,6 @@ export default {
           })
         })
 
-        console.log(tmpList)
         data.upstreamList = tmpList
       }
     }
@@ -205,7 +222,8 @@ export default {
     // 定义函数
     const fn = reactive({
       onSubmit,
-      cancel
+      cancel,
+      filterOption
     })
 
     return {

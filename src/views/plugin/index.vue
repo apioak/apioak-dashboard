@@ -178,7 +178,6 @@ export default {
   emits: ['componentCloseDrawer', 'componentRefreshList'],
   setup(props, { emit }) {
     onMounted(() => {
-
       if (props.currentResId !== null) {
         getList(props.currentResId)
       }

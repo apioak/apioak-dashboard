@@ -16,15 +16,18 @@
       <a-select
         class="select"
         ref="select"
+        :field-names="{
+          label: 'name',
+          value: 'res_id'
+        }"
+        show-search
         v-model:value="data.params.service_res_id"
         placeholder="请选择"
+        :filter-option="fn.filterOption"
         @change="fn.paramsChange(data.params)"
-      >
-        <a-select-option :value="0">全部</a-select-option>
-        <a-select-option v-for="item in data.serviceList" :value="item.res_id">
-          {{ item.name }}
-        </a-select-option>
-      </a-select>
+        :options="data.serviceList"
+        style="width: 15%"
+      ></a-select>
 
       <span>启用状态: </span>
       <a-select
@@ -359,7 +362,7 @@ export default {
     const data = reactive({
       params: reactive({
         // 路由列表查询参数
-        service_res_id: '',
+        service_res_id: null,
         enable: null,
         release: null,
         search: '',
@@ -374,7 +377,7 @@ export default {
         page: 1,
         page_size: 1000 // 此处暂时不做轮询获取 暂定获取前1000条
       }),
-      serviceList: reactive({}) // 服务列表
+      serviceList: ref([]) // 服务列表
     })
 
     // 抽屉变量
@@ -467,7 +470,13 @@ export default {
       if (code != 0) {
         message.error(msg)
       } else {
-        let tmpList = ref([])
+        let tmpList = ref([
+          {
+            res_id: '',
+            name: '全部'
+          }
+        ])
+
         dataList.data.forEach(item => {
           tmpList.value.push({
             res_id: item.res_id,
@@ -478,6 +487,12 @@ export default {
         data.serviceList = tmpList
       }
     }
+
+    // 下拉选择服务列表搜索
+    const filterOption = (input, option) => {
+      return option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    }
+
     // 编辑名称——填入输入框
     const editName = async (resId, name) => {
       data.editName[resId] = name
@@ -660,7 +675,8 @@ export default {
       afterVisibleChange,
       componentCloseDrawer,
       componentRefreshList,
-      routerCopy
+      routerCopy,
+      filterOption
     })
 
     return {
