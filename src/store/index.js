@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import userModule from './modules/user'
+import paramsModule from './modules/params'
 
 export default createStore({
   state: {},
@@ -8,12 +9,13 @@ export default createStore({
   mutations: {},
   actions: {},
   modules: {
-    user: userModule
+    user: userModule,
+    params: paramsModule
   },
   plugins: [
     createPersistedState({
       key: 'vuex-local',
-      paths: ['user']
+      paths: ['user', 'params']
     })
   ]
 })

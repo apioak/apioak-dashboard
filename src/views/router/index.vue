@@ -334,7 +334,7 @@ import {
   $routerCopy
 } from '@/api'
 import { HookEnableToName, HookProtocolToName, HookReleaseToName } from '@/hooks'
-import router from '@/router'
+import store from '@/store'
 
 export default {
   components: { RouterOperate, PluginIndex },
@@ -342,8 +342,9 @@ export default {
   setup() {
     // 初始化——路由列表
     onMounted(async () => {
-      if (router.currentRoute.value.query.serviceResId != null) {
-        data.params.service_res_id = router.currentRoute.value.query.serviceResId
+      if (store.state.params.res_id != null) {
+        data.params.service_res_id = store.state.params.res_id
+        store.commit('params/setParams', null)
       }
 
       getList(data.params)

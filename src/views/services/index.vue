@@ -323,6 +323,7 @@ import {
 } from '@/api'
 import { HookProtocolToName, HookReleaseToName, HookEnableToName } from '@/hooks'
 import router from '@/router'
+import store from '@/store'
 
 export default {
   components: { ServiceOperate, PluginIndex },
@@ -570,7 +571,8 @@ export default {
 
     // 跳转到路由列表
     const routerList = async record => {
-      router.push({ name: 'router', query: { serviceResId: record.res_id } })
+      store.commit('params/setParams', record.res_id)
+      router.push({ name: 'router' })
     }
 
     // 定义函数
