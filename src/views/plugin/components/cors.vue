@@ -43,11 +43,11 @@
 </template>
 <script>
 import { reactive } from 'vue'
-import {Form, message} from 'ant-design-vue'
+import { Form, message } from 'ant-design-vue'
 import { schemaPluginCors } from '@/schema'
 import { $pluginConfigAdd, $pluginConfigUpdate } from '@/api'
 
-const useForm = Form.useForm;
+const useForm = Form.useForm
 export default {
   props: {
     pluginConfigData: {
@@ -160,7 +160,7 @@ export default {
           return
         } else {
           message.success(msg)
-          emit('pluginEditVisibleOff')
+          emit('pluginEditVisibleOff', props.pluginConfigData.key)
           emit('componentRefreshList')
         }
       }

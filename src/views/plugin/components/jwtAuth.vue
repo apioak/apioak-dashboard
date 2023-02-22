@@ -1,11 +1,11 @@
 <template>
   <a-form
-      :model="data.formData"
-      name="formData"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 19 }"
-      autocomplete="off"
-      @finish="fn.onSubmit"
+    :model="data.formData"
+    name="formData"
+    :label-col="{ span: 4 }"
+    :wrapper-col="{ span: 19 }"
+    autocomplete="off"
+    @finish="fn.onSubmit"
   >
     <a-form-item label="插件名称" name="name" :rules="schemaPluginJwtAuth.name">
       <a-input v-model:value="data.formData.name" />
@@ -31,7 +31,7 @@ import { message, Form } from 'ant-design-vue'
 import { schemaPluginJwtAuth } from '@/schema'
 import { $pluginConfigAdd, $pluginConfigUpdate } from '@/api'
 
-const useForm = Form.useForm;
+const useForm = Form.useForm
 export default {
   props: {
     pluginConfigData: {
@@ -55,7 +55,6 @@ export default {
   },
   emits: ['pluginAddVisible', 'pluginEditVisibleOff', 'componentRefreshList'],
   setup(props, { emit }) {
-
     const data = reactive({
       formData: {
         name: '',
@@ -87,7 +86,7 @@ export default {
           name: formData.name ?? '',
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
-            jwt_key: formData.jwt_key ?? '',
+            jwt_key: formData.jwt_key ?? ''
           })
         })
 
@@ -107,21 +106,21 @@ export default {
         let configData = reactive({
           name: formData.name ?? '',
           config: reactive({
-            jwt_key: formData.jwt_key ?? '',
+            jwt_key: formData.jwt_key ?? ''
           })
         })
 
         let { code, msg } = await $pluginConfigUpdate(
-            props.pluginConfigResId,
-            configData,
-            props.pluginConfigType
+          props.pluginConfigResId,
+          configData,
+          props.pluginConfigType
         )
         if (code !== 0) {
           message.error(msg)
           return
         } else {
           message.success(msg)
-          emit('pluginEditVisibleOff')
+          emit('pluginEditVisibleOff', props.pluginConfigData.key)
           emit('componentRefreshList')
         }
       }
@@ -129,12 +128,11 @@ export default {
 
     // 取消按钮
     const cancel = async key => {
-
       if (props.pluginOpType == 1) {
         // 调用父组件方法，收起增加插件的表单
         emit('pluginAddVisible')
 
-        resetFields();
+        resetFields()
       } else {
         // 调用父组件方法，收起编辑插件的表单
         emit('pluginEditVisibleOff', key)
@@ -143,7 +141,7 @@ export default {
 
     const fn = reactive({
       onSubmit,
-      cancel,
+      cancel
     })
 
     return { data, fn, schemaPluginJwtAuth }

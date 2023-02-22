@@ -132,7 +132,7 @@ export default {
           return
         } else {
           message.success(msg)
-          emit('pluginEditVisibleOff')
+          emit('pluginEditVisibleOff', props.pluginConfigData.key)
           emit('componentRefreshList')
         }
       }

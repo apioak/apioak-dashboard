@@ -1,13 +1,13 @@
 <template>
   <a-form
-      :model="data.formData"
-      name="formData"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 19 }"
-      autocomplete="off"
-      @finish="fn.onSubmit"
+    :model="data.formData"
+    name="formData"
+    :label-col="{ span: 4 }"
+    :wrapper-col="{ span: 19 }"
+    autocomplete="off"
+    @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name" >
+    <a-form-item label="插件名称" name="name">
       <a-input v-model:value="data.formData.name" />
     </a-form-item>
 
@@ -20,30 +20,25 @@
     </a-form-item>
 
     <a-form-item label="http_body" name="http_body" :rules="schemaPluginMock.http_body">
-      <a-textarea v-model:value="data.formData.http_body" :rows="4"/>
+      <a-textarea v-model:value="data.formData.http_body" :rows="4" />
     </a-form-item>
 
     <a-form-item label="http_headers" name="http_headers">
-      <a-space
-          v-for="(item, index) in data.formData.http_headers"
-          :key="item.id"
-          align="baseline"
-      >
-        <a-form-item :name="[ 'http_headers', index, 'key' ]" :rules="checkHttpHeader">
-          <a-input placeholder="key" v-model:value="item.key" style="width: 200px;"/>
+      <a-space v-for="(item, index) in data.formData.http_headers" :key="item.id" align="baseline">
+        <a-form-item :name="['http_headers', index, 'key']" :rules="checkHttpHeader">
+          <a-input placeholder="key" v-model:value="item.key" style="width: 200px" />
         </a-form-item>
-        <a-form-item :name="[ 'http_headers', index, 'value' ]">
-          <a-input placeholder="value" v-model:value="item.value" style="width: 300px;"/>
+        <a-form-item :name="['http_headers', index, 'value']">
+          <a-input placeholder="value" v-model:value="item.value" style="width: 300px" />
         </a-form-item>
-        
+
         <a @click="fn.addHttpHeaders()">
           <i class="iconfont icon-tianjia"></i>
         </a>
-        <a v-if="index>0" @click="fn.removeHttpHeaders(item)">
+        <a v-if="index > 0" @click="fn.removeHttpHeaders(item)">
           <i class="iconfont color-red icon-jian"></i>
         </a>
       </a-space>
-
     </a-form-item>
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">
       <a-switch v-model:checked="data.formData.enable" size="small" />
@@ -57,11 +52,11 @@
 </template>
 <script>
 import { reactive, onMounted } from 'vue'
-import {Form, message} from 'ant-design-vue'
+import { Form, message } from 'ant-design-vue'
 import { schemaPluginMock } from '@/schema'
 import { $pluginConfigAdd, $pluginConfigUpdate } from '@/api'
 
-const useForm = Form.useForm;
+const useForm = Form.useForm
 export default {
   props: {
     pluginConfigData: {
@@ -85,11 +80,11 @@ export default {
   },
   emits: ['pluginAddVisible', 'pluginEditVisibleOff', 'componentRefreshList'],
   setup(props, { emit }) {
-
     onMounted(async () => {
-
-      if (props.pluginConfigResId == null ||
-          Object.keys(props.pluginConfigData.http_headers).length===0) {
+      if (
+        props.pluginConfigResId == null ||
+        Object.keys(props.pluginConfigData.http_headers).length === 0
+      ) {
         // 初始化一个空 http_headers
         addHttpHeaders()
       }
@@ -101,7 +96,7 @@ export default {
         response_type: 'application/json',
         http_code: 200,
         http_body: '',
-        http_headers:[],
+        http_headers: [],
         enable: false
       }
     })
@@ -126,14 +121,13 @@ export default {
       }
 
       if (props.pluginConfigData.http_headers != null) {
-
         let hh = JSON.parse(JSON.stringify(props.pluginConfigData.http_headers))
-        Object.getOwnPropertyNames(hh).forEach(function (k){
+        Object.getOwnPropertyNames(hh).forEach(function (k) {
           data.formData.http_headers.push({
-                key: k,
-                value: hh[k],
-                id: Date.now(),
-              })
+            key: k,
+            value: hh[k],
+            id: Date.now()
+          })
         })
       }
     }
@@ -142,20 +136,19 @@ export default {
       data.formData.http_headers.push({
         key: undefined,
         vaule: undefined,
-        id: Date.now(),
-      });
+        id: Date.now()
+      })
     }
 
-    const removeHttpHeaders = (item) => {
-      let index = data.formData.http_headers.indexOf(item);
+    const removeHttpHeaders = item => {
+      let index = data.formData.http_headers.indexOf(item)
       if (index !== -1) {
-        data.formData.http_headers.splice(index, 1);
+        data.formData.http_headers.splice(index, 1)
       }
-    };
+    }
 
     // 提交当前插件的表单数据
     const onSubmit = async formData => {
-
       let hh = reactive({})
       formData.http_headers.forEach(item => {
         if (item.key != null) {
@@ -179,7 +172,7 @@ export default {
             response_type: formData.response_type ?? '',
             http_code: formData.http_code ?? '',
             http_body: formData.http_body ?? '',
-            http_headers: hh ?? [],
+            http_headers: hh ?? []
           })
         })
 
@@ -202,21 +195,21 @@ export default {
             response_type: formData.response_type ?? '',
             http_code: formData.http_code ?? '',
             http_body: formData.http_body ?? '',
-            http_headers: hh ?? [],
+            http_headers: hh ?? []
           })
         })
 
         let { code, msg } = await $pluginConfigUpdate(
-            props.pluginConfigResId,
-            configData,
-            props.pluginConfigType
+          props.pluginConfigResId,
+          configData,
+          props.pluginConfigType
         )
         if (code !== 0) {
           message.error(msg)
           return
         } else {
           message.success(msg)
-          emit('pluginEditVisibleOff')
+          emit('pluginEditVisibleOff', props.pluginConfigData.key)
           emit('componentRefreshList')
         }
       }
@@ -238,7 +231,6 @@ export default {
     const checkHttpHeader = [
       {
         validator: async (_, value) => {
-
           let pattern = /^[A-Za-z1-9_-]+$/
           if (value !== undefined && value.length !== 0 && !pattern.test(value)) {
             return Promise.reject('当前值仅包含字母、数字、划线')
@@ -253,7 +245,7 @@ export default {
       addHttpHeaders,
       removeHttpHeaders,
       onSubmit,
-      cancel,
+      cancel
     })
 
     return { data, fn, schemaPluginMock, checkHttpHeader }
