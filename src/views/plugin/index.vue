@@ -253,18 +253,18 @@ export default {
         if (dataList.list && dataList.list.length > 0) {
           let pluginList = ref([])
 
-          dataList.list.forEach((pluginConfigInfo, index) => {
+          dataList.list.forEach(pluginConfigInfo => {
             let componentName = hookData.pluginKeyToComponentMap[pluginConfigInfo.plugin_key]
             if (componentName == null) {
               componentName = 'Plugin404'
             }
 
-            pluginConfigInfo.config.key = index
+            pluginConfigInfo.config.key = pluginConfigInfo.res_id
             pluginConfigInfo.config.name = pluginConfigInfo.name
             let pluginConfigData = reactive(pluginConfigInfo.config)
 
             pluginList.value.push({
-              key: index,
+              key: pluginConfigInfo.res_id,
               res_id: pluginConfigInfo.res_id,
               icon: pluginConfigInfo.icon.length == 0 ? 'icon-apex_plugin1' : pluginConfigInfo.icon,
               name: pluginConfigInfo.name,
