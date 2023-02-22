@@ -179,40 +179,24 @@
                 cancel-text="否"
                 @confirm="fn.releaseFunc(record)"
               >
-                <a
-                  ><a-tooltip placement="topRight">
-                    <template #title> 发布 </template>
-                    <span> <i class="iconfont icon-yuntongbu" /></span>
-                  </a-tooltip>
-                  <a-divider type="vertical"
-                /></a>
+                <a><i class="iconfont icon-yuntongbu" /> <a-divider type="vertical" /></a>
               </a-popconfirm>
             </span>
 
             <a @click="fn.drawerOperate(record.res_id)">
-              <a-tooltip placement="topRight">
-                <template #title> 编辑 </template>
-                <span>
-                  <i class="iconfont icon-xiugai" />
-                </span>
-              </a-tooltip>
+              <i class="iconfont icon-xiugai" />
               <a-divider type="vertical" />
             </a>
 
             <a-popconfirm
-              placement="top"
+              placement="topRight"
               title="确认删除该配置?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
-                <a-tooltip placement="topRight">
-                  <template #title> 删除 </template>
-                  <span>
-                    <i class="iconfont icon-shanchu" />
-                  </span>
-                </a-tooltip>
+                <i class="iconfont icon-shanchu" />
               </a>
             </a-popconfirm>
           </span>
@@ -319,7 +303,7 @@ export default {
       { title: '节点', dataIndex: 'nodes' },
       { title: '发布', dataIndex: 'release' },
       { title: '启用', dataIndex: 'enable' },
-      { title: '操作', dataIndex: 'operation', width: 120 }
+      { title: '操作', dataIndex: 'operation', width: 130 }
     ])
 
     // 获取服务列表

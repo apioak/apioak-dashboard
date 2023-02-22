@@ -252,19 +252,14 @@
             </a>
 
             <a-popconfirm
-              placement="top"
+              placement="topRight"
               title="确认删除该配置?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
-                <a-tooltip placement="topRight">
-                  <template #title> 删除 </template>
-                  <span>
-                    <i class="iconfont icon-shanchu" />
-                  </span>
-                </a-tooltip>
+                <i class="iconfont icon-shanchu" />
               </a>
             </a-popconfirm>
           </span>

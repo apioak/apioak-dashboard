@@ -157,11 +157,19 @@
         <!-- 方法 -->
         <template v-if="column.dataIndex === 'method'">
           <a-tooltip placement="bottomRight" v-for="(mv, mi) in record.method" :key="mi">
-            <a-tag v-if="mv.name == 'ALL'" color="purple">{{ mv.name }}</a-tag>
+            <!-- <a-tag v-if="mv.name == 'ALL'" color="purple">{{ mv.name }}</a-tag>
             <a-tag v-else-if="mv.name == 'GET'" color="green">{{ mv.name }}</a-tag>
             <a-tag v-else-if="mv.name == 'POST'" color="orange">{{ mv.name }}</a-tag>
             <a-tag v-else-if="mv.name == 'PUT'" color="blue">{{ mv.name }}</a-tag>
-            <a-tag v-else-if="mv.name == 'DELETE'" color="red">{{ mv.name }}</a-tag>
+            <a-tag v-else-if="mv.name == 'DELETE'" color="red">{{ mv.name }}</a-tag> -->
+
+            <span class="method-span color-purple" v-if="mv.name == 'ALL'">{{ mv.name }}</span>
+            <span class="method-span color-green" v-else-if="mv.name == 'GET'">{{ mv.name }}</span>
+            <span class="method-span color-orange" v-else-if="mv.name == 'POST'">{{
+              mv.name
+            }}</span>
+            <span class="method-span color-blue" v-else-if="mv.name == 'PUT'">{{ mv.name }}</span>
+            <span class="method-span color-red" v-else-if="mv.name == 'DELETE'">{{ mv.name }}</span>
           </a-tooltip>
         </template>
 
@@ -240,7 +248,7 @@
             </a>
             <a-popconfirm
               placement="top"
-              title="路由复制会将其下的插件全量复制,是否确认复制?"
+              title="路由下的插件全量复制,是否确认复制?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.routerCopy(record)"
@@ -267,19 +275,14 @@
             </a>
 
             <a-popconfirm
-              placement="top"
+              placement="topRight"
               title="确认删除该配置?"
               ok-text="是"
               cancel-text="否"
               @confirm="fn.deleteFunc(record)"
             >
               <a class="color-red a-delete">
-                <a-tooltip placement="topRight">
-                  <template #title> 删除 </template>
-                  <span>
-                    <i class="iconfont icon-shanchu" />
-                  </span>
-                </a-tooltip>
+                <i class="iconfont icon-shanchu" />
               </a>
             </a-popconfirm>
           </span>
@@ -733,6 +736,9 @@ export default {
   color: #ff1744;
 }
 .icon-lianjie {
+  margin-right: 10px;
+}
+.method-span {
   margin-right: 10px;
 }
 </style>

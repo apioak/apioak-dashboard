@@ -1,4 +1,4 @@
-const nameFormat = { pattern: /^[A-Za-z\d_\-.]+$/, message: '名称仅包含字母数字划线和点!' }
+const nameFormat = { pattern: /^[A-Za-z\d_\-./*]+$/, message: '名称仅包含字母、数字、_ - . / *' }
 const nameMax = { max: 30, message: '名称最长30个字符!' }
 
 const portBetween = { type: 'number', min: 1, max: 65535, message: '限制1-65535' }

@@ -1,4 +1,4 @@
-const nameFormat = { pattern: /^[A-Za-z\d_\-.]+$/, message: '名称仅包含字母数字划线和点!' }
+const nameFormat = { pattern: /^[A-Za-z\d_\-./*]+$/, message: '名称仅包含字母、数字、_ - . / *' }
 const nameMax = { max: 30, message: '名称最长30个字符!' }
 
 const domainMax = { max: 50, message: '服务域名最长50个字符!' }
