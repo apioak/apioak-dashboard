@@ -1,22 +1,22 @@
 <template>
   <a-form
-      :model="data.formData"
-      name="formData"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 19 }"
-      autocomplete="off"
-      @finish="fn.onSubmit"
+    :model="data.formData"
+    name="formData"
+    :label-col="{ span: 5 }"
+    :wrapper-col="{ span: 18 }"
+    autocomplete="off"
+    @finish="fn.onSubmit"
   >
     <a-form-item label="插件名称" name="name" :rules="schemaPluginLimitCount.name">
       <a-input v-model:value="data.formData.name" />
     </a-form-item>
 
     <a-form-item label="time_window" name="time_window" :rules="schemaPluginLimitCount.time_window">
-      <a-input-number v-model:value="data.formData.time_window" style="width: 200px"/>
+      <a-input-number v-model:value="data.formData.time_window" style="width: 100%" />
     </a-form-item>
 
     <a-form-item label="count" name="count" :rules="schemaPluginLimitCount.count">
-      <a-input-number v-model:value="data.formData.count" style="width: 200px"/>
+      <a-input-number v-model:value="data.formData.count" style="width: 100%" />
     </a-form-item>
 
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">
@@ -31,11 +31,11 @@
 </template>
 <script>
 import { reactive } from 'vue'
-import {Form, message} from 'ant-design-vue'
+import { Form, message } from 'ant-design-vue'
 import { schemaPluginLimitCount } from '@/schema'
 import { $pluginConfigAdd, $pluginConfigUpdate } from '@/api'
 
-const useForm = Form.useForm;
+const useForm = Form.useForm
 
 export default {
   props: {
@@ -97,7 +97,7 @@ export default {
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
             time_window: formData.time_window ?? '',
-            count: formData.count ?? '',
+            count: formData.count ?? ''
           })
         })
 
@@ -118,14 +118,14 @@ export default {
           name: formData.name ?? '',
           config: reactive({
             time_window: formData.time_window ?? '',
-            count: formData.count ?? '',
+            count: formData.count ?? ''
           })
         })
 
         let { code, msg } = await $pluginConfigUpdate(
-            props.pluginConfigResId,
-            configData,
-            props.pluginConfigType
+          props.pluginConfigResId,
+          configData,
+          props.pluginConfigType
         )
         if (code !== 0) {
           message.error(msg)
