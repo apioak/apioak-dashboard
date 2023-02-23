@@ -57,7 +57,7 @@ export default {
   setup(props, { emit }) {
     const data = reactive({
       formData: {
-        name: '',
+        name: 'plugin-jwt-auth',
         jwt_key: '',
         enable: false
       }

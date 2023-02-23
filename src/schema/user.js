@@ -1,12 +1,12 @@
-const emailFormat = {
-  pattern: /^[a-zA-Z0-9]+([-_.][A-Za-zd]+)*@([a-zA-Z0-9]+[-.])+[A-Za-zd]{2,5}$/,
-  message: '邮箱格式错误!'
-}
+const emailFormat = { type: 'email', message: '邮箱格式错误!' }
 
 const passwordMin = { min: 8, message: '密码最小8个字符!' }
 const passwordMax = { max: 16, message: '密码最长16个字符!' }
 
-const nameFormat = { pattern: /^[A-Za-z\d_]+$/, message: '昵称仅包含字母数字下划线字符!' }
+const nameFormat = {
+  pattern: /^[A-Za-z\u4E00-\u9FA5\d_\-./*@#（）()&~+=[\]]+$/,
+  message: '可包含汉字、字母、数字、_ + - . / * @ # （ ） ( ) [ ] & ~ ='
+}
 const nameMax = { max: 15, message: '昵称最长15个字符!' }
 
 export const schemaUser = {

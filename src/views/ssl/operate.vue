@@ -11,18 +11,12 @@
         <a-input v-model:value="data.formData.sni" />
       </a-form-item>
 
-      <a-form-item
-          label="证书内容："
-          name="certificate"
-          :rules="schemaSsl.certificate">
-        <a-textarea v-model:value="data.formData.certificate" />
+      <a-form-item label="证书内容：" name="certificate" :rules="schemaSsl.certificate">
+        <a-textarea v-model:value="data.formData.certificate" :rows="7" />
       </a-form-item>
 
-      <a-form-item
-          label="私钥内容："
-          name="private_key"
-          :rules="schemaSsl.private_key">
-        <a-textarea v-model:value="data.formData.private_key" />
+      <a-form-item label="私钥内容：" name="private_key" :rules="schemaSsl.private_key">
+        <a-textarea v-model:value="data.formData.private_key" :rows="7" />
       </a-form-item>
 
       <a-form-item label="启用：">
@@ -53,23 +47,22 @@ export default {
   setup(props, { emit }) {
     // 初始化——服务详情数据
     onMounted(async () => {
-
       if (props.currentResId !== null) {
-        getInfo( props.currentResId)
+        getInfo(props.currentResId)
       }
     })
 
     // 定义变量
     const data = reactive({
       formData: {
-        sni:'',
-        certificate:'',
-        private_key:'',
-        enable:false,
-      },
+        sni: '',
+        certificate: '',
+        private_key: '',
+        enable: false
+      }
     })
     // 获取详情
-    const getInfo = async (resId) => {
+    const getInfo = async resId => {
       let { code, data: dataInfo, msg } = await $sslInfo(resId)
 
       if (code !== 0) {

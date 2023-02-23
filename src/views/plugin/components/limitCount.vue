@@ -12,11 +12,19 @@
     </a-form-item>
 
     <a-form-item label="time_window" name="time_window" :rules="schemaPluginLimitCount.time_window">
-      <a-input-number v-model:value="data.formData.time_window" style="width: 100%" />
+      <a-input-number
+        placeholder="1-86400"
+        v-model:value="data.formData.time_window"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item label="count" name="count" :rules="schemaPluginLimitCount.count">
-      <a-input-number v-model:value="data.formData.count" style="width: 100%" />
+      <a-input-number
+        placeholder="1-100000000"
+        v-model:value="data.formData.count"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">
@@ -62,9 +70,9 @@ export default {
   setup(props, { emit }) {
     const data = reactive({
       formData: {
-        name: '',
-        time_window: 0,
-        count: 0,
+        name: 'plugin-limit-count',
+        time_window: null,
+        count: null,
         enable: false
       }
     })

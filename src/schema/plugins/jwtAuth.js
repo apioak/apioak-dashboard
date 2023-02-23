@@ -1,8 +1,6 @@
-const nameMax = { max: 30, message: '名称最长30个字符！' }
-
-const jwtKeyLenBetween = { type: 'string', min: 10, max: 32, message: '当前字段长度必须在 10~32 之间！' }
+import { nameFormat, nameMax, authFormat, authLenBetween } from '../common'
 
 export const schemaPluginJwtAuth = {
-  name: [nameMax],
-  jwt_key: [jwtKeyLenBetween, {required: true}],
+  name: [nameFormat, nameMax],
+  jwt_key: [{ required: true, message: '请输入jwt_key' }, authLenBetween, authFormat]
 }

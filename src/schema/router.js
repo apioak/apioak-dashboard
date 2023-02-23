@@ -1,6 +1,6 @@
 const nameFormat = {
-  pattern: /^[A-Za-z\d_\-./*\\]+$/,
-  message: '名称仅包含字母、数字、 _ * . / \\ - '
+  pattern: /^[A-Za-z\u4E00-\u9FA5\d_\-./*\\]+$/,
+  message: '名称仅包含汉字、字母、数字、 _ * . / \\ - '
 }
 const nameMax = { max: 30, message: '名称最长30个字符!' }
 

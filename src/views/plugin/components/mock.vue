@@ -12,11 +12,17 @@
     </a-form-item>
 
     <a-form-item label="response_type" name="response_type" :rules="schemaPluginMock.response_type">
-      <a-input v-model:value="data.formData.response_type" />
+      <a-select class="select" v-model:value="data.formData.response_type">
+        <a-select-option value="application/json">application/json</a-select-option>
+        <a-select-option value="text/html">text/html</a-select-option>
+        <a-select-option value="text/xml">text/xml</a-select-option>
+      </a-select>
+
+      <!-- <a-input v-model:value="data.formData.response_type" /> -->
     </a-form-item>
 
     <a-form-item label="http_code" name="http_code" :rules="schemaPluginMock.http_code">
-      <a-input v-model:value="data.formData.http_code" />
+      <a-input-number v-model:value="data.formData.http_code" style="width: 100%" />
     </a-form-item>
 
     <a-form-item label="http_body" name="http_body" :rules="schemaPluginMock.http_body">
@@ -26,10 +32,10 @@
     <a-form-item label="http_headers" name="http_headers">
       <a-space v-for="(item, index) in data.formData.http_headers" :key="item.id" align="baseline">
         <a-form-item :name="['http_headers', index, 'key']" :rules="checkHttpHeader">
-          <a-input placeholder="key" v-model:value="item.key" style="width: 200px" />
+          <a-input placeholder="key" v-model:value="item.key" style="width: 100%" />
         </a-form-item>
         <a-form-item :name="['http_headers', index, 'value']">
-          <a-input placeholder="value" v-model:value="item.value" style="width: 300px" />
+          <a-input placeholder="value" v-model:value="item.value" style="width: 100%" />
         </a-form-item>
 
         <a @click="fn.addHttpHeaders()">
@@ -92,7 +98,7 @@ export default {
 
     const data = reactive({
       formData: {
-        name: '',
+        name: 'plugin-mock',
         response_type: 'application/json',
         http_code: 200,
         http_body: '',

@@ -24,7 +24,7 @@
     </a-form-item>
 
     <a-form-item label="max_age" name="max_age" :rules="schemaPluginCors.max_age">
-      <a-input-number v-model:value="data.formData.max_age" />
+      <a-input-number v-model:value="data.formData.max_age" style="width: 100%" />
     </a-form-item>
 
     <a-form-item label="allow_credential" name="allow_credential">
@@ -73,7 +73,7 @@ export default {
   setup(props, { emit }) {
     const data = reactive({
       formData: {
-        name: '',
+        name: 'plugin-cors',
         allow_methods: '*',
         allow_origins: '*',
         allow_headers: '*',

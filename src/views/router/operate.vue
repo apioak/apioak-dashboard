@@ -12,16 +12,6 @@
       </a-form-item>
 
       <a-form-item label="所属服务：" name="service_res_id" :rules="schemaRouter.service_res_id">
-        <!-- <a-select
-          class="select"
-          ref="select"
-          v-model:value="data.formData.service_res_id"
-          placeholder="请选择"
-        >
-          <a-select-option v-for="item in data.serviceList" :value="item.res_id">{{
-            item.name
-          }}</a-select-option>
-        </a-select> -->
         <a-select
           class="select"
           ref="select"

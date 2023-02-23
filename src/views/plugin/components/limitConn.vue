@@ -12,11 +12,19 @@
     </a-form-item>
 
     <a-form-item label="rate" name="rate" :rules="schemaPluginLimitConn.rate">
-      <a-input-number v-model:value="data.formData.rate" style="width: 100%" />
+      <a-input-number
+        placeholder="1-100000"
+        v-model:value="data.formData.rate"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item label="burst" name="burst" :rules="schemaPluginLimitConn.burst">
-      <a-input-number v-model:value="data.formData.burst" style="width: 100%" />
+      <a-input-number
+        placeholder="1-5000"
+        v-model:value="data.formData.burst"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item
@@ -24,7 +32,11 @@
       name="default_conn_delay"
       :rules="schemaPluginLimitConn.default_conn_delay"
     >
-      <a-input-number v-model:value="data.formData.default_conn_delay" style="width: 100%" />
+      <a-input-number
+        placeholder="1-60"
+        v-model:value="data.formData.default_conn_delay"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">
@@ -69,10 +81,10 @@ export default {
   setup(props, { emit }) {
     const data = reactive({
       formData: {
-        name: '',
-        rate: 0,
-        burst: 0,
-        default_conn_delay: 0,
+        name: 'plugin-limit-conn',
+        rate: null,
+        burst: null,
+        default_conn_delay: null,
         enable: false
       }
     })

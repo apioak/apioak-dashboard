@@ -157,12 +157,6 @@
         <!-- 方法 -->
         <template v-if="column.dataIndex === 'method'">
           <a-tooltip placement="bottomRight" v-for="(mv, mi) in record.method" :key="mi">
-            <!-- <a-tag v-if="mv.name == 'ALL'" color="purple">{{ mv.name }}</a-tag>
-            <a-tag v-else-if="mv.name == 'GET'" color="green">{{ mv.name }}</a-tag>
-            <a-tag v-else-if="mv.name == 'POST'" color="orange">{{ mv.name }}</a-tag>
-            <a-tag v-else-if="mv.name == 'PUT'" color="blue">{{ mv.name }}</a-tag>
-            <a-tag v-else-if="mv.name == 'DELETE'" color="red">{{ mv.name }}</a-tag> -->
-
             <span class="method-span color-purple" v-if="mv.name == 'ALL'">{{ mv.name }}</span>
             <span class="method-span color-green" v-else-if="mv.name == 'GET'">{{ mv.name }}</span>
             <span class="method-span color-orange" v-else-if="mv.name == 'POST'">{{

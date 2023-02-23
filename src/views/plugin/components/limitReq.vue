@@ -12,11 +12,19 @@
     </a-form-item>
 
     <a-form-item label="rate" name="rate" :rules="schemaPluginLimitReq.rate">
-      <a-input-number v-model:value="data.formData.rate" style="width: 200px" />
+      <a-input-number
+        placeholder="1-100000"
+        v-model:value="data.formData.rate"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item label="burst" name="burst" :rules="schemaPluginLimitReq.burst">
-      <a-input-number v-model:value="data.formData.burst" style="width: 200px" />
+      <a-input-number
+        placeholder="0-5000"
+        v-model:value="data.formData.burst"
+        style="width: 100%"
+      />
     </a-form-item>
 
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">
@@ -61,9 +69,9 @@ export default {
   setup(props, { emit }) {
     const data = reactive({
       formData: {
-        name: '',
-        rate: 0,
-        burst: 0,
+        name: 'plugin-limit-req',
+        rate: null,
+        burst: null,
         enable: false
       }
     })
