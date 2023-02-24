@@ -2,8 +2,8 @@
   <a-form
     :model="data.formData"
     name="formData"
-    :label-col="{ span: 4 }"
-    :wrapper-col="{ span: 19 }"
+    :label-col="{ span: 5 }"
+    :wrapper-col="{ span: 18 }"
     autocomplete="off"
     @finish="fn.onSubmit"
   >
@@ -189,4 +189,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lange="scss" scoped></style>

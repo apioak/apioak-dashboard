@@ -19,7 +19,7 @@
         v-model:value="data.params.algorithm"
         placeholder="请选择"
         @change="fn.paramsChange(data.params)"
-        style="width: 210px"
+        style="width: 190px"
       >
         <a-select-option value="0">全部</a-select-option>
         <a-select-option value="1">加权轮询（Round Robin）</a-select-option>
@@ -301,7 +301,7 @@ export default {
       { title: 'ID/名称', dataIndex: 'res_id' },
       { title: '负载均衡', dataIndex: 'algorithm' },
       { title: '节点', dataIndex: 'nodes' },
-      { title: '发布', dataIndex: 'release' },
+      { title: '发布', dataIndex: 'release', width: 75 },
       { title: '启用', dataIndex: 'enable' },
       { title: '操作', dataIndex: 'operation', width: 130 }
     ])
@@ -519,11 +519,11 @@ export default {
   font-size: 20px;
 }
 .select {
-  width: 120px;
-  margin-right: 20px;
+  width: 130px;
+  margin-right: 10px;
 }
 .search {
-  width: 260px;
+  width: 220px;
   border-radius: 10px;
 }
 .filter {

@@ -26,7 +26,7 @@
         :filter-option="fn.filterOption"
         @change="fn.paramsChange(data.params)"
         :options="data.serviceList"
-        style="width: 15%"
+        style="width: 17%"
       ></a-select>
 
       <span>启用状态: </span>
@@ -405,7 +405,7 @@ export default {
       { title: '方法', dataIndex: 'method' },
       { title: '路径', dataIndex: 'path' },
       { title: '插件', dataIndex: 'plugin' },
-      { title: '发布', dataIndex: 'release' },
+      { title: '发布', dataIndex: 'release', width: 75 },
       { title: '启用', dataIndex: 'enable' },
       { title: '操作', dataIndex: 'operation', width: 200 }
     ])
@@ -695,11 +695,11 @@ export default {
   font-size: 20px;
 }
 .select {
-  width: 135px;
-  margin-right: 20px;
+  width: 130px;
+  margin-right: 10px;
 }
 .search {
-  width: 260px;
+  width: 220px;
   border-radius: 10px;
 }
 .filter {
@@ -733,6 +733,6 @@ export default {
   margin-right: 10px;
 }
 .method-span {
-  margin-right: 10px;
+  margin-right: 5px;
 }
 </style>

@@ -335,8 +335,8 @@ export default {
   font-size: 20px;
 }
 .select {
-  width: 135px;
-  margin-right: 20px;
+  width: 130px;
+  margin-right: 10px;
 }
 .search {
   width: 260px;

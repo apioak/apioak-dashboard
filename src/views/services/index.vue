@@ -372,7 +372,7 @@ export default {
       { title: '域名', dataIndex: 'domian' },
       { title: '协议', dataIndex: 'protocol' },
       { title: '插件', dataIndex: 'plugin' },
-      { title: '发布', dataIndex: 'release' },
+      { title: '发布', dataIndex: 'release', width: 75 },
       { title: '启用', dataIndex: 'enable' },
       { title: '操作', dataIndex: 'operation', width: 200 }
     ])
@@ -607,11 +607,11 @@ export default {
   font-size: 20px;
 }
 .select {
-  width: 135px;
-  margin-right: 20px;
+  width: 130px;
+  margin-right: 10px;
 }
 .search {
-  width: 260px;
+  width: 240px;
   border-radius: 10px;
 }
 .filter {

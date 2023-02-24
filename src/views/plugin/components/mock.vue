@@ -2,8 +2,8 @@
   <a-form
     :model="data.formData"
     name="formData"
-    :label-col="{ span: 4 }"
-    :wrapper-col="{ span: 19 }"
+    :label-col="{ span: 5 }"
+    :wrapper-col="{ span: 18 }"
     autocomplete="off"
     @finish="fn.onSubmit"
   >
@@ -17,8 +17,6 @@
         <a-select-option value="text/html">text/html</a-select-option>
         <a-select-option value="text/xml">text/xml</a-select-option>
       </a-select>
-
-      <!-- <a-input v-model:value="data.formData.response_type" /> -->
     </a-form-item>
 
     <a-form-item label="http_code" name="http_code" :rules="schemaPluginMock.http_code">
@@ -29,22 +27,38 @@
       <a-textarea v-model:value="data.formData.http_body" :rows="4" />
     </a-form-item>
 
-    <a-form-item label="http_headers" name="http_headers">
-      <a-space v-for="(item, index) in data.formData.http_headers" :key="item.id" align="baseline">
-        <a-form-item :name="['http_headers', index, 'key']" :rules="checkHttpHeader">
-          <a-input placeholder="key" v-model:value="item.key" style="width: 100%" />
+    <a-form-item class="http_headers_list" label="http_headers" name="http_headers">
+      <div
+        class="http_headers"
+        v-for="(item, index) in data.formData.http_headers"
+        :key="item.id"
+        align="baseline"
+      >
+        <a-form-item
+          class="http_headers_item"
+          :name="['http_headers', index, 'key']"
+          :rules="checkHttpHeader"
+          style="width: 35%"
+        >
+          <a-input placeholder="key" v-model:value="item.key" />
         </a-form-item>
-        <a-form-item :name="['http_headers', index, 'value']">
-          <a-input placeholder="value" v-model:value="item.value" style="width: 100%" />
+        <a-form-item
+          class="http_headers_item"
+          :name="['http_headers', index, 'value']"
+          style="width: 55%"
+        >
+          <a-input placeholder="value" v-model:value="item.value" />
         </a-form-item>
 
-        <a @click="fn.addHttpHeaders()">
-          <i class="iconfont icon-tianjia"></i>
-        </a>
-        <a v-if="index > 0" @click="fn.removeHttpHeaders(item)">
-          <i class="iconfont color-red icon-jian"></i>
-        </a>
-      </a-space>
+        <a-form-item>
+          <a @click="fn.addHttpHeaders()">
+            <i class="iconfont icon-tianjia"></i>
+          </a>
+          <a v-if="index > 0" @click="fn.removeHttpHeaders(item)">
+            <i class="iconfont color-red icon-jian"></i>
+          </a>
+        </a-form-item>
+      </div>
     </a-form-item>
     <a-form-item label="启用" name="enable" v-show="pluginOpType === 1">
       <a-switch v-model:checked="data.formData.enable" size="small" />
@@ -259,4 +273,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lange="scss" scoped>
+.http_headers_list {
+  margin-bottom: 0;
+}
+.http_headers {
+  display: flex;
+}
+.http_headers_item {
+  margin-right: 10px;
+}
+</style>

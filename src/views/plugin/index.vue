@@ -226,7 +226,7 @@ export default {
     // 定义列表头部
     data.columns = [
       { title: '', dataIndex: 'icon', width: 50 },
-      { title: '名称', dataIndex: 'name', width: 250 },
+      { title: '名称', dataIndex: 'name' },
       { title: '标识', dataIndex: 'tag' },
       { title: '类型', dataIndex: 'type', width: 60 },
       { title: '描述', dataIndex: 'description', width: 190, ellipsis: true },
