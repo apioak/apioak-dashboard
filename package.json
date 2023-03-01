@@ -1,41 +1,60 @@
 {
-  "name": "vue-material-dashboard",
-  "version": "1.5.0",
+  "name": "antd-demo",
+  "version": "0.6.1",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --open",
-    "dev": "npm run serve",
+    "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.24.0",
-    "chartist": "0.11.4",
-    "core-js": "3.18.2",
-    "google-maps": "4.3.3",
-    "vue": "2.6.14",
-    "vue-clickaway": "2.2.2",
-    "vue-github-buttons": "3.1.0",
-    "vue-material": "1.0.0-beta-15",
-    "vue-router": "3.5.2",
-    "vue-social-sharing": "3.0.8",
-    "vuelidate": "^0.7.6",
-    "vuex": "^3.6.2"
+    "@ant-design/icons-vue": "^6.1.0",
+    "ant-design-vue": "^3.2.14",
+    "axios": "^1.2.2",
+    "core-js": "^3.8.3",
+    "nprogress": "^0.2.0",
+    "vue": "^3.2.13",
+    "vue-router": "^4.1.6",
+    "vuex": "^4.1.0",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "4.5.13",
-    "@vue/cli-plugin-eslint": "4.5.13",
-    "@vue/cli-plugin-router": "4.5.13",
-    "@vue/cli-service": "4.5.13",
-    "@vue/eslint-config-prettier": "6.0.0",
-    "babel-eslint": "10.1.0",
-    "eslint": "7.32.0",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-vue": "7.19.1",
-    "es6-promise": "4.2.8",
-    "prettier": "2.4.1",
-    "sass": "1.42.1",
-    "sass-loader": "10.1.1",
-    "vue-template-compiler": "2.6.14"
-  }
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser",
+      "requireConfigFile": false
+    },
+    "rules": {
+      "space-before-function-paren": [
+        "error",
+        {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always"
+        }
+      ]
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }

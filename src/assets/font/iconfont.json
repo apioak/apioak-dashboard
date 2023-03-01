@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "429241",
+      "name": "错号",
+      "font_class": "error-1",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "429242",
+      "name": "对号",
+      "font_class": "right-1",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
       "icon_id": "33568370",
       "name": "limit-count",
       "font_class": "limit-count",

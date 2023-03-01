@@ -1,0 +1,113 @@
+.list_manage {
+  i {
+    font-size: 20px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  i.icon-shanchu {
+    color: red;
+  }
+  i.icon-xiugai {
+    color: #2979ff;
+  }
+  i.icon-yuntongbu {
+    color: #00c853;
+  }
+  i.icon-lianjie {
+    color: #2979ff;
+  }
+  i.icon-chajiangongneng {
+    color: #d500f9;
+  }
+}
+.md-list.md-dense .md-list-item-text {
+  /*line-height: 40px !important;
+  text-indent: 10px !important;*/
+  position: static !important;
+}
+.md-select-menu .md-checkbox {
+  margin-right: 6px !important;
+}
+.field-edit-name {
+  margin: 0 !important;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.color-light-grey {
+  color: lightgrey;
+}
+
+.color-grey {
+  color: grey;
+}
+
+.color-black {
+  color: black;
+}
+
+.color-red {
+  color: red;
+}
+
+.color-orange {
+  color: orange;
+}
+
+.color-green {
+  color: green;
+}
+
+.color-purple {
+  color: purple;
+}
+
+.color-blue {
+  color: blue;
+}
+
+.background-color-grey {
+  background-color: grey;
+}
+
+.background-color-black {
+  background-color: black;
+}
+
+.background-color-red {
+  background-color: red;
+}
+
+.background-color-orange {
+  background-color: orange;
+}
+
+.background-color-green {
+  background-color: green;
+}
+
+.background-color-purple {
+  background-color: purple;
+}
+
+.background-color-blue {
+  background-color: blue;
+}
+
+.font-link-color {
+  color: #1e88e5;
+}
+
+.font-block {
+  color: white;
+  padding: 2px 3px;
+  border-radius: 3px;
+  margin: 2px;
+  font-size: 10px;
+}
+
+.a-delete:hover {
+  color: #ff1744;
+}

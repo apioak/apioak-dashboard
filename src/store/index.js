@@ -1,43 +1,21 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import userModule from './modules/user'
+import paramsModule from './modules/params'
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
-    // 用户Token。
-    token: localStorage.getItem("token") ? localStorage.getItem("token") : "",
-    //路由参数
-    routerParams: localStorage.getItem("routerParams")
-      ? JSON.parse(localStorage.getItem("routerParams"))
-      : {},
-    currentPage: localStorage.getItem("currentPage") ? localStorage.getItem("currentPage") : 1,
-  },
-  mutations: {
-    /**
-     * 更新token。
-     */
-    setToken(state, token) {
-      window.localStorage.setItem("token", token);
-      state.token = token;
-    },
-    /**
-     * 路由参数
-     * @param state
-     * @param routerParams
-     */
-    setRouterParams(state, routerParams) {
-      state.routerParams[routerParams.name] = routerParams.params;
-      window.localStorage.setItem(
-        "routerParams",
-        JSON.stringify(state.routerParams)
-      );
-    },
-    setCurrentPage(state, page) {
-      window.localStorage.setItem("currentPage", page)
-      state.currentPage = page
-    }
-  },
+export default createStore({
+  state: {},
+  getters: {},
+  mutations: {},
   actions: {},
-  modules: {},
-});
+  modules: {
+    user: userModule,
+    params: paramsModule
+  },
+  plugins: [
+    createPersistedState({
+      key: 'vuex-local',
+      paths: ['user', 'params']
+    })
+  ]
+})
