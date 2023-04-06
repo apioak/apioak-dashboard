@@ -149,19 +149,25 @@ export default {
     const getUpstreamNameList = async () => {
       let { code, data: dataList, msg } = await $upstreamNameList()
 
+      let tmpList = ref([])
+
+      tmpList.value.push({
+        res_id: '',
+        name: '请选择'
+      })
+
       if (code != 0) {
         message.error(msg)
       } else {
-        let tmpList = ref([])
         dataList.forEach(item => {
           tmpList.value.push({
             res_id: item.res_id,
             name: item.name
           })
         })
-
-        data.upstreamList = tmpList
       }
+
+      data.upstreamList = tmpList
     }
     // 获取详情
     const getInfo = async (serviceResId, resId) => {

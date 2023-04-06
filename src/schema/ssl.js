@@ -1,4 +1,4 @@
-const sniFormat = { pattern: /^[A-Za-z\d_\-./]+$/, message: '域名仅包含字母、数字、_ - . /' }
+const sniFormat = { pattern: /^[A-Za-z\d_\-./*]+$/, message: '域名仅包含字母、数字、_ - . / *' }
 
 export const schemaSsl = {
   sni: [sniFormat],
