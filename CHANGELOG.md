@@ -1,3 +1,13 @@
+## 0.6.2
+> Released on 2023.04.06
+
+#### Feature
+
+- Upgrade route association upstream to add empty options.
+- Upgrade certificate `sni` supports wildcard `*`.
+
+
+
 ## 0.6.1
 > Released on 2023.03.01
 
