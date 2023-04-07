@@ -1,11 +1,11 @@
 <p align="center">
-  <img width="150" src="src/assets/img/logo.png">
+  <img width="150" src="src/assets/img/apioak-logo.png">
 </p>
 
 <p align="center">
 
   <a href="https://github.com/apioak/apioak-dashboard">
-    <img src="https://img.shields.io/badge/apioak--dashboard-v0.6.1-blue" alt="apioak-dashboard">
+    <img src="https://img.shields.io/badge/Apioak--Dashboard-Master-blue" alt="Apioak-Dashboard">
   </a>
 
   <a href="https://github.com/vuejs/vue">
