@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="150" src="src/assets/img/logo.png">
+  <img width="150" src="src/assets/img/apioak-logo.png">
 </p>
 
 <p align="center">
